@@ -1,4 +1,4 @@
-package me.wcy.weather;
+package me.wcy.weather.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -28,8 +28,8 @@ import com.baidu.location.LocationClientOption.LocationMode;
 
 import java.sql.SQLException;
 
-import me.wcy.util.BaseActivity;
-import me.wcy.util.ViewInject;
+import me.wcy.weather.util.ViewInject;
+import me.wcy.weather.R;
 import me.wcy.weather.adapter.CityAdapter;
 import me.wcy.weather.util.Utils;
 import me.wcy.weather.util.WeatherManager;

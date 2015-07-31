@@ -2,7 +2,7 @@
     android:id="@+id/weather_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/ic_weather_bg_fine_day"
+    android:background="@drawable/ic_weather_bg_fine_day"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:src="@mipmap/ic_locate_indicator" />
+                    android:src="@drawable/ic_locate_indicator" />
 
                 <TextView
                     android:id="@+id/city"
@@ -57,7 +57,7 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/ic_title_bar_icon_pressed_effect"
                     android:scaleType="centerInside"
-                    android:src="@mipmap/ic_menu_share" />
+                    android:src="@drawable/ic_menu_share" />
 
                 <View
                     android:layout_width="1dp"
@@ -65,7 +65,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="1px"
                     android:layout_marginRight="1px"
-                    android:background="@mipmap/ic_trend_bg_line" />
+                    android:background="@drawable/ic_trend_bg_line" />
 
                 <ImageView
                     android:id="@+id/about"
@@ -74,7 +74,7 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/ic_title_bar_icon_pressed_effect"
                     android:scaleType="centerInside"
-                    android:src="@mipmap/ic_menu_about" />
+                    android:src="@drawable/ic_menu_about" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -135,7 +135,7 @@
                             android:layout_height="40dp"
                             android:layout_gravity="right"
                             android:layout_marginTop="10dp"
-                            android:background="@mipmap/ic_air_quality_num_bg"
+                            android:background="@drawable/ic_air_quality_num_bg"
                             android:gravity="center"
                             android:text="20"
                             android:textColor="@color/white"
@@ -146,7 +146,7 @@
                             android:layout_width="60dp"
                             android:layout_height="20dp"
                             android:layout_gravity="right"
-                            android:background="@mipmap/ic_air_quality_bg_1"
+                            android:background="@drawable/ic_air_quality_bg_1"
                             android:gravity="center"
                             android:text="空气优"
                             android:textColor="@color/white"
@@ -192,7 +192,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="5dp"
-                            android:background="@mipmap/ic_trend_bg_line" />
+                            android:background="@drawable/ic_trend_bg_line" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -214,7 +214,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:scaleType="centerInside"
-                                    android:src="@mipmap/icon_temperature" />
+                                    android:src="@drawable/icon_temperature" />
 
                                 <TextView
                                     android:id="@+id/temperature"
@@ -239,7 +239,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:scaleType="centerInside"
-                                    android:src="@mipmap/icon_wind" />
+                                    android:src="@drawable/icon_wind" />
 
                                 <TextView
                                     android:id="@+id/wind"
@@ -269,7 +269,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="5dp"
-                            android:src="@mipmap/ic_today_weather_extra_arrow" />
+                            android:src="@drawable/ic_today_weather_extra_arrow" />
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
@@ -280,7 +280,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@mipmap/ic_weather_forcast_bg"
+                android:background="@drawable/ic_weather_forcast_bg"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -305,7 +305,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:scaleType="centerInside"
-                        android:src="@mipmap/ic_drag_view_handle" />
+                        android:src="@drawable/ic_drag_view_handle" />
                 </RelativeLayout>
 
                 <View
@@ -313,15 +313,15 @@
                     android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@mipmap/ic_trend_bg_line" />
+                    android:background="@drawable/ic_trend_bg_line" />
 
-                <me.wcy.util.MyListView
+                <me.wcy.weather.widget.MyListView
                     android:id="@+id/weather_forecast_listview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:divider="@mipmap/ic_trend_bg_line"
+                    android:divider="@drawable/ic_trend_bg_line"
                     android:dividerHeight="1dp"
                     android:listSelector="@color/transparent" />
 
@@ -330,7 +330,7 @@
                     android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@mipmap/ic_trend_bg_line" />
+                    android:background="@drawable/ic_trend_bg_line" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -349,7 +349,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@mipmap/ic_weather_forcast_bg"
+                android:background="@drawable/ic_weather_forcast_bg"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -374,7 +374,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:scaleType="centerInside"
-                        android:src="@mipmap/ic_drag_view_handle" />
+                        android:src="@drawable/ic_drag_view_handle" />
                 </RelativeLayout>
 
                 <View
@@ -382,15 +382,15 @@
                     android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@mipmap/ic_trend_bg_line" />
+                    android:background="@drawable/ic_trend_bg_line" />
 
-                <me.wcy.util.MyListView
+                <me.wcy.weather.widget.MyListView
                     android:id="@+id/life_index_listview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:divider="@mipmap/ic_trend_bg_line"
+                    android:divider="@drawable/ic_trend_bg_line"
                     android:dividerHeight="1dp"
                     android:listSelector="@color/transparent" />
             </LinearLayout>

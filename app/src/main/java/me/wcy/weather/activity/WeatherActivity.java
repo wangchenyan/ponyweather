@@ -1,4 +1,4 @@
-package me.wcy.weather;
+package me.wcy.weather.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
@@ -32,19 +32,19 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Map;
 
-import me.wcy.util.BaseActivity;
-import me.wcy.util.MyListView;
-import me.wcy.util.ViewInject;
+import me.wcy.weather.widget.MyListView;
+import me.wcy.weather.util.ViewInject;
+import me.wcy.weather.R;
 import me.wcy.weather.adapter.LifeIndexAdapter;
 import me.wcy.weather.adapter.WeatherForecastAdapter;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherResult;
-import me.wcy.weather.request.GsonRequest;
+import me.wcy.weather.request.JsonRequest;
 import me.wcy.weather.util.Utils;
 import me.wcy.weather.util.WeatherImage;
 import me.wcy.weather.util.WeatherManager;
 
-@SuppressLint("SimpleDateFormat")
+@SuppressLint({"SimpleDateFormat", "InflateParams"})
 public class WeatherActivity extends BaseActivity implements OnClickListener,
         OnItemClickListener, OnRefreshListener<ScrollView> {
     public static final String CITY = "city";
@@ -236,8 +236,8 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     }
 
     private void updateWeather() {
-        updateTime.setText(getResources().getString(R.string.updating));
-        GsonRequest<WeatherResult> gsonRequest = new GsonRequest<>(
+        updateTime.setText(getString(R.string.updating));
+        JsonRequest<WeatherResult> request = new JsonRequest<>(
                 Utils.getUpdateUrl(city), WeatherResult.class,
                 new Listener<WeatherResult>() {
                     @Override
@@ -257,8 +257,8 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
                 onUpdateFail();
             }
         });
-        gsonRequest.setShouldCache(false);
-        queue.add(gsonRequest);
+        request.setShouldCache(false);
+        queue.add(request);
     }
 
     private void onUpdateSuccess(WeatherResult weatherResult) {
@@ -275,7 +275,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     private void onUpdateFail() {
         scrollView.onRefreshComplete();
-        updateTime.setText(getResources().getString(R.string.update_fail));
+        updateTime.setText(getString(R.string.update_fail));
         builder = new Builder(this);
         builder.setTitle(R.string.tips);
         builder.setMessage(R.string.update_failed);
@@ -309,14 +309,11 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     private void share() {
         intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT,
-                getResources().getString(R.string.share_content));
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_content));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(Intent.createChooser(intent,
-                getResources().getString(R.string.share)));
+        startActivity(Intent.createChooser(intent, getString(R.string.share)));
     }
 
-    @SuppressLint("InflateParams")
     private void about() {
         View dialogView = getLayoutInflater().inflate(R.layout.about_dialog,
                 null);
@@ -389,12 +386,12 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
                 weather.getCurrentCity())) {
             city = data.getStringExtra(CITY);
             cityText.setText(city);
-            weatherBg.setBackgroundResource(R.mipmap.ic_weather_bg_na);
+            weatherBg.setBackgroundResource(R.drawable.ic_weather_bg_na);
             weatherLayout.setVisibility(View.GONE);
             if (!Utils.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT)
                         .show();
-                updateTime.setText(getResources().getString(
+                updateTime.setText(getString(
                         R.string.update_fail));
                 return;
             }

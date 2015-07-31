@@ -18,6 +18,7 @@ import android.widget.TextView;
 /**
  * @author wcy
  */
+@SuppressLint({"InflateParams", "ViewHolder"})
 public class LifeIndexAdapter extends BaseAdapter {
     private Context context;
     private LifeIndex lifeIndexs[];
@@ -29,12 +30,12 @@ public class LifeIndexAdapter extends BaseAdapter {
         this.context = context;
         this.lifeIndexs = lifeIndexs;
         this.focus = focus;
-        icons = new int[]{R.mipmap.ic_life_index_icon_chuanyi,
-                R.mipmap.ic_life_index_icon_xiche,
-                R.mipmap.ic_life_index_icon_lvyou,
-                R.mipmap.ic_life_index_icon_ganmao,
-                R.mipmap.ic_life_index_icon_yundong,
-                R.mipmap.ic_life_index_icon_ziwaixian};
+        icons = new int[]{R.drawable.ic_life_index_icon_chuanyi,
+                R.drawable.ic_life_index_icon_xiche,
+                R.drawable.ic_life_index_icon_lvyou,
+                R.drawable.ic_life_index_icon_ganmao,
+                R.drawable.ic_life_index_icon_yundong,
+                R.drawable.ic_life_index_icon_ziwaixian};
     }
 
     @Override
@@ -52,7 +53,6 @@ public class LifeIndexAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint({"InflateParams", "ViewHolder"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -71,7 +71,7 @@ public class LifeIndexAdapter extends BaseAdapter {
         holder.des.setText(lifeIndexs[position].getDes());
         if (position == focus) {
             holder.des.setVisibility(View.VISIBLE);
-            holder.arrow.setImageResource(R.mipmap.ic_arrow_open);
+            holder.arrow.setImageResource(R.drawable.ic_arrow_open);
         }
         return convertView;
     }

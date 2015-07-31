@@ -28,71 +28,71 @@ public class WeatherImage {
     }
 
     public int getWeatherBg() {
-        int bg = R.mipmap.ic_weather_bg_na;
+        int bg = R.drawable.ic_weather_bg_na;
         if (weather.contains("晴")) {
             if (hour >= 7 && hour < 19) {
-                bg = R.mipmap.ic_weather_bg_fine_day;
+                bg = R.drawable.ic_weather_bg_fine_day;
             } else {
-                bg = R.mipmap.ic_weather_bg_fine_night;
+                bg = R.drawable.ic_weather_bg_fine_night;
             }
         } else if (weather.contains("多云")) {
             if (hour >= 7 && hour < 19) {
-                bg = R.mipmap.ic_weather_bg_cloudy_day;
+                bg = R.drawable.ic_weather_bg_cloudy_day;
             } else {
-                bg = R.mipmap.ic_weather_bg_cloudy_night;
+                bg = R.drawable.ic_weather_bg_cloudy_night;
             }
         } else if (weather.contains("阴")) {
-            bg = R.mipmap.ic_weather_bg_overcast;
+            bg = R.drawable.ic_weather_bg_overcast;
         } else if (weather.contains("雷")) {
-            bg = R.mipmap.ic_weather_bg_thunder_storm;
+            bg = R.drawable.ic_weather_bg_thunder_storm;
         } else if (weather.contains("雨")) {
-            bg = R.mipmap.ic_weather_bg_rain;
+            bg = R.drawable.ic_weather_bg_rain;
         } else if (weather.contains("雪") || weather.contains("冰雹")) {
-            bg = R.mipmap.ic_weather_bg_snow;
+            bg = R.drawable.ic_weather_bg_snow;
         } else if (weather.contains("雾")) {
-            bg = R.mipmap.ic_weather_bg_fog;
+            bg = R.drawable.ic_weather_bg_fog;
         } else if (weather.contains("霾")) {
-            bg = R.mipmap.ic_weather_bg_haze;
+            bg = R.drawable.ic_weather_bg_haze;
         } else if (weather.contains("沙") || weather.contains("浮尘")) {
-            bg = R.mipmap.ic_weather_bg_sand_storm;
+            bg = R.drawable.ic_weather_bg_sand_storm;
         }
         return bg;
     }
 
     public int getWeatherIcon() {
-        int icon = R.mipmap.ic_weather_icon_fine;
+        int icon = R.drawable.ic_weather_icon_fine;
         if (weather.contains("多云")) {
-            icon = R.mipmap.ic_weather_icon_cloudy;
+            icon = R.drawable.ic_weather_icon_cloudy;
         } else if (weather.contains("阴")) {
-            icon = R.mipmap.ic_weather_icon_overcast;
+            icon = R.drawable.ic_weather_icon_overcast;
         } else if (weather.contains("雷")) {
-            icon = R.mipmap.ic_weather_icon_thunder_storm;
+            icon = R.drawable.ic_weather_icon_thunder_storm;
         } else if (weather.contains("小雨")) {
-            icon = R.mipmap.ic_weather_icon_rain_small;
+            icon = R.drawable.ic_weather_icon_rain_small;
         } else if (weather.contains("中雨")) {
-            icon = R.mipmap.ic_weather_icon_rain_middle;
+            icon = R.drawable.ic_weather_icon_rain_middle;
         } else if (weather.contains("大雨")) {
-            icon = R.mipmap.ic_weather_icon_rain_big;
+            icon = R.drawable.ic_weather_icon_rain_big;
         } else if (weather.contains("暴雨")) {
-            icon = R.mipmap.ic_weather_icon_rain_storm;
+            icon = R.drawable.ic_weather_icon_rain_storm;
         } else if (weather.contains("雨夹雪")) {
-            icon = R.mipmap.ic_weather_icon_rain_snow;
+            icon = R.drawable.ic_weather_icon_rain_snow;
         } else if (weather.contains("冻雨")) {
-            icon = R.mipmap.ic_weather_icon_sleet;
+            icon = R.drawable.ic_weather_icon_sleet;
         } else if (weather.contains("小雪")) {
-            icon = R.mipmap.ic_weather_icon_snow_small;
+            icon = R.drawable.ic_weather_icon_snow_small;
         } else if (weather.contains("中雪")) {
-            icon = R.mipmap.ic_weather_icon_snow_middle;
+            icon = R.drawable.ic_weather_icon_snow_middle;
         } else if (weather.contains("大雪")) {
-            icon = R.mipmap.ic_weather_icon_snow_big;
+            icon = R.drawable.ic_weather_icon_snow_big;
         } else if (weather.contains("暴雪")) {
-            icon = R.mipmap.ic_weather_icon_snow_storm;
+            icon = R.drawable.ic_weather_icon_snow_storm;
         } else if (weather.contains("冰雹")) {
-            icon = R.mipmap.ic_weather_icon_hail;
+            icon = R.drawable.ic_weather_icon_hail;
         } else if (weather.contains("雾") || weather.contains("霾")) {
-            icon = R.mipmap.ic_weather_icon_fog;
+            icon = R.drawable.ic_weather_icon_fog;
         } else if (weather.contains("沙") || weather.contains("浮尘")) {
-            icon = R.mipmap.ic_weather_icon_sand_storm;
+            icon = R.drawable.ic_weather_icon_sand_storm;
         }
         return icon;
     }

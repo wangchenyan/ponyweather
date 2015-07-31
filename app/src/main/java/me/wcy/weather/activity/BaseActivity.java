@@ -1,10 +1,11 @@
-package me.wcy.util;
+package me.wcy.weather.activity;
 
 import java.lang.reflect.Field;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import me.wcy.weather.util.ViewInject;
 
 public class BaseActivity extends AppCompatActivity {
 

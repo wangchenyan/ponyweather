@@ -187,27 +187,27 @@ public class WeatherManager {
             pm25 = Integer.parseInt(weather.getPm25());
             if (pm25 <= 50) {
                 quality = "空气优";
-                bg = R.mipmap.ic_air_quality_bg_1;
+                bg = R.drawable.ic_air_quality_bg_1;
             } else if (pm25 <= 100) {
                 quality = "空气良";
-                bg = R.mipmap.ic_air_quality_bg_2;
+                bg = R.drawable.ic_air_quality_bg_2;
             } else if (pm25 <= 150) {
                 quality = "轻度污染";
-                bg = R.mipmap.ic_air_quality_bg_3;
+                bg = R.drawable.ic_air_quality_bg_3;
             } else if (pm25 <= 200) {
                 quality = "中度污染";
-                bg = R.mipmap.ic_air_quality_bg_4;
+                bg = R.drawable.ic_air_quality_bg_4;
             } else if (pm25 <= 300) {
                 quality = "重度污染";
-                bg = R.mipmap.ic_air_quality_bg_5;
+                bg = R.drawable.ic_air_quality_bg_5;
             } else {
                 quality = "严重污染";
-                bg = R.mipmap.ic_air_quality_bg_6;
+                bg = R.drawable.ic_air_quality_bg_6;
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
             quality = "";
-            bg = R.mipmap.ic_air_quality_bg_1;
+            bg = R.drawable.ic_air_quality_bg_1;
         }
         airQualityMap.put(AIR_QULITY, quality);
         airQualityMap.put(AIR_QULITY_BG, bg);
