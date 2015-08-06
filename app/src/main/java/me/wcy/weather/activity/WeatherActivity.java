@@ -32,8 +32,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Map;
 
-import me.wcy.weather.widget.MyListView;
-import me.wcy.weather.util.ViewInject;
+import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.LifeIndexAdapter;
 import me.wcy.weather.adapter.WeatherForecastAdapter;
@@ -43,6 +42,7 @@ import me.wcy.weather.request.JsonRequest;
 import me.wcy.weather.util.Utils;
 import me.wcy.weather.util.WeatherImage;
 import me.wcy.weather.util.WeatherManager;
+import me.wcy.weather.widget.MyListView;
 
 @SuppressLint({"SimpleDateFormat", "InflateParams"})
 public class WeatherActivity extends BaseActivity implements OnClickListener,
@@ -50,68 +50,68 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     public static final String CITY = "city";
     public static WeatherActivity context;
 
-    @ViewInject(id = R.id.weather_bg)
-    private LinearLayout weatherBg;
+    @Bind(R.id.weather_bg)
+    LinearLayout weatherBg;
 
-    @ViewInject(id = R.id.titlebar_layout)
-    private LinearLayout titlebarLayout;
+    @Bind(R.id.titlebar_layout)
+    LinearLayout titlebarLayout;
 
-    @ViewInject(id = R.id.change_city_layout)
-    private LinearLayout changeCity;
+    @Bind(R.id.change_city_layout)
+    LinearLayout changeCity;
 
-    @ViewInject(id = R.id.scroll_view)
-    private PullToRefreshScrollView scrollView;
+    @Bind(R.id.scroll_view)
+    PullToRefreshScrollView scrollView;
 
-    @ViewInject(id = R.id.weather_layout)
-    private LinearLayout weatherLayout;
+    @Bind(R.id.weather_layout)
+    LinearLayout weatherLayout;
 
-    @ViewInject(id = R.id.current_weather_layout)
-    private LinearLayout currentWeatherLayout;
+    @Bind(R.id.current_weather_layout)
+    LinearLayout currentWeatherLayout;
 
-    @ViewInject(id = R.id.city)
-    private TextView cityText;
+    @Bind(R.id.city)
+    TextView cityText;
 
-    @ViewInject(id = R.id.share)
-    private ImageView share;
+    @Bind(R.id.share)
+    ImageView share;
 
-    @ViewInject(id = R.id.about)
-    private ImageView about;
+    @Bind(R.id.about)
+    ImageView about;
 
-    @ViewInject(id = R.id.update_time)
-    private TextView updateTime;
+    @Bind(R.id.update_time)
+    TextView updateTime;
 
-    @ViewInject(id = R.id.date)
-    private TextView date;
+    @Bind(R.id.date)
+    TextView date;
 
-    @ViewInject(id = R.id.air_quality_num)
-    private TextView airQualityNum;
+    @Bind(R.id.air_quality_num)
+    TextView airQualityNum;
 
-    @ViewInject(id = R.id.air_quality)
-    private TextView airQuality;
+    @Bind(R.id.air_quality)
+    TextView airQuality;
 
-    @ViewInject(id = R.id.current_temperature)
-    private TextView currentTemp;
+    @Bind(R.id.current_temperature)
+    TextView currentTemp;
 
-    @ViewInject(id = R.id.current_weather)
-    private TextView currentWeather;
+    @Bind(R.id.current_weather)
+    TextView currentWeather;
 
-    @ViewInject(id = R.id.temperature)
-    private TextView temperature;
+    @Bind(R.id.temperature)
+    TextView temperature;
 
-    @ViewInject(id = R.id.wind)
-    private TextView wind;
+    @Bind(R.id.wind)
+    TextView wind;
 
-    @ViewInject(id = R.id.weekday)
-    private TextView weekday;
+    @Bind(R.id.weekday)
+    TextView weekday;
 
-    @ViewInject(id = R.id.weather_forecast_listview)
-    private MyListView weatherForecast;
+    @Bind(R.id.weather_forecast_listview)
+    MyListView weatherForecast;
 
-    @ViewInject(id = R.id.life_index_listview)
-    private MyListView lifeIndex;
+    @Bind(R.id.life_index_listview)
+    MyListView lifeIndex;
 
-    @ViewInject(id = R.id.life_layout)
-    private LinearLayout lifeLayout;
+    @Bind(R.id.life_layout)
+    LinearLayout lifeLayout;
 
     private Intent intent;
     private Builder builder;

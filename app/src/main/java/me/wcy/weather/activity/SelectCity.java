@@ -28,7 +28,7 @@ import com.baidu.location.LocationClientOption.LocationMode;
 
 import java.sql.SQLException;
 
-import me.wcy.weather.util.ViewInject;
+import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.CityAdapter;
 import me.wcy.weather.util.Utils;
@@ -39,17 +39,17 @@ public class SelectCity extends BaseActivity implements OnClickListener,
         TextWatcher, OnItemClickListener, OnEditorActionListener,
         BDLocationListener {
 
-    @ViewInject(id = R.id.back)
-    private ImageView back;
+    @Bind(R.id.back)
+    ImageView back;
 
-    @ViewInject(id = R.id.city_list)
-    private GridView cityGridView;
+    @Bind(R.id.city_list)
+    GridView cityGridView;
 
-    @ViewInject(id = R.id.input_city)
-    private EditText inputCity;
+    @Bind(R.id.input_city)
+    EditText inputCity;
 
-    @ViewInject(id = R.id.search)
-    private ImageView search;
+    @Bind(R.id.search)
+    ImageView search;
 
     private String[] citys;
     private Intent intent;
