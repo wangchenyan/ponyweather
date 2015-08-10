@@ -61,17 +61,29 @@
 #custom
 -dontshrink
 -dontoptimize
--dontwarn android.support.**
 
 -keepattributes *Annotation*,Exceptions,InnerClasses,Signature,SourceFile,LineNumberTable
 
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.**
 
+#android-support
+-dontwarn android.support.**
 -keep class android.support.** {*;}
--keep class com.baidu.** {*;}
--keep class com.j256.ormlite.** {*;}
--keep class com.google.gson.** {*;}
--keep class com.android.volley.** {*;}
+
+#weather
 -keep class me.wcy.weather.database.** {*;}
 -keep class me.wcy.weather.model.** {*;}
+
+#baidu
+-keep class com.baidu.** {*;}
+
+#ormlite
+-keep class com.j256.ormlite.** {*;}
+
+#volley
+-keep class com.android.volley.** {*;}
+
+#fastjson
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** {*;}

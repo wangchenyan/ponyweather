@@ -3,7 +3,7 @@ package me.wcy.weather.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import butterknife.ButterKnife;
+import me.wcy.weather.util.ViewInjector;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -16,7 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void setContentView(View view) {
         super.setContentView(view);
-        ButterKnife.bind(this);
+        ViewInjector.initInjectedView(this);
     }
 
 }
