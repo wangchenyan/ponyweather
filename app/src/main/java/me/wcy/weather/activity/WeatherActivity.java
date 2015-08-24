@@ -127,8 +127,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather);
 
-        scrollView.getRefreshableView().setOverScrollMode(
-                View.OVER_SCROLL_NEVER);
+        scrollView.getRefreshableView().setOverScrollMode(View.OVER_SCROLL_NEVER);
         scrollView.setOnRefreshListener(this);
         scrollView.setMode(Mode.PULL_FROM_START);
         changeCity.setOnClickListener(this);
@@ -315,8 +314,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     }
 
     private void about() {
-        View dialogView = getLayoutInflater().inflate(R.layout.about_dialog,
-                null);
+        View dialogView = getLayoutInflater().inflate(R.layout.about_dialog, null);
         TextView version = (TextView) dialogView.findViewById(R.id.version);
         version.setText("V " + Utils.getVersion(this));
         builder = new Builder(this);
@@ -402,12 +400,12 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - exitTime > 2000) {
+            exitTime = System.currentTimeMillis();
             Toast.makeText(this, R.string.click2exit, Toast.LENGTH_SHORT)
                     .show();
         } else {
             finish();
         }
-        exitTime = System.currentTimeMillis();
     }
 
 }
