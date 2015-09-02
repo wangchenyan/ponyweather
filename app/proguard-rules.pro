@@ -76,12 +76,14 @@
 -keep class me.wcy.weather.model.** {*;}
 
 #baidu
+-dontwarn com.baidu.**
 -keep class com.baidu.** {*;}
 
 #ormlite
 -keep class com.j256.ormlite.** {*;}
 
 #volley
+-dontwarn com.android.volley.**
 -keep class com.android.volley.** {*;}
 
 #fastjson
