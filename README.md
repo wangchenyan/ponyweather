@@ -6,4 +6,4 @@
 * 网络请求使用Volley + [fastjson](https://github.com/alibaba/fastjson)
 * 数据库使用[ormlite](https://github.com/j256/ormlite-android)
 * 下拉刷新使用[PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)
-* 图片资源来自360天气
+* 图片资源来自[360天气](http://zhushou.360.cn/detail/index/soft_id/92235)
