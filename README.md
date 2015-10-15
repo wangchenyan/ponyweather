@@ -1,4 +1,4 @@
-# Weather
+# PonyWeather
 一款高仿360天气的天气查询应用。<br>
 ![](https://github.com/ChanWong21/Weather/blob/master/screenshot/screenshot.gif)<br>
 * 天气接口使用[百度天气api](http://blog.csdn.net/yongyinmg/article/details/36682683)
