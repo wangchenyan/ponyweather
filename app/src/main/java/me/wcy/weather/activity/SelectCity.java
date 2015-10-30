@@ -35,23 +35,17 @@ import me.wcy.weather.util.Utils;
 import me.wcy.weather.util.WeatherManager;
 
 @SuppressLint("InlinedApi")
-public class SelectCity extends BaseActivity implements OnClickListener,
-        TextWatcher, OnItemClickListener, OnEditorActionListener,
-        BDLocationListener {
-
+public class SelectCity extends BaseActivity implements OnClickListener, TextWatcher, OnItemClickListener, OnEditorActionListener, BDLocationListener {
     @Bind(R.id.back)
     ImageView back;
-
     @Bind(R.id.city_list)
     GridView cityGridView;
-
     @Bind(R.id.input_city)
     EditText inputCity;
-
     @Bind(R.id.search)
     ImageView search;
 
-    private String[] citys;
+    private String[] cities;
     private Intent intent;
     private ProgressDialog dialog;
     private String city;
@@ -66,8 +60,8 @@ public class SelectCity extends BaseActivity implements OnClickListener,
         search.setOnClickListener(this);
         inputCity.addTextChangedListener(this);
         inputCity.setOnEditorActionListener(this);
-        citys = getResources().getStringArray(R.array.citys);
-        cityGridView.setAdapter(new CityAdapter(this, citys));
+        cities = getResources().getStringArray(R.array.citys);
+        cityGridView.setAdapter(new CityAdapter(this, cities));
         cityGridView.setOnItemClickListener(this);
 
         dialog = new ProgressDialog(this);
@@ -132,19 +126,16 @@ public class SelectCity extends BaseActivity implements OnClickListener,
             finish();
         } else {
             // 定位失败
-            Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-                            long arg3) {
-        city = citys[position];
-        if (citys[0].equals(city)) {
+    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+        city = cities[position];
+        if (cities[0].equals(city)) {
             if (!Utils.isNetworkAvailable(this)) {
-                Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 return;
             }
             dialog.show();

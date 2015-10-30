@@ -52,64 +52,44 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     @Bind(R.id.weather_bg)
     LinearLayout weatherBg;
-
     @Bind(R.id.titlebar_layout)
     LinearLayout titlebarLayout;
-
     @Bind(R.id.change_city_layout)
     LinearLayout changeCity;
-
     @Bind(R.id.scroll_view)
     PullToRefreshScrollView scrollView;
-
     @Bind(R.id.weather_layout)
     LinearLayout weatherLayout;
-
     @Bind(R.id.current_weather_layout)
     LinearLayout currentWeatherLayout;
-
     @Bind(R.id.city)
     TextView cityText;
-
     @Bind(R.id.share)
     ImageView share;
-
     @Bind(R.id.about)
     ImageView about;
-
     @Bind(R.id.update_time)
     TextView updateTime;
-
     @Bind(R.id.date)
     TextView date;
-
     @Bind(R.id.air_quality_num)
     TextView airQualityNum;
-
     @Bind(R.id.air_quality)
     TextView airQuality;
-
     @Bind(R.id.current_temperature)
     TextView currentTemp;
-
     @Bind(R.id.current_weather)
     TextView currentWeather;
-
     @Bind(R.id.temperature)
     TextView temperature;
-
     @Bind(R.id.wind)
     TextView wind;
-
     @Bind(R.id.weekday)
     TextView weekday;
-
     @Bind(R.id.weather_forecast_listview)
     MyListView weatherForecast;
-
     @Bind(R.id.life_index_listview)
     MyListView lifeIndex;
-
     @Bind(R.id.life_layout)
     LinearLayout lifeLayout;
 
@@ -120,6 +100,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     private WeatherManager weatherManager;
     private Weather weather;
     private Handler handler;
+    private LifeIndexAdapter lifeAdapter;
     private long exitTime = 0;
 
     @Override
@@ -174,12 +155,9 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         updateTime.setText(weatherManager.getUpdateTime(weather));
         date.setText(weatherManager.getDate());
         airQualityNum.setText(weather.getPm25());
-        Map<String, Object> airQualityMap = weatherManager
-                .getAirQuality(weather);
-        airQuality.setText((String) airQualityMap
-                .get(WeatherManager.AIR_QULITY));
-        airQuality.setBackgroundResource((Integer) airQualityMap
-                .get(WeatherManager.AIR_QULITY_BG));
+        Map<String, Object> airQualityMap = weatherManager.getAirQuality(weather);
+        airQuality.setText((String) airQualityMap.get(WeatherManager.AIR_QULITY));
+        airQuality.setBackgroundResource((Integer) airQualityMap.get(WeatherManager.AIR_QULITY_BG));
         currentTemp.setText(weather.getCurrentTemp());
         currentWeather.setText(weatherManager.getCurrentWeather(weather));
         temperature.setText(weather.getWeather_data()[0].getTemperature());
@@ -191,8 +169,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         weatherForecast.setFocusable(false);
         if (weather.getIndex().length > 0) {
             lifeLayout.setVisibility(View.VISIBLE);
-            LifeIndexAdapter lifeAdapter = new LifeIndexAdapter(this,
-                    weather.getIndex(), -1);
+            lifeAdapter = new LifeIndexAdapter(this, weather.getIndex());
             lifeIndex.setAdapter(lifeAdapter);
             lifeIndex.setFocusable(false);
         } else {
@@ -366,12 +343,9 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-        LifeIndexAdapter lifeAdapter = new LifeIndexAdapter(this,
-                weather.getIndex(), position);
-        lifeIndex.setAdapter(lifeAdapter);
-        lifeIndex.setFocusable(false);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lifeAdapter.setSelection(position);
+        lifeAdapter.notifyDataSetChanged();
     }
 
     @Override
