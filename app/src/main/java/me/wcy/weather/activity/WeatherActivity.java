@@ -38,7 +38,7 @@ import me.wcy.weather.adapter.LifeIndexAdapter;
 import me.wcy.weather.adapter.WeatherForecastAdapter;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherResult;
-import me.wcy.weather.request.JsonRequest;
+import me.wcy.weather.request.JSORequest;
 import me.wcy.weather.util.Utils;
 import me.wcy.weather.util.WeatherImage;
 import me.wcy.weather.util.WeatherManager;
@@ -213,7 +213,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     private void updateWeather() {
         updateTime.setText(getString(R.string.updating));
-        JsonRequest<WeatherResult> request = new JsonRequest<>(
+        JSORequest<WeatherResult> request = new JSORequest<>(
                 Utils.getUpdateUrl(city), WeatherResult.class,
                 new Listener<WeatherResult>() {
                     @Override
