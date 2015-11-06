@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="穿衣指数"
-                android:textColor="@color/white_gray"
+                android:textColor="@color/white_grey"
                 android:textSize="14sp"
                 android:visibility="gone" />
         </LinearLayout>

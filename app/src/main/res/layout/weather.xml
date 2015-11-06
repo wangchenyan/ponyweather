@@ -338,7 +338,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:text="@string/disclaimer"
-                    android:textColor="@color/white_gray"
+                    android:textColor="@color/white_grey"
                     android:textSize="14sp" />
             </LinearLayout>
 

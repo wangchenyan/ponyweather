@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="热门城市"
-                android:textColor="@color/white_gray"
+                android:textColor="@color/white_grey"
                 android:textSize="15sp" />
 
             <View
