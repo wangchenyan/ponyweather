@@ -31,8 +31,8 @@ import java.sql.SQLException;
 import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.CityAdapter;
+import me.wcy.weather.util.DataManager;
 import me.wcy.weather.util.Utils;
-import me.wcy.weather.util.WeatherManager;
 
 @SuppressLint("InlinedApi")
 public class SelectCity extends BaseActivity implements OnClickListener, TextWatcher, OnItemClickListener, OnEditorActionListener, BDLocationListener {
@@ -45,10 +45,10 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     @Bind(R.id.search)
     ImageView search;
 
-    private String[] cities;
-    private Intent intent;
-    private ProgressDialog dialog;
-    private String city;
+    private String[] mCities;
+    private Intent mIntent;
+    private ProgressDialog mDialog;
+    private String mCity;
     private LocationClient mLocationClient;
 
     @Override
@@ -60,13 +60,13 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
         search.setOnClickListener(this);
         inputCity.addTextChangedListener(this);
         inputCity.setOnEditorActionListener(this);
-        cities = getResources().getStringArray(R.array.citys);
-        cityGridView.setAdapter(new CityAdapter(this, cities));
+        mCities = getResources().getStringArray(R.array.citys);
+        cityGridView.setAdapter(new CityAdapter(this, mCities));
         cityGridView.setOnItemClickListener(this);
 
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.locating));
-        dialog.setCanceledOnTouchOutside(false);
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage(getResources().getString(R.string.locating));
+        mDialog.setCanceledOnTouchOutside(false);
 
         initBaiduLocation();
     }
@@ -110,19 +110,19 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
 
     @Override
     public void onReceiveLocation(BDLocation location) {
-        dialog.cancel();
+        mDialog.cancel();
         if (location == null) {
             Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT)
                     .show();
             return;
         }
         int code = location.getLocType();
-        city = location.getCity();
-        if (code == 161 && city != null) {
+        mCity = location.getCity();
+        if (code == 161 && mCity != null) {
             // 定位成功
-            intent = new Intent();
-            intent.putExtra(WeatherActivity.CITY, city);
-            setResult(RESULT_OK, intent);
+            mIntent = new Intent();
+            mIntent.putExtra(WeatherActivity.CITY, mCity);
+            setResult(RESULT_OK, mIntent);
             finish();
         } else {
             // 定位失败
@@ -132,18 +132,18 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-        city = cities[position];
-        if (cities[0].equals(city)) {
+        mCity = mCities[position];
+        if (mCities[0].equals(mCity)) {
             if (!Utils.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 return;
             }
-            dialog.show();
+            mDialog.show();
             requestLocation();
         } else {
-            intent = new Intent();
-            intent.putExtra(WeatherActivity.CITY, city);
-            setResult(RESULT_OK, intent);
+            mIntent = new Intent();
+            mIntent.putExtra(WeatherActivity.CITY, mCity);
+            setResult(RESULT_OK, mIntent);
             finish();
         }
     }
@@ -155,10 +155,10 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
                 back();
                 break;
             case R.id.search:
-                city = inputCity.getText().toString();
-                intent = new Intent();
-                intent.putExtra(WeatherActivity.CITY, city);
-                setResult(RESULT_OK, intent);
+                mCity = inputCity.getText().toString();
+                mIntent = new Intent();
+                mIntent.putExtra(WeatherActivity.CITY, mCity);
+                setResult(RESULT_OK, mIntent);
                 finish();
                 break;
             default:
@@ -191,8 +191,7 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-                                  int after) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
 
     @Override
@@ -207,10 +206,10 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     }
 
     private void back() {
-        WeatherManager storageManager = new WeatherManager(this);
+        DataManager storageManager = DataManager.getInstance().setContext(this);
         try {
             if (storageManager.getData() == null) {
-                WeatherActivity.context.finish();
+                WeatherActivity.mContext.finish();
             }
         } catch (SQLException e) {
             e.printStackTrace();

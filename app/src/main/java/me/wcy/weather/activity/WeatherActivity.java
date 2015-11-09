@@ -1,7 +1,7 @@
 package me.wcy.weather.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,16 +39,16 @@ import me.wcy.weather.adapter.WeatherForecastAdapter;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherResult;
 import me.wcy.weather.request.JSONRequest;
+import me.wcy.weather.util.DataManager;
 import me.wcy.weather.util.Utils;
 import me.wcy.weather.util.WeatherImage;
-import me.wcy.weather.util.WeatherManager;
 import me.wcy.weather.widget.MyListView;
 
 @SuppressLint({"SimpleDateFormat", "InflateParams"})
 public class WeatherActivity extends BaseActivity implements OnClickListener,
         OnItemClickListener, OnRefreshListener<ScrollView> {
     public static final String CITY = "city";
-    public static WeatherActivity context;
+    public static WeatherActivity mContext;
 
     @Bind(R.id.weather_bg)
     LinearLayout weatherBg;
@@ -93,15 +93,15 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     @Bind(R.id.life_layout)
     LinearLayout lifeLayout;
 
-    private Intent intent;
-    private Builder builder;
-    private String city;
-    private RequestQueue queue;
-    private WeatherManager weatherManager;
-    private Weather weather;
-    private Handler handler;
-    private LifeIndexAdapter lifeAdapter;
-    private long exitTime = 0;
+    private Intent mIntent;
+    private AlertDialog.Builder mDialog;
+    private String mCity;
+    private RequestQueue mRequestQueue;
+    private DataManager mDataManager;
+    private Weather mWeather;
+    private Handler mHandler;
+    private LifeIndexAdapter mLifeAdapter;
+    private long mExitTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,30 +116,30 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         about.setOnClickListener(this);
         lifeIndex.setOnItemClickListener(this);
 
-        context = this;
-        queue = Volley.newRequestQueue(this);
-        weatherManager = new WeatherManager(this);
-        handler = new Handler();
+        mContext = this;
+        mRequestQueue = Volley.newRequestQueue(this);
+        mDataManager = DataManager.getInstance().setContext(this);
+        mHandler = new Handler();
         try {
-            weather = weatherManager.getData();
+            mWeather = mDataManager.getData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         setWeatherLayoutHight();
-        if (weather == null) {
+        if (mWeather == null) {
             getCity();
         } else {
-            city = weather.getCurrentCity();
+            mCity = mWeather.getCurrentCity();
             updateView();
             autoUpdate();
         }
     }
 
     private void getCity() {
-        intent = new Intent();
-        intent.setClass(this, SelectCity.class);
-        startActivityForResult(intent, 0);
+        mIntent = new Intent();
+        mIntent.setClass(this, SelectCity.class);
+        startActivityForResult(mIntent, 0);
     }
 
     /**
@@ -149,28 +149,28 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         weatherLayout.setVisibility(View.VISIBLE);
         scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
         WeatherImage weatherImage = new WeatherImage(
-                weather.getWeather_data()[0].getWeather());
+                mWeather.getWeather_data()[0].getWeather());
         weatherBg.setBackgroundResource(weatherImage.getWeatherBg());
-        cityText.setText(city);
-        updateTime.setText(weatherManager.getUpdateTime(weather));
-        date.setText(weatherManager.getDate());
-        airQualityNum.setText(weather.getPm25());
-        Map<String, Object> airQualityMap = weatherManager.getAirQuality(weather);
-        airQuality.setText((String) airQualityMap.get(WeatherManager.AIR_QULITY));
-        airQuality.setBackgroundResource((Integer) airQualityMap.get(WeatherManager.AIR_QULITY_BG));
-        currentTemp.setText(weather.getCurrentTemp());
-        currentWeather.setText(weatherManager.getCurrentWeather(weather));
-        temperature.setText(weather.getWeather_data()[0].getTemperature());
-        wind.setText(weather.getWeather_data()[0].getWind());
-        weekday.setText(weather.getWeather_data()[0].getDate());
+        cityText.setText(mCity);
+        updateTime.setText(mDataManager.getUpdateTime(mWeather));
+        date.setText(mDataManager.getDate());
+        airQualityNum.setText(mWeather.getPm25());
+        Map<String, Object> airQualityMap = mDataManager.getAirQuality(mWeather);
+        airQuality.setText((String) airQualityMap.get(DataManager.AIR_QUALITY));
+        airQuality.setBackgroundResource((Integer) airQualityMap.get(DataManager.AIR_QUALITY_BG));
+        currentTemp.setText(mWeather.getCurrentTemp());
+        currentWeather.setText(mDataManager.getCurrentWeather(mWeather));
+        temperature.setText(mWeather.getWeather_data()[0].getTemperature());
+        wind.setText(mWeather.getWeather_data()[0].getWind());
+        weekday.setText(mWeather.getWeather_data()[0].getDate());
         WeatherForecastAdapter weatherAdapter = new WeatherForecastAdapter(
-                this, weather.getWeather_data());
+                this, mWeather.getWeather_data());
         weatherForecast.setAdapter(weatherAdapter);
         weatherForecast.setFocusable(false);
-        if (weather.getIndex().length > 0) {
+        if (mWeather.getIndex().length > 0) {
             lifeLayout.setVisibility(View.VISIBLE);
-            lifeAdapter = new LifeIndexAdapter(this, weather.getIndex());
-            lifeIndex.setAdapter(lifeAdapter);
+            mLifeAdapter = new LifeIndexAdapter(this, mWeather.getIndex());
+            lifeIndex.setAdapter(mLifeAdapter);
             lifeIndex.setFocusable(false);
         } else {
             lifeLayout.setVisibility(View.GONE);
@@ -182,7 +182,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
      */
     private void autoUpdate() {
         try {
-            if (weatherManager.autoUpdate(weather)) {
+            if (mDataManager.autoUpdate(mWeather)) {
                 if (Utils.isNetworkAvailable(this)) {
                     refresh();
                 }
@@ -214,7 +214,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     private void updateWeather() {
         updateTime.setText(getString(R.string.updating));
         JSONRequest<WeatherResult> request = new JSONRequest<>(
-                Utils.getUpdateUrl(city), WeatherResult.class,
+                Utils.getUpdateUrl(mCity), WeatherResult.class,
                 new Listener<WeatherResult>() {
                     @Override
                     public void onResponse(WeatherResult weatherResult) {
@@ -234,15 +234,15 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
             }
         });
         request.setShouldCache(false);
-        queue.add(request);
+        mRequestQueue.add(request);
     }
 
     private void onUpdateSuccess(WeatherResult weatherResult) {
         scrollView.onRefreshComplete();
         Toast.makeText(this, R.string.update_tips, Toast.LENGTH_SHORT).show();
         try {
-            weatherManager.storeData(weatherResult);
-            this.weather = weatherManager.getData();
+            mDataManager.storeData(weatherResult);
+            this.mWeather = mDataManager.getData();
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
@@ -252,58 +252,58 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     private void onUpdateFail() {
         scrollView.onRefreshComplete();
         updateTime.setText(getString(R.string.update_fail));
-        builder = new Builder(this);
-        builder.setTitle(R.string.tips);
-        builder.setMessage(R.string.update_failed);
-        builder.setPositiveButton(R.string.retry,
+        mDialog = new AlertDialog.Builder(this);
+        mDialog.setTitle(R.string.tips);
+        mDialog.setMessage(R.string.update_failed);
+        mDialog.setPositiveButton(R.string.retry,
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        intent = new Intent();
-                        intent.setClass(WeatherActivity.this, SelectCity.class);
-                        WeatherActivity.this.startActivityForResult(intent, 0);
+                        mIntent = new Intent();
+                        mIntent.setClass(WeatherActivity.this, SelectCity.class);
+                        WeatherActivity.this.startActivityForResult(mIntent, 0);
                     }
                 });
-        builder.setNegativeButton(R.string.cancel,
+        mDialog.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (weather != null) {
-                            city = weather.getCurrentCity();
+                        if (mWeather != null) {
+                            mCity = mWeather.getCurrentCity();
                             updateView();
                         } else {
                             finish();
                         }
                     }
                 });
-        builder.setCancelable(false);
-        builder.show();
+        mDialog.setCancelable(false);
+        mDialog.show();
     }
 
     private void share() {
-        intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_content));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(Intent.createChooser(intent, getString(R.string.share)));
+        mIntent = new Intent(Intent.ACTION_SEND);
+        mIntent.setType("text/plain");
+        mIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_content));
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(mIntent, getString(R.string.share)));
     }
 
     private void about() {
         View dialogView = getLayoutInflater().inflate(R.layout.about_dialog, null);
         TextView version = (TextView) dialogView.findViewById(R.id.version);
         version.setText("V " + Utils.getVersion(this));
-        builder = new Builder(this);
-        builder.setTitle(R.string.about);
-        builder.setView(dialogView);
-        builder.setPositiveButton(R.string.sure, null);
-        builder.setCancelable(false);
-        builder.show();
+        mDialog = new AlertDialog.Builder(this);
+        mDialog.setTitle(R.string.about);
+        mDialog.setView(dialogView);
+        mDialog.setPositiveButton(R.string.sure, null);
+        mDialog.setCancelable(false);
+        mDialog.show();
     }
 
     private void refresh() {
-        handler.postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
@@ -327,9 +327,9 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.change_city_layout:
-                intent = new Intent();
-                intent.setClass(this, SelectCity.class);
-                startActivityForResult(intent, 0);
+                mIntent = new Intent();
+                mIntent.setClass(this, SelectCity.class);
+                startActivityForResult(mIntent, 0);
                 break;
             case R.id.share:
                 share();
@@ -344,8 +344,8 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        lifeAdapter.setSelection(position);
-        lifeAdapter.notifyDataSetChanged();
+        mLifeAdapter.setSelection(position);
+        mLifeAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -354,10 +354,10 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         if (resultCode != RESULT_OK) {
             return;
         }
-        if (weather == null || !data.getStringExtra(CITY).equals(
-                weather.getCurrentCity())) {
-            city = data.getStringExtra(CITY);
-            cityText.setText(city);
+        if (mWeather == null || !data.getStringExtra(CITY).equals(
+                mWeather.getCurrentCity())) {
+            mCity = data.getStringExtra(CITY);
+            cityText.setText(mCity);
             weatherBg.setBackgroundResource(R.drawable.ic_weather_bg_na);
             weatherLayout.setVisibility(View.GONE);
             if (!Utils.isNetworkAvailable(this)) {
@@ -373,8 +373,8 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - exitTime > 2000) {
-            exitTime = System.currentTimeMillis();
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            mExitTime = System.currentTimeMillis();
             Toast.makeText(this, R.string.click2exit, Toast.LENGTH_SHORT)
                     .show();
         } else {
