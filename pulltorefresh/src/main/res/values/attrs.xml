@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <declare-styleable name="PullToRefresh">
-
         <!-- A drawable to use as the background of the Refreshable View -->
         <attr name="ptrRefreshableViewBackground" format="reference|color" />
 
@@ -76,5 +74,4 @@
         <attr name="ptrDrawableTop" format="reference" />
         <attr name="ptrDrawableBottom" format="reference" />
     </declare-styleable>
-
 </resources>

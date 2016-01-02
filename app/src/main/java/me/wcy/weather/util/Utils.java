@@ -2,8 +2,6 @@ package me.wcy.weather.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,17 +22,12 @@ public class Utils {
 
     /**
      * 检查网络连接
-     *
-     * @param context
-     * @return
      */
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager localConnectivityManager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager localConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         int k;
         if (localConnectivityManager != null) {
-            NetworkInfo[] arrayOfNetworkInfo = localConnectivityManager
-                    .getAllNetworkInfo();
+            NetworkInfo[] arrayOfNetworkInfo = localConnectivityManager.getAllNetworkInfo();
             if (arrayOfNetworkInfo != null) {
                 int j = arrayOfNetworkInfo.length;
                 for (k = 0; k < j; k++) {
@@ -53,40 +46,33 @@ public class Utils {
      * @return 版本号
      */
     public static String getVersion(Context context) {
-        PackageManager manager = context.getPackageManager();
-        PackageInfo info = null;
+        String versionName = "1.0.0";
         try {
-            info = manager.getPackageInfo(context.getPackageName(), 0);
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        return info.versionName;
+        return "V " + versionName;
     }
 
     public static String getUpdateUrl(String city) {
         city = URLEncoder.encode(city);
-        return URL + "?location=" + city + "&ak=" + BAIDU_APP_KEY + "&output="
-                + OUTPUT_JSON;
+        return URL + "?location=" + city + "&ak=" + BAIDU_APP_KEY + "&output=" + OUTPUT_JSON;
     }
 
     /**
      * 获取屏幕高度（除去状态栏）
-     *
-     * @param context
-     * @return
-     * @throws Exception
      */
     public static int getDisplayHeight(Context context) throws Exception {
-        int displayHeight, statusBarHeight;
         // 屏幕高度
         WindowManager manager = ((Activity) context).getWindowManager();
-        displayHeight = manager.getDefaultDisplay().getHeight();
+        int displayHeight = manager.getDefaultDisplay().getHeight();
         // 通知栏高度
         Class<?> c = Class.forName("com.android.internal.R$dimen");
         Object obj = c.newInstance();
         Field field = c.getField("status_bar_height");
         int x = Integer.parseInt(field.get(obj).toString());
-        statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        int statusBarHeight = context.getResources().getDimensionPixelSize(x);
         return displayHeight - statusBarHeight;
     }
 }

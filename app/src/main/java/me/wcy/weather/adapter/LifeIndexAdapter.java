@@ -20,16 +20,16 @@ import me.wcy.weather.model.LifeIndex;
  */
 @SuppressLint({"InflateParams", "ViewHolder"})
 public class LifeIndexAdapter extends BaseAdapter {
-    private Context context;
-    private LifeIndex lifeIndexs[];
-    private int icons[];
-    private int selection;
+    private Context mContext;
+    private LifeIndex mLifeIndexes[];
+    private int mIcons[];
+    private int mSelection;
 
-    public LifeIndexAdapter(Context context, LifeIndex lifeIndexs[]) {
-        this.context = context;
-        this.lifeIndexs = lifeIndexs;
-        this.selection = -1;
-        icons = new int[]{R.drawable.ic_life_index_icon_chuanyi,
+    public LifeIndexAdapter(Context context, LifeIndex lifeIndexes[]) {
+        this.mContext = context;
+        this.mLifeIndexes = lifeIndexes;
+        this.mSelection = -1;
+        mIcons = new int[]{R.drawable.ic_life_index_icon_chuanyi,
                 R.drawable.ic_life_index_icon_xiche,
                 R.drawable.ic_life_index_icon_lvyou,
                 R.drawable.ic_life_index_icon_ganmao,
@@ -39,7 +39,7 @@ public class LifeIndexAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return lifeIndexs.length;
+        return mLifeIndexes.length;
     }
 
     @Override
@@ -55,41 +55,40 @@ public class LifeIndexAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        convertView = LayoutInflater.from(context).inflate(R.layout.life_index_item, null);
+        convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_weather_life_index_list_item, null);
         holder = new ViewHolder();
-        holder.icon = (ImageView) convertView.findViewById(R.id.life_index_icon);
-        holder.tipt = (TextView) convertView.findViewById(R.id.tipt);
-        holder.zs = (TextView) convertView.findViewById(R.id.zs);
-        holder.des = (TextView) convertView.findViewById(R.id.des);
-        holder.arrow = (ImageView) convertView.findViewById(R.id.arrow);
-        holder.icon.setImageResource(icons[position]);
-        holder.tipt.setText(lifeIndexs[position].getTipt());
-        holder.zs.setText(lifeIndexs[position].getZs());
-        holder.des.setText(lifeIndexs[position].getDes());
-        if (position == selection) {
-            holder.des.setVisibility(View.VISIBLE);
-            holder.arrow.setImageResource(R.drawable.ic_arrow_open);
+        holder.ivIcon = (ImageView) convertView.findViewById(R.id.iv_icon);
+        holder.tvTips = (TextView) convertView.findViewById(R.id.tv_tips);
+        holder.tvZS = (TextView) convertView.findViewById(R.id.tv_zs);
+        holder.tvDes = (TextView) convertView.findViewById(R.id.tv_des);
+        holder.ivArrow = (ImageView) convertView.findViewById(R.id.iv_arrow);
+        holder.ivIcon.setImageResource(mIcons[position]);
+        holder.tvTips.setText(mLifeIndexes[position].getTipt());
+        holder.tvZS.setText(mLifeIndexes[position].getZs());
+        holder.tvDes.setText(mLifeIndexes[position].getDes());
+        if (position == mSelection) {
+            holder.tvDes.setVisibility(View.VISIBLE);
+            holder.ivArrow.setImageResource(R.drawable.ic_arrow_open);
         } else {
-            holder.des.setVisibility(View.GONE);
-            holder.arrow.setImageResource(R.drawable.ic_arrow_close);
+            holder.tvDes.setVisibility(View.GONE);
+            holder.ivArrow.setImageResource(R.drawable.ic_arrow_close);
         }
         return convertView;
     }
 
     public void setSelection(int position) {
-        if (selection != position) {
-            selection = position;
+        if (mSelection != position) {
+            mSelection = position;
         } else {
-            selection = -1;
+            mSelection = -1;
         }
     }
 
     class ViewHolder {
-        ImageView icon;
-        TextView tipt;
-        TextView zs;
-        TextView des;
-        ImageView arrow;
+        ImageView ivIcon;
+        TextView tvTips;
+        TextView tvZS;
+        TextView tvDes;
+        ImageView ivArrow;
     }
-
 }

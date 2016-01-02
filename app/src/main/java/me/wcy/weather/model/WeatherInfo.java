@@ -8,60 +8,52 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * @author wcy
- * 
  */
 @DatabaseTable(tableName = "WeatherInfo")
 public class WeatherInfo {
+    @DatabaseField(generatedId = true)
+    int id;
+    @DatabaseField
+    String date;
+    @DatabaseField
+    String weather;
+    @DatabaseField
+    String wind;
+    @DatabaseField
+    String temperature;
 
-	@DatabaseField(generatedId = true)
-	int id;
+    public WeatherInfo() {
+    }
 
-	@DatabaseField
-	String date;
+    public String getDate() {
+        return date;
+    }
 
-	@DatabaseField
-	String weather;
+    public void setDate(String date) {
+        this.date = date;
+    }
 
-	@DatabaseField
-	String wind;
+    public String getWeather() {
+        return weather;
+    }
 
-	@DatabaseField
-	String temperature;
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
 
-	public WeatherInfo() {
-		super();
-	}
+    public String getWind() {
+        return wind;
+    }
 
-	public String getDate() {
-		return date;
-	}
+    public void setWind(String wind) {
+        this.wind = wind;
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
+    public String getTemperature() {
+        return temperature;
+    }
 
-	public String getWeather() {
-		return weather;
-	}
-
-	public void setWeather(String weather) {
-		this.weather = weather;
-	}
-
-	public String getWind() {
-		return wind;
-	}
-
-	public void setWind(String wind) {
-		this.wind = wind;
-	}
-
-	public String getTemperature() {
-		return temperature;
-	}
-
-	public void setTemperature(String temperature) {
-		this.temperature = temperature;
-	}
-
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
+    }
 }

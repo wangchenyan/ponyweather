@@ -56,5 +56,4 @@
                 android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
-
 </merge>

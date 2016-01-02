@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string-array name="citys">
         <item>自动定位</item>
         <item>北京</item>
@@ -39,5 +38,4 @@
         <item>香港</item>
         <item>台北</item>
     </string-array>
-
 </resources>

@@ -8,90 +8,81 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * @author wcy
- * 
  */
 @DatabaseTable(tableName = "Weather")
 public class Weather {
+    @DatabaseField(generatedId = true)
+    int id;
+    @DatabaseField
+    String currentCity;
+    @DatabaseField
+    String pm25;
+    @DatabaseField
+    String currentTemp;
+    @DatabaseField
+    long date;
+    @DatabaseField
+    long updateTime;
 
-	@DatabaseField(generatedId = true)
-	int id;
+    LifeIndex index[];
+    WeatherInfo weather_data[];
 
-	@DatabaseField
-	String currentCity;
+    public Weather() {
+    }
 
-	@DatabaseField
-	String pm25;
+    public String getCurrentCity() {
+        return currentCity;
+    }
 
-	@DatabaseField
-	String currentTemp;
+    public void setCurrentCity(String currentCity) {
+        this.currentCity = currentCity;
+    }
 
-	@DatabaseField
-	long date;
+    public String getPm25() {
+        return pm25;
+    }
 
-	@DatabaseField
-	long updateTime;
+    public void setPm25(String pm25) {
+        this.pm25 = pm25;
+    }
 
-	LifeIndex index[];
-	WeatherInfo weather_data[];
+    public String getCurrentTemp() {
+        return currentTemp;
+    }
 
-	public Weather() {
-		super();
-	}
+    public void setCurrentTemp(String currentTemp) {
+        this.currentTemp = currentTemp;
+    }
 
-	public String getCurrentCity() {
-		return currentCity;
-	}
+    public long getDate() {
+        return date;
+    }
 
-	public void setCurrentCity(String currentCity) {
-		this.currentCity = currentCity;
-	}
+    public void setDate(long date) {
+        this.date = date;
+    }
 
-	public String getPm25() {
-		return pm25;
-	}
+    public long getUpdateTime() {
+        return updateTime;
+    }
 
-	public void setPm25(String pm25) {
-		this.pm25 = pm25;
-	}
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public String getCurrentTemp() {
-		return currentTemp;
-	}
+    public LifeIndex[] getIndex() {
+        return index;
+    }
 
-	public void setCurrentTemp(String currentTemp) {
-		this.currentTemp = currentTemp;
-	}
+    public void setIndex(LifeIndex[] index) {
+        this.index = index;
+    }
 
-	public long getDate() {
-		return date;
-	}
+    public WeatherInfo[] getWeather_data() {
+        return weather_data;
+    }
 
-	public void setDate(long date) {
-		this.date = date;
-	}
-
-	public long getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(long updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public LifeIndex[] getIndex() {
-		return index;
-	}
-
-	public void setIndex(LifeIndex[] index) {
-		this.index = index;
-	}
-
-	public WeatherInfo[] getWeather_data() {
-		return weather_data;
-	}
-
-	public void setWeather_data(WeatherInfo[] weather_data) {
-		this.weather_data = weather_data;
-	}
-
+    public void setWeather_data(WeatherInfo[] weather_data) {
+        this.weather_data = weather_data;
+    }
 }

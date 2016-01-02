@@ -10,14 +10,14 @@
         android:paddingTop="10dp">
 
         <ImageView
-            android:id="@+id/life_index_icon"
+            android:id="@+id/iv_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_life_index_icon_chuanyi" />
 
         <ImageView
-            android:id="@+id/arrow"
+            android:id="@+id/iv_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -26,13 +26,12 @@
             android:src="@drawable/ic_arrow_close" />
 
         <LinearLayout
-            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toLeftOf="@id/arrow"
-            android:layout_toRightOf="@id/life_index_icon"
+            android:layout_toLeftOf="@id/iv_arrow"
+            android:layout_toRightOf="@id/iv_icon"
             android:orientation="vertical">
 
             <LinearLayout
@@ -41,7 +40,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tipt"
+                    android:id="@+id/tv_tips"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -51,7 +50,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/zs"
+                    android:id="@+id/tv_zs"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -62,7 +61,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/des"
+                android:id="@+id/tv_des"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -72,5 +71,4 @@
                 android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
-
 </LinearLayout>

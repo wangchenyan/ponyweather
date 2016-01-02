@@ -9,12 +9,12 @@ import android.os.Handler;
 import me.wcy.weather.R;
 
 @SuppressLint("InlinedApi")
-public class Welcome extends Activity {
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome);
+        setContentView(R.layout.activity_splash);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -22,11 +22,10 @@ public class Welcome extends Activity {
             @Override
             public void run() {
                 Intent intent = new Intent();
-                intent.setClass(Welcome.this, WeatherActivity.class);
-                Welcome.this.startActivity(intent);
-                Welcome.this.finish();
+                intent.setClass(SplashActivity.this, WeatherActivity.class);
+                SplashActivity.this.startActivity(intent);
+                SplashActivity.this.finish();
             }
         }, 500);
     }
-
 }

@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/weather_bg"
+    android:id="@+id/ll_weather_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_weather_bg_fine_day"
@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/titlebar_layout"
+        android:id="@+id/ll_title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -17,7 +17,7 @@
             android:layout_height="45dp">
 
             <LinearLayout
-                android:id="@+id/change_city_layout"
+                android:id="@+id/ll_change_city"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
                     android:src="@drawable/ic_locate_indicator" />
 
                 <TextView
-                    android:id="@+id/city"
+                    android:id="@+id/tv_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -51,7 +51,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/share"
+                    android:id="@+id/iv_share"
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -68,7 +68,7 @@
                     android:background="@drawable/ic_trend_bg_line" />
 
                 <ImageView
-                    android:id="@+id/about"
+                    android:id="@+id/iv_about"
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -79,7 +79,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/update_time"
+            android:id="@+id/tv_update_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -90,20 +90,20 @@
     </LinearLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
-        android:id="@+id/scroll_view"
+        android:id="@+id/sv_weather"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/weather_layout"
+            android:id="@+id/ll_weather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="10dp">
 
             <LinearLayout
-                android:id="@+id/current_weather_layout"
+                android:id="@+id/ll_current_weather"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -121,7 +121,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/date"
+                            android:id="@+id/tv_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
@@ -130,7 +130,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/air_quality_num"
+                            android:id="@+id/tv_air_quality_num"
                             android:layout_width="60dp"
                             android:layout_height="40dp"
                             android:layout_gravity="right"
@@ -142,7 +142,7 @@
                             android:textSize="30sp" />
 
                         <TextView
-                            android:id="@+id/air_quality"
+                            android:id="@+id/tv_air_quality"
                             android:layout_width="60dp"
                             android:layout_height="20dp"
                             android:layout_gravity="right"
@@ -166,7 +166,7 @@
                             android:layout_marginRight="10dp">
 
                             <TextView
-                                android:id="@+id/current_temperature"
+                                android:id="@+id/tv_current_temp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
@@ -175,11 +175,11 @@
                                 android:textSize="80sp" />
 
                             <TextView
-                                android:id="@+id/current_weather"
+                                android:id="@+id/tv_current_weather"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignBottom="@id/current_temperature"
-                                android:layout_toRightOf="@id/current_temperature"
+                                android:layout_alignBottom="@id/tv_current_temp"
+                                android:layout_toRightOf="@id/tv_current_temp"
                                 android:singleLine="true"
                                 android:text="晴"
                                 android:textColor="@color/white"
@@ -217,7 +217,7 @@
                                     android:src="@drawable/icon_temperature" />
 
                                 <TextView
-                                    android:id="@+id/temperature"
+                                    android:id="@+id/tv_temp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -242,7 +242,7 @@
                                     android:src="@drawable/icon_wind" />
 
                                 <TextView
-                                    android:id="@+id/wind"
+                                    android:id="@+id/tv_wind"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -252,7 +252,7 @@
                             </LinearLayout>
 
                             <TextView
-                                android:id="@+id/weekday"
+                                android:id="@+id/tv_weekday"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -280,7 +280,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/ic_weather_forcast_bg"
+                android:background="@drawable/ic_weather_forecast_bg"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -316,7 +316,7 @@
                     android:background="@drawable/ic_trend_bg_line" />
 
                 <me.wcy.weather.widget.MyListView
-                    android:id="@+id/weather_forecast_listview"
+                    android:id="@+id/lv_weather_forecast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -343,13 +343,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/life_layout"
+                android:id="@+id/ll_life_index"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/ic_weather_forcast_bg"
+                android:background="@drawable/ic_weather_forecast_bg"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -385,7 +385,7 @@
                     android:background="@drawable/ic_trend_bg_line" />
 
                 <me.wcy.weather.widget.MyListView
-                    android:id="@+id/life_index_listview"
+                    android:id="@+id/lv_life_index"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -396,5 +396,4 @@
             </LinearLayout>
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
-
 </LinearLayout>

@@ -17,7 +17,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/back"
+                android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/ic_title_bar_icon_pressed_effect"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/input_city"
+                    android:id="@+id/et_input_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_search_input_bg"
@@ -62,7 +62,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/search"
+                    android:id="@+id/iv_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -88,7 +88,7 @@
         </LinearLayout>
 
         <GridView
-            android:id="@+id/city_list"
+            android:id="@+id/gv_city_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -98,5 +98,4 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
     </LinearLayout>
-
 </LinearLayout>

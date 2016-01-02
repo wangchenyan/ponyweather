@@ -35,15 +35,16 @@ import me.wcy.weather.util.DataManager;
 import me.wcy.weather.util.Utils;
 
 @SuppressLint("InlinedApi")
-public class SelectCity extends BaseActivity implements OnClickListener, TextWatcher, OnItemClickListener, OnEditorActionListener, BDLocationListener {
-    @Bind(R.id.back)
-    ImageView back;
-    @Bind(R.id.city_list)
-    GridView cityGridView;
-    @Bind(R.id.input_city)
-    EditText inputCity;
-    @Bind(R.id.search)
-    ImageView search;
+public class SelectCityActivity extends BaseActivity implements OnClickListener, TextWatcher,
+        OnItemClickListener, OnEditorActionListener, BDLocationListener {
+    @Bind(R.id.iv_back)
+    ImageView ivBack;
+    @Bind(R.id.gv_city_list)
+    GridView gvCity;
+    @Bind(R.id.et_input_city)
+    EditText etInputCity;
+    @Bind(R.id.iv_search)
+    ImageView ivSearch;
 
     private String[] mCities;
     private Intent mIntent;
@@ -54,15 +55,15 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_city);
+        setContentView(R.layout.activity_select_city);
 
-        back.setOnClickListener(this);
-        search.setOnClickListener(this);
-        inputCity.addTextChangedListener(this);
-        inputCity.setOnEditorActionListener(this);
+        ivBack.setOnClickListener(this);
+        ivSearch.setOnClickListener(this);
+        etInputCity.addTextChangedListener(this);
+        etInputCity.setOnEditorActionListener(this);
         mCities = getResources().getStringArray(R.array.citys);
-        cityGridView.setAdapter(new CityAdapter(this, mCities));
-        cityGridView.setOnItemClickListener(this);
+        gvCity.setAdapter(new CityAdapter(this, mCities));
+        gvCity.setOnItemClickListener(this);
 
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getResources().getString(R.string.locating));
@@ -112,8 +113,7 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     public void onReceiveLocation(BDLocation location) {
         mDialog.cancel();
         if (location == null) {
-            Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
             return;
         }
         int code = location.getLocType();
@@ -151,11 +151,11 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.iv_back:
                 back();
                 break;
-            case R.id.search:
-                mCity = inputCity.getText().toString();
+            case R.id.iv_search:
+                mCity = etInputCity.getText().toString();
                 mIntent = new Intent();
                 mIntent.putExtra(WeatherActivity.CITY, mCity);
                 setResult(RESULT_OK, mIntent);
@@ -169,20 +169,20 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            if (inputCity.length() == 0) {
+            if (etInputCity.length() == 0) {
                 return true;
             }
-            search.performClick();
+            ivSearch.performClick();
         }
         return false;
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (inputCity.getText().toString().length() == 0) {
-            search.setVisibility(View.GONE);
+        if (etInputCity.getText().toString().length() == 0) {
+            ivSearch.setVisibility(View.GONE);
         } else {
-            search.setVisibility(View.VISIBLE);
+            ivSearch.setVisibility(View.VISIBLE);
         }
     }
 
@@ -216,5 +216,4 @@ public class SelectCity extends BaseActivity implements OnClickListener, TextWat
         }
         finish();
     }
-
 }

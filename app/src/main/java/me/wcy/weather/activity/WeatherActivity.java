@@ -45,53 +45,52 @@ import me.wcy.weather.util.WeatherImage;
 import me.wcy.weather.widget.MyListView;
 
 @SuppressLint({"SimpleDateFormat", "InflateParams"})
-public class WeatherActivity extends BaseActivity implements OnClickListener,
-        OnItemClickListener, OnRefreshListener<ScrollView> {
+public class WeatherActivity extends BaseActivity implements OnClickListener, OnItemClickListener, OnRefreshListener<ScrollView> {
     public static final String CITY = "city";
     public static WeatherActivity mContext;
 
-    @Bind(R.id.weather_bg)
-    LinearLayout weatherBg;
-    @Bind(R.id.titlebar_layout)
-    LinearLayout titlebarLayout;
-    @Bind(R.id.change_city_layout)
-    LinearLayout changeCity;
-    @Bind(R.id.scroll_view)
-    PullToRefreshScrollView scrollView;
-    @Bind(R.id.weather_layout)
-    LinearLayout weatherLayout;
-    @Bind(R.id.current_weather_layout)
-    LinearLayout currentWeatherLayout;
-    @Bind(R.id.city)
-    TextView cityText;
-    @Bind(R.id.share)
-    ImageView share;
-    @Bind(R.id.about)
-    ImageView about;
-    @Bind(R.id.update_time)
-    TextView updateTime;
-    @Bind(R.id.date)
-    TextView date;
-    @Bind(R.id.air_quality_num)
-    TextView airQualityNum;
-    @Bind(R.id.air_quality)
-    TextView airQuality;
-    @Bind(R.id.current_temperature)
-    TextView currentTemp;
-    @Bind(R.id.current_weather)
-    TextView currentWeather;
-    @Bind(R.id.temperature)
-    TextView temperature;
-    @Bind(R.id.wind)
-    TextView wind;
-    @Bind(R.id.weekday)
-    TextView weekday;
-    @Bind(R.id.weather_forecast_listview)
-    MyListView weatherForecast;
-    @Bind(R.id.life_index_listview)
-    MyListView lifeIndex;
-    @Bind(R.id.life_layout)
-    LinearLayout lifeLayout;
+    @Bind(R.id.ll_weather_bg)
+    LinearLayout llWeatherBg;
+    @Bind(R.id.ll_title_bar)
+    LinearLayout llTitleBar;
+    @Bind(R.id.ll_change_city)
+    LinearLayout llChangeCity;
+    @Bind(R.id.sv_weather)
+    PullToRefreshScrollView svWeather;
+    @Bind(R.id.ll_weather)
+    LinearLayout llWeather;
+    @Bind(R.id.ll_current_weather)
+    LinearLayout llCurrentWeather;
+    @Bind(R.id.tv_city)
+    TextView tvCity;
+    @Bind(R.id.iv_share)
+    ImageView ivShare;
+    @Bind(R.id.iv_about)
+    ImageView ivAbout;
+    @Bind(R.id.tv_update_time)
+    TextView tvUpdateTime;
+    @Bind(R.id.tv_date)
+    TextView tvDate;
+    @Bind(R.id.tv_air_quality_num)
+    TextView tvAirQualityNum;
+    @Bind(R.id.tv_air_quality)
+    TextView tvAirQuality;
+    @Bind(R.id.tv_current_temp)
+    TextView tvCurrentTemp;
+    @Bind(R.id.tv_current_weather)
+    TextView tvCurrentWeather;
+    @Bind(R.id.tv_temp)
+    TextView tvTemp;
+    @Bind(R.id.tv_wind)
+    TextView tvWind;
+    @Bind(R.id.tv_weekday)
+    TextView tvWeekday;
+    @Bind(R.id.lv_weather_forecast)
+    MyListView lvWeatherForecast;
+    @Bind(R.id.lv_life_index)
+    MyListView lvLifeIndex;
+    @Bind(R.id.ll_life_index)
+    LinearLayout llLifeIndex;
 
     private Intent mIntent;
     private AlertDialog.Builder mDialog;
@@ -106,15 +105,15 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.weather);
+        setContentView(R.layout.activity_weather);
 
-        scrollView.getRefreshableView().setOverScrollMode(View.OVER_SCROLL_NEVER);
-        scrollView.setOnRefreshListener(this);
-        scrollView.setMode(Mode.PULL_FROM_START);
-        changeCity.setOnClickListener(this);
-        share.setOnClickListener(this);
-        about.setOnClickListener(this);
-        lifeIndex.setOnItemClickListener(this);
+        svWeather.getRefreshableView().setOverScrollMode(View.OVER_SCROLL_NEVER);
+        svWeather.setOnRefreshListener(this);
+        svWeather.setMode(Mode.PULL_FROM_START);
+        llChangeCity.setOnClickListener(this);
+        ivShare.setOnClickListener(this);
+        ivAbout.setOnClickListener(this);
+        lvLifeIndex.setOnItemClickListener(this);
 
         mContext = this;
         mRequestQueue = Volley.newRequestQueue(this);
@@ -126,7 +125,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
             e.printStackTrace();
         }
 
-        setWeatherLayoutHight();
+        setWeatherLayoutHeight();
         if (mWeather == null) {
             getCity();
         } else {
@@ -138,7 +137,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     private void getCity() {
         mIntent = new Intent();
-        mIntent.setClass(this, SelectCity.class);
+        mIntent.setClass(this, SelectCityActivity.class);
         startActivityForResult(mIntent, 0);
     }
 
@@ -146,34 +145,32 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
      * 更新界面
      */
     private void updateView() {
-        weatherLayout.setVisibility(View.VISIBLE);
-        scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
-        WeatherImage weatherImage = new WeatherImage(
-                mWeather.getWeather_data()[0].getWeather());
-        weatherBg.setBackgroundResource(weatherImage.getWeatherBg());
-        cityText.setText(mCity);
-        updateTime.setText(mDataManager.getUpdateTime(mWeather));
-        date.setText(mDataManager.getDate());
-        airQualityNum.setText(mWeather.getPm25());
+        llWeather.setVisibility(View.VISIBLE);
+        svWeather.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
+        WeatherImage weatherImage = new WeatherImage(mWeather.getWeather_data()[0].getWeather());
+        llWeatherBg.setBackgroundResource(weatherImage.getWeatherBg());
+        tvCity.setText(mCity);
+        tvUpdateTime.setText(mDataManager.getUpdateTime(mWeather));
+        tvDate.setText(mDataManager.getDate());
+        tvAirQualityNum.setText(mWeather.getPm25());
         Map<String, Object> airQualityMap = mDataManager.getAirQuality(mWeather);
-        airQuality.setText((String) airQualityMap.get(DataManager.AIR_QUALITY));
-        airQuality.setBackgroundResource((Integer) airQualityMap.get(DataManager.AIR_QUALITY_BG));
-        currentTemp.setText(mWeather.getCurrentTemp());
-        currentWeather.setText(mDataManager.getCurrentWeather(mWeather));
-        temperature.setText(mWeather.getWeather_data()[0].getTemperature());
-        wind.setText(mWeather.getWeather_data()[0].getWind());
-        weekday.setText(mWeather.getWeather_data()[0].getDate());
-        WeatherForecastAdapter weatherAdapter = new WeatherForecastAdapter(
-                this, mWeather.getWeather_data());
-        weatherForecast.setAdapter(weatherAdapter);
-        weatherForecast.setFocusable(false);
+        tvAirQuality.setText((String) airQualityMap.get(DataManager.AIR_QUALITY));
+        tvAirQuality.setBackgroundResource((Integer) airQualityMap.get(DataManager.AIR_QUALITY_BG));
+        tvCurrentTemp.setText(mWeather.getCurrentTemp());
+        tvCurrentWeather.setText(mDataManager.getCurrentWeather(mWeather));
+        tvTemp.setText(mWeather.getWeather_data()[0].getTemperature());
+        tvWind.setText(mWeather.getWeather_data()[0].getWind());
+        tvWeekday.setText(mWeather.getWeather_data()[0].getDate());
+        WeatherForecastAdapter weatherAdapter = new WeatherForecastAdapter(this, mWeather.getWeather_data());
+        lvWeatherForecast.setAdapter(weatherAdapter);
+        lvWeatherForecast.setFocusable(false);
         if (mWeather.getIndex().length > 0) {
-            lifeLayout.setVisibility(View.VISIBLE);
+            llLifeIndex.setVisibility(View.VISIBLE);
             mLifeAdapter = new LifeIndexAdapter(this, mWeather.getIndex());
-            lifeIndex.setAdapter(mLifeAdapter);
-            lifeIndex.setFocusable(false);
+            lvLifeIndex.setAdapter(mLifeAdapter);
+            lvLifeIndex.setFocusable(false);
         } else {
-            lifeLayout.setVisibility(View.GONE);
+            llLifeIndex.setVisibility(View.GONE);
         }
     }
 
@@ -195,38 +192,34 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     /**
      * 设置布局高度铺满屏幕
      */
-    private void setWeatherLayoutHight() {
+    private void setWeatherLayoutHeight() {
         // TitleBar高度
-        titlebarLayout.measure(View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED), View.MeasureSpec
-                .makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        int titleBarHeight = titlebarLayout.getMeasuredHeight();
-        LayoutParams linearParams = (LayoutParams) currentWeatherLayout
-                .getLayoutParams();
+        llTitleBar.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        int titleBarHeight = llTitleBar.getMeasuredHeight();
+        LayoutParams linearParams = (LayoutParams) llCurrentWeather.getLayoutParams();
         try {
             linearParams.height = Utils.getDisplayHeight(this) - titleBarHeight;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        currentWeatherLayout.setLayoutParams(linearParams);
+        llCurrentWeather.setLayoutParams(linearParams);
     }
 
     private void updateWeather() {
-        updateTime.setText(getString(R.string.updating));
-        JSONRequest<WeatherResult> request = new JSONRequest<>(
-                Utils.getUpdateUrl(mCity), WeatherResult.class,
-                new Listener<WeatherResult>() {
-                    @Override
-                    public void onResponse(WeatherResult weatherResult) {
-                        Log.i("UpdateWeather", weatherResult.getStatus());
-                        if (Utils.STATUS_SUCCESS.equals(weatherResult
-                                .getStatus())) {
-                            onUpdateSuccess(weatherResult);
-                        } else {
-                            onUpdateFail();
-                        }
-                    }
-                }, new ErrorListener() {
+        tvUpdateTime.setText(getString(R.string.updating));
+        JSONRequest<WeatherResult> request = new JSONRequest<>(Utils.getUpdateUrl(mCity),
+                WeatherResult.class, new Listener<WeatherResult>() {
+            @Override
+            public void onResponse(WeatherResult weatherResult) {
+                Log.i("UpdateWeather", weatherResult.getStatus());
+                if (Utils.STATUS_SUCCESS.equals(weatherResult.getStatus())) {
+                    onUpdateSuccess(weatherResult);
+                } else {
+                    onUpdateFail();
+                }
+            }
+        }, new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("UpdateWeather", error.getMessage(), error);
@@ -238,7 +231,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     }
 
     private void onUpdateSuccess(WeatherResult weatherResult) {
-        scrollView.onRefreshComplete();
+        svWeather.onRefreshComplete();
         Toast.makeText(this, R.string.update_tips, Toast.LENGTH_SHORT).show();
         try {
             mDataManager.storeData(weatherResult);
@@ -250,34 +243,32 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     }
 
     private void onUpdateFail() {
-        scrollView.onRefreshComplete();
-        updateTime.setText(getString(R.string.update_fail));
+        svWeather.onRefreshComplete();
+        tvUpdateTime.setText(getString(R.string.update_fail));
         mDialog = new AlertDialog.Builder(this);
         mDialog.setTitle(R.string.tips);
         mDialog.setMessage(R.string.update_failed);
-        mDialog.setPositiveButton(R.string.retry,
-                new DialogInterface.OnClickListener() {
+        mDialog.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mIntent = new Intent();
-                        mIntent.setClass(WeatherActivity.this, SelectCity.class);
-                        WeatherActivity.this.startActivityForResult(mIntent, 0);
-                    }
-                });
-        mDialog.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mIntent = new Intent();
+                mIntent.setClass(WeatherActivity.this, SelectCityActivity.class);
+                WeatherActivity.this.startActivityForResult(mIntent, 0);
+            }
+        });
+        mDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mWeather != null) {
-                            mCity = mWeather.getCurrentCity();
-                            updateView();
-                        } else {
-                            finish();
-                        }
-                    }
-                });
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mWeather != null) {
+                    mCity = mWeather.getCurrentCity();
+                    updateView();
+                } else {
+                    finish();
+                }
+            }
+        });
         mDialog.setCancelable(false);
         mDialog.show();
     }
@@ -292,8 +283,8 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
     private void about() {
         View dialogView = getLayoutInflater().inflate(R.layout.about_dialog, null);
-        TextView version = (TextView) dialogView.findViewById(R.id.version);
-        version.setText("V " + Utils.getVersion(this));
+        TextView version = (TextView) dialogView.findViewById(R.id.tv_version);
+        version.setText(Utils.getVersion(this));
         mDialog = new AlertDialog.Builder(this);
         mDialog.setTitle(R.string.about);
         mDialog.setView(dialogView);
@@ -307,7 +298,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
 
             @Override
             public void run() {
-                scrollView.setRefreshing();
+                svWeather.setRefreshing();
             }
         }, 500);
     }
@@ -315,9 +306,8 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
         if (!Utils.isNetworkAvailable(this)) {
-            scrollView.onRefreshComplete();
-            Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT)
-                    .show();
+            svWeather.onRefreshComplete();
+            Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
             return;
         }
         updateWeather();
@@ -326,15 +316,15 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.change_city_layout:
+            case R.id.ll_change_city:
                 mIntent = new Intent();
-                mIntent.setClass(this, SelectCity.class);
+                mIntent.setClass(this, SelectCityActivity.class);
                 startActivityForResult(mIntent, 0);
                 break;
-            case R.id.share:
+            case R.id.iv_share:
                 share();
                 break;
-            case R.id.about:
+            case R.id.iv_about:
                 about();
                 break;
             default:
@@ -354,16 +344,14 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
         if (resultCode != RESULT_OK) {
             return;
         }
-        if (mWeather == null || !data.getStringExtra(CITY).equals(
-                mWeather.getCurrentCity())) {
+        if (mWeather == null || !data.getStringExtra(CITY).equals(mWeather.getCurrentCity())) {
             mCity = data.getStringExtra(CITY);
-            cityText.setText(mCity);
-            weatherBg.setBackgroundResource(R.drawable.ic_weather_bg_na);
-            weatherLayout.setVisibility(View.GONE);
+            tvCity.setText(mCity);
+            llWeatherBg.setBackgroundResource(R.drawable.ic_weather_bg_na);
+            llWeather.setVisibility(View.GONE);
             if (!Utils.isNetworkAvailable(this)) {
-                Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT)
-                        .show();
-                updateTime.setText(getString(
+                Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
+                tvUpdateTime.setText(getString(
                         R.string.update_fail));
                 return;
             }
@@ -375,11 +363,9 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,
     public void onBackPressed() {
         if (System.currentTimeMillis() - mExitTime > 2000) {
             mExitTime = System.currentTimeMillis();
-            Toast.makeText(this, R.string.click2exit, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(this, R.string.click2exit, Toast.LENGTH_SHORT).show();
         } else {
             finish();
         }
     }
-
 }

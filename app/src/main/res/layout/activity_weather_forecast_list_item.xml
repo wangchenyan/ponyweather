@@ -11,50 +11,54 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:id="@+id/weather_forecast_date"
+            android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:text="周一"
             android:textColor="@color/white_grey"
             android:textSize="14sp" />
 
         <ImageView
-            android:id="@+id/weather_forecast_icon"
+            android:id="@+id/iv_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_weather_icon_fine" />
 
         <TextView
-            android:id="@+id/weather_forecast_weather"
+            android:id="@+id/tv_weather"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
+            android:text="晴"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/weather_forecast_temperature"
+            android:id="@+id/tv_temp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
+            android:text="14 ~ 2"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/weather_forecast_wind"
+            android:id="@+id/tv_wind"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="right"
+            android:text="微风"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>
-
 </LinearLayout>

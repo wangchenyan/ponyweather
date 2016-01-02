@@ -122,10 +122,8 @@ public class DataManager {
         Weather weather = mWeatherDao.queryForAll().get(0);
         List<WeatherInfo> weatherInfoList = mWeatherInfoDao.queryForAll();
         List<LifeIndex> lifeIndexList = mLifeIndexDao.queryForAll();
-        weather.setWeather_data(weatherInfoList
-                .toArray(new WeatherInfo[weatherInfoList.size()]));
-        weather.setIndex(lifeIndexList.toArray(new LifeIndex[lifeIndexList
-                .size()]));
+        weather.setWeather_data(weatherInfoList.toArray(new WeatherInfo[weatherInfoList.size()]));
+        weather.setIndex(lifeIndexList.toArray(new LifeIndex[lifeIndexList.size()]));
         return weather;
     }
 
@@ -146,8 +144,7 @@ public class DataManager {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        String lunar = calendarUtil.getChineseMonth(year, month, day)
-                + calendarUtil.getChineseDay(year, month, day);
+        String lunar = calendarUtil.getChineseMonth(year, month, day) + calendarUtil.getChineseDay(year, month, day);
         date = date + " 农历" + lunar;
         return date;
     }
