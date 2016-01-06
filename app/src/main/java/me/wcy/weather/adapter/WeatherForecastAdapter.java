@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import me.wcy.weather.R;
 import me.wcy.weather.model.WeatherInfo;
-import me.wcy.weather.util.WeatherImage;
+import me.wcy.weather.utils.WeatherImage;
 
 /**
  * @author wcy

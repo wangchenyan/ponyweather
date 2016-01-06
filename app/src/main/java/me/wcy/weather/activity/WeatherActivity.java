@@ -39,9 +39,9 @@ import me.wcy.weather.adapter.WeatherForecastAdapter;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherResult;
 import me.wcy.weather.request.JSONRequest;
-import me.wcy.weather.util.DataManager;
-import me.wcy.weather.util.Utils;
-import me.wcy.weather.util.WeatherImage;
+import me.wcy.weather.utils.DataManager;
+import me.wcy.weather.utils.Utils;
+import me.wcy.weather.utils.WeatherImage;
 import me.wcy.weather.widget.MyListView;
 
 @SuppressLint({"SimpleDateFormat", "InflateParams"})

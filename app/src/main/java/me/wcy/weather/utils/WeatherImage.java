@@ -1,7 +1,7 @@
 /**
  * 2015-3-27
  */
-package me.wcy.weather.util;
+package me.wcy.weather.utils;
 
 import java.util.Calendar;
 

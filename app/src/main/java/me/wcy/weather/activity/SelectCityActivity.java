@@ -31,8 +31,8 @@ import java.sql.SQLException;
 import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.CityAdapter;
-import me.wcy.weather.util.DataManager;
-import me.wcy.weather.util.Utils;
+import me.wcy.weather.utils.DataManager;
+import me.wcy.weather.utils.Utils;
 
 @SuppressLint("InlinedApi")
 public class SelectCityActivity extends BaseActivity implements OnClickListener, TextWatcher,

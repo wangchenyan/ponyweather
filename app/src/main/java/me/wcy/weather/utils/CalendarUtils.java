@@ -1,10 +1,10 @@
-package me.wcy.weather.util;
+package me.wcy.weather.utils;
 
 /**
  * Copyright (c) 1997-2002 by Dr. Herong Yang
  * 中国农历算法 - 试用于公历 1901 年至 2100 年之间的 200 年
  */
-public class CalendarUtil {
+public class CalendarUtils {
     private int gregorianYear;
     private int gregorianMonth;
     private int gregorianDate;
@@ -37,7 +37,7 @@ public class CalendarUtil {
             "十六", "十七", "十八", "十九", "二十", "廿一", "廿二", "廿三", "廿四",
             "廿五", "廿六", "廿七", "廿八", "廿九", "三十"}; // 农历的天数
 
-    public CalendarUtil() {
+    public CalendarUtils() {
         setGregorian(1901, 1, 1);
     }
 
@@ -50,7 +50,7 @@ public class CalendarUtil {
      * @return String
      */
     public String getChineseDay(int y, int m, int d) {
-        CalendarUtil c = new CalendarUtil();
+        CalendarUtils c = new CalendarUtils();
         c.setGregorian(y, m, d);
         c.computeChineseFields();
         c.computeSolarTerms();
@@ -680,7 +680,7 @@ public class CalendarUtil {
     }
 
     public static void setDaysInGregorianMonth(char[] daysInGregorianMonth) {
-        CalendarUtil.daysInGregorianMonth = daysInGregorianMonth;
+        CalendarUtils.daysInGregorianMonth = daysInGregorianMonth;
     }
 
     public static String[] getStemNames() {
@@ -688,7 +688,7 @@ public class CalendarUtil {
     }
 
     public static void setStemNames(String[] stemNames) {
-        CalendarUtil.stemNames = stemNames;
+        CalendarUtils.stemNames = stemNames;
     }
 
     public static String[] getBranchNames() {
@@ -696,7 +696,7 @@ public class CalendarUtil {
     }
 
     public static void setBranchNames(String[] branchNames) {
-        CalendarUtil.branchNames = branchNames;
+        CalendarUtils.branchNames = branchNames;
     }
 
     public static String[] getAnimalNames() {
@@ -704,7 +704,7 @@ public class CalendarUtil {
     }
 
     public static void setAnimalNames(String[] animalNames) {
-        CalendarUtil.animalNames = animalNames;
+        CalendarUtils.animalNames = animalNames;
     }
 
     public static char[] getChineseMonths() {
@@ -712,7 +712,7 @@ public class CalendarUtil {
     }
 
     public static void setChineseMonths(char[] chineseMonths) {
-        CalendarUtil.chineseMonths = chineseMonths;
+        CalendarUtils.chineseMonths = chineseMonths;
     }
 
     public static int getBaseYear() {
@@ -720,7 +720,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseYear(int baseYear) {
-        CalendarUtil.baseYear = baseYear;
+        CalendarUtils.baseYear = baseYear;
     }
 
     public static int getBaseMonth() {
@@ -728,7 +728,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseMonth(int baseMonth) {
-        CalendarUtil.baseMonth = baseMonth;
+        CalendarUtils.baseMonth = baseMonth;
     }
 
     public static int getBaseDate() {
@@ -736,7 +736,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseDate(int baseDate) {
-        CalendarUtil.baseDate = baseDate;
+        CalendarUtils.baseDate = baseDate;
     }
 
     public static int getBaseIndex() {
@@ -744,7 +744,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseIndex(int baseIndex) {
-        CalendarUtil.baseIndex = baseIndex;
+        CalendarUtils.baseIndex = baseIndex;
     }
 
     public static int getBaseChineseYear() {
@@ -752,7 +752,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseChineseYear(int baseChineseYear) {
-        CalendarUtil.baseChineseYear = baseChineseYear;
+        CalendarUtils.baseChineseYear = baseChineseYear;
     }
 
     public static int getBaseChineseMonth() {
@@ -760,7 +760,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseChineseMonth(int baseChineseMonth) {
-        CalendarUtil.baseChineseMonth = baseChineseMonth;
+        CalendarUtils.baseChineseMonth = baseChineseMonth;
     }
 
     public static int getBaseChineseDate() {
@@ -768,7 +768,7 @@ public class CalendarUtil {
     }
 
     public static void setBaseChineseDate(int baseChineseDate) {
-        CalendarUtil.baseChineseDate = baseChineseDate;
+        CalendarUtils.baseChineseDate = baseChineseDate;
     }
 
     public static int[] getBigLeapMonthYears() {
@@ -776,7 +776,7 @@ public class CalendarUtil {
     }
 
     public static void setBigLeapMonthYears(int[] bigLeapMonthYears) {
-        CalendarUtil.bigLeapMonthYears = bigLeapMonthYears;
+        CalendarUtils.bigLeapMonthYears = bigLeapMonthYears;
     }
 
     public static char[][] getSectionalTermMap() {
@@ -784,7 +784,7 @@ public class CalendarUtil {
     }
 
     public static void setSectionalTermMap(char[][] sectionalTermMap) {
-        CalendarUtil.sectionalTermMap = sectionalTermMap;
+        CalendarUtils.sectionalTermMap = sectionalTermMap;
     }
 
     public static char[][] getSectionalTermYear() {
@@ -792,7 +792,7 @@ public class CalendarUtil {
     }
 
     public static void setSectionalTermYear(char[][] sectionalTermYear) {
-        CalendarUtil.sectionalTermYear = sectionalTermYear;
+        CalendarUtils.sectionalTermYear = sectionalTermYear;
     }
 
     public static char[][] getPrincipleTermMap() {
@@ -800,7 +800,7 @@ public class CalendarUtil {
     }
 
     public static void setPrincipleTermMap(char[][] principleTermMap) {
-        CalendarUtil.principleTermMap = principleTermMap;
+        CalendarUtils.principleTermMap = principleTermMap;
     }
 
     public static char[][] getPrincipleTermYear() {
@@ -808,7 +808,7 @@ public class CalendarUtil {
     }
 
     public static void setPrincipleTermYear(char[][] principleTermYear) {
-        CalendarUtil.principleTermYear = principleTermYear;
+        CalendarUtils.principleTermYear = principleTermYear;
     }
 
     public static String[] getMonthNames() {
@@ -816,7 +816,7 @@ public class CalendarUtil {
     }
 
     public static void setMonthNames(String[] monthNames) {
-        CalendarUtil.monthNames = monthNames;
+        CalendarUtils.monthNames = monthNames;
     }
 
     public static String[] getChineseMonthNames() {
@@ -824,7 +824,7 @@ public class CalendarUtil {
     }
 
     public static void setChineseMonthNames(String[] chineseMonthNames) {
-        CalendarUtil.chineseMonthNames = chineseMonthNames;
+        CalendarUtils.chineseMonthNames = chineseMonthNames;
     }
 
     public static String[] getPrincipleTermNames() {
@@ -832,7 +832,7 @@ public class CalendarUtil {
     }
 
     public static void setPrincipleTermNames(String[] principleTermNames) {
-        CalendarUtil.principleTermNames = principleTermNames;
+        CalendarUtils.principleTermNames = principleTermNames;
     }
 
     public static String[] getSectionalTermNames() {
@@ -840,11 +840,11 @@ public class CalendarUtil {
     }
 
     public static void setSectionalTermNames(String[] sectionalTermNames) {
-        CalendarUtil.sectionalTermNames = sectionalTermNames;
+        CalendarUtils.sectionalTermNames = sectionalTermNames;
     }
 
     public static void main(String[] arg) {
-        CalendarUtil c = new CalendarUtil();
+        CalendarUtils c = new CalendarUtils();
         String cmd = "day";
         int y = 2010;
         int m = 8;

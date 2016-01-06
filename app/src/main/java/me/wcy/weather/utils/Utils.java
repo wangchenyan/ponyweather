@@ -1,4 +1,4 @@
-package me.wcy.weather.util;
+package me.wcy.weather.utils;
 
 import android.app.Activity;
 import android.content.Context;

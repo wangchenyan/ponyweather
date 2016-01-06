@@ -1,7 +1,7 @@
 /**
  * 2015-3-26
  */
-package me.wcy.weather.util;
+package me.wcy.weather.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -138,13 +138,13 @@ public class DataManager {
      * @return
      */
     public String getDate() {
-        CalendarUtil calendarUtil = new CalendarUtil();
+        CalendarUtils calendarUtils = new CalendarUtils();
         mSdf = new SimpleDateFormat("MM月dd日");
         String date = mSdf.format(new Date(System.currentTimeMillis()));
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        String lunar = calendarUtil.getChineseMonth(year, month, day) + calendarUtil.getChineseDay(year, month, day);
+        String lunar = calendarUtils.getChineseMonth(year, month, day) + calendarUtils.getChineseDay(year, month, day);
         date = date + " 农历" + lunar;
         return date;
     }
