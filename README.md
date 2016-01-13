@@ -9,4 +9,4 @@
 * 下拉刷新：[PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)
 * 图片资源来自[360天气](http://zhushou.360.cn/detail/index/soft_id/92235)<br>
 <br>
-[下载链接](http://zhushou.360.cn/detail/index/soft_id/2826694)
+[APP下载](http://zhushou.360.cn/detail/index/soft_id/2826694)
