@@ -2,10 +2,13 @@ package me.wcy.weather.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -269,8 +272,9 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
                 }
             }
         });
-        mDialog.setCancelable(false);
-        mDialog.show();
+        Dialog dialog = mDialog.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void share() {
@@ -282,15 +286,19 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
     }
 
     private void about() {
-        View dialogView = getLayoutInflater().inflate(R.layout.about_dialog, null);
-        TextView version = (TextView) dialogView.findViewById(R.id.tv_version);
-        version.setText(Utils.getVersion(this));
+        View view = getLayoutInflater().inflate(R.layout.about_dialog, null);
+        TextView tvVersion = (TextView) view.findViewById(R.id.tv_version);
+        TextView tvSource = (TextView) view.findViewById(R.id.tv_source);
+        tvVersion.setText(Utils.getVersion(this));
+        tvSource.setText(Html.fromHtml(getString(R.string.source_link)));
+        tvSource.setMovementMethod(LinkMovementMethod.getInstance());
         mDialog = new AlertDialog.Builder(this);
         mDialog.setTitle(R.string.about);
-        mDialog.setView(dialogView);
+        mDialog.setView(view);
         mDialog.setPositiveButton(R.string.sure, null);
-        mDialog.setCancelable(false);
-        mDialog.show();
+        Dialog dialog = mDialog.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void refresh() {
@@ -326,8 +334,6 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
                 break;
             case R.id.iv_about:
                 about();
-                break;
-            default:
                 break;
         }
     }
