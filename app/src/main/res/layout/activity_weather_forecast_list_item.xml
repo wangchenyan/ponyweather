@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="周一"
-            android:textColor="@color/white_grey"
+            android:textColor="@color/grey_300"
             android:textSize="14sp" />
 
         <ImageView

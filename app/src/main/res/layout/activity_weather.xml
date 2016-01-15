@@ -323,7 +323,7 @@
                     android:layout_marginRight="15dp"
                     android:divider="@drawable/ic_trend_bg_line"
                     android:dividerHeight="1dp"
-                    android:listSelector="@color/transparent" />
+                    android:listSelector="@android:color/transparent" />
 
                 <View
                     android:layout_width="match_parent"
@@ -338,7 +338,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:text="@string/disclaimer"
-                    android:textColor="@color/white_grey"
+                    android:textColor="@color/grey_300"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -392,7 +392,7 @@
                     android:layout_marginRight="15dp"
                     android:divider="@drawable/ic_trend_bg_line"
                     android:dividerHeight="1dp"
-                    android:listSelector="@color/transparent" />
+                    android:listSelector="@android:color/transparent" />
             </LinearLayout>
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
