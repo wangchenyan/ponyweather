@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">小马天气</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_weather_activity">天气</string>
     <string name="title_activity_select_city">选择城市</string>
     <string name="sure">确定</string>
@@ -11,17 +9,17 @@
     <string name="tips">温馨提示</string>
     <string name="share">分享</string>
     <string name="about">关于</string>
-    <string name="network_error">网络异常,请检查网络设置</string>
+    <string name="network_error">网络异常，请检查网络设置</string>
     <string name="updating">正在更新…</string>
     <string name="update_fail">更新失败</string>
     <string name="update_failed">抱歉，没有查询到相关天气信息。</string>
     <string name="locating">正在定位…</string>
-    <string name="locate_fail">自动定位失败,请稍后再试</string>
+    <string name="locate_fail">自动定位失败，请稍后再试</string>
     <string name="click2exit">再按一次退出小马天气</string>
     <string name="weather_forecast">天气预报</string>
     <string name="life_index">生活指数</string>
     <string name="disclaimer">天气预报数据由百度天气提供</string>
     <string name="update_tips">已更新至最新天气</string>
     <string name="share_content">我正在使用@小马天气，可以随时随地查看天气信息，是您出差、旅行的贴心助手！推荐你也试试：http://m.app.haosou.com/detail/index?pname=me.wcy.weather&#038;id=2826694</string>
-    <string name="source_link">&lt;a href=\'https://github.com/ChanWong21/PonyWeather\'&gt;源码下载&lt;/a&gt;</string>
+    <string name="source_link">&lt;font color=blue&gt;&lt;a href=\'https://github.com/ChanWong21/PonyWeather\'&gt;源码下载&lt;/a&gt;&lt;/font&gt;</string>
 </resources>
