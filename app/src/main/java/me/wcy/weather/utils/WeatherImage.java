@@ -24,7 +24,7 @@ public class WeatherImage {
         if (mWeather.contains("转")) {
             mWeather = mWeather.substring(0, mWeather.indexOf("转"));
         }
-        mHour = Calendar.HOUR_OF_DAY;
+        mHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     }
 
     public int getWeatherBg() {
