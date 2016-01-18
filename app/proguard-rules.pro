@@ -16,7 +16,7 @@
 #   public *;
 #}
 
-#proguard.cfg
+# proguard.cfg
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -58,7 +58,7 @@
   public static final android.os.Parcelable$Creator *;
 }
 
-#custom
+# custom
 -dontshrink
 -dontoptimize
 
@@ -67,30 +67,30 @@
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.**
 
-#android-support
+# android-support
 -dontwarn android.support.**
 -keep class android.support.** {*;}
 
-#weather
+# app
 -keep class me.wcy.weather.database.** {*;}
 -keep class me.wcy.weather.model.** {*;}
 
-#baidu
--dontwarn com.baidu.**
--keep class com.baidu.** {*;}
-
-#ormlite
--keep class com.j256.ormlite.** {*;}
-
-#volley
--dontwarn com.android.volley.**
--keep class com.android.volley.** {*;}
-
-#fastjson
--dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.** {*;}
-
-#butterknife
+# butterknife
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
 -keepnames class * { @butterknife.InjectView *;}
+
+# baidu
+-dontwarn com.baidu.**
+-keep class com.baidu.** {*;}
+
+# volley
+-dontwarn com.android.volley.**
+-keep class com.android.volley.** {*;}
+
+# fastjson
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** {*;}
+
+# ormlite
+-keep class com.j256.ormlite.** {*;}
