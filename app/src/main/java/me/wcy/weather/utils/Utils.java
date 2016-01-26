@@ -15,7 +15,7 @@ import java.net.URLEncoder;
  */
 @SuppressWarnings("deprecation")
 public class Utils {
-    private static final String URL = "http://api.map.baidu.com/telematics/v3/weather";
+    private static final String URL = "http://api.map.baidu.com/telematics/v3/weather?location=%1$s&ak=%2$s&output=%3$s";
     private static final String BAIDU_APP_KEY = "MEMK39Gs9RS2jXyiG3He4VUB";
     private static final String OUTPUT_JSON = "json";
     public static final String STATUS_SUCCESS = "success";
@@ -57,7 +57,7 @@ public class Utils {
 
     public static String getUpdateUrl(String city) {
         city = URLEncoder.encode(city);
-        return URL + "?location=" + city + "&ak=" + BAIDU_APP_KEY + "&output=" + OUTPUT_JSON;
+        return String.format(URL, city, BAIDU_APP_KEY, OUTPUT_JSON);
     }
 
     /**
