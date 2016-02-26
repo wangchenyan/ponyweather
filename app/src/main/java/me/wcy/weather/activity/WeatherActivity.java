@@ -45,7 +45,7 @@ import me.wcy.weather.request.JSONRequest;
 import me.wcy.weather.utils.DataManager;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.WeatherImage;
-import me.wcy.weather.widget.MyListView;
+import me.wcy.weather.widget.ScrollListView;
 
 @SuppressLint({"SimpleDateFormat", "InflateParams"})
 public class WeatherActivity extends BaseActivity implements OnClickListener, OnItemClickListener, OnRefreshListener<ScrollView> {
@@ -89,9 +89,9 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
     @Bind(R.id.tv_weekday)
     TextView tvWeekday;
     @Bind(R.id.lv_weather_forecast)
-    MyListView lvWeatherForecast;
+    ScrollListView lvWeatherForecast;
     @Bind(R.id.lv_life_index)
-    MyListView lvLifeIndex;
+    ScrollListView lvLifeIndex;
     @Bind(R.id.ll_life_index)
     LinearLayout llLifeIndex;
 

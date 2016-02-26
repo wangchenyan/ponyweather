@@ -315,7 +315,7 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/ic_trend_bg_line" />
 
-                <me.wcy.weather.widget.MyListView
+                <me.wcy.weather.widget.ScrollListView
                     android:id="@+id/lv_weather_forecast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -384,7 +384,7 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/ic_trend_bg_line" />
 
-                <me.wcy.weather.widget.MyListView
+                <me.wcy.weather.widget.ScrollListView
                     android:id="@+id/lv_life_index"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
