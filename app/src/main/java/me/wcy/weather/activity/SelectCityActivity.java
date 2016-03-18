@@ -1,6 +1,5 @@
 package me.wcy.weather.activity;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ import me.wcy.weather.adapter.CityAdapter;
 import me.wcy.weather.utils.DataManager;
 import me.wcy.weather.utils.Utils;
 
-@SuppressLint("InlinedApi")
 public class SelectCityActivity extends BaseActivity implements OnClickListener, TextWatcher,
         OnItemClickListener, OnEditorActionListener, AMapLocationListener {
     @Bind(R.id.iv_back)
