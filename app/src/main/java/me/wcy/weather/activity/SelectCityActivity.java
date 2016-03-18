@@ -131,16 +131,18 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
+            mDialog.cancel();
+            mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0) {
                 // 定位成功回调信息，设置相关消息
-                mDialog.cancel();
-                mLocationClient.stopLocation();
                 mCity = aMapLocation.getCity();
                 Intent intent = new Intent();
                 intent.putExtra(WeatherActivity.CITY, mCity);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
+                // 定位失败
+                Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Log.e("AmapError", "location Error, ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
