@@ -20,11 +20,10 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 
 import java.sql.SQLException;
 
@@ -36,7 +35,7 @@ import me.wcy.weather.utils.Utils;
 
 @SuppressLint("InlinedApi")
 public class SelectCityActivity extends BaseActivity implements OnClickListener, TextWatcher,
-        OnItemClickListener, OnEditorActionListener, BDLocationListener {
+        OnItemClickListener, OnEditorActionListener, AMapLocationListener {
     @Bind(R.id.iv_back)
     ImageView ivBack;
     @Bind(R.id.gv_city_list)
@@ -47,10 +46,9 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
     ImageView ivSearch;
 
     private String[] mCities;
-    private Intent mIntent;
     private ProgressDialog mDialog;
     private String mCity;
-    private LocationClient mLocationClient;
+    private AMapLocationClient mLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,65 +67,28 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
         mDialog.setMessage(getResources().getString(R.string.locating));
         mDialog.setCanceledOnTouchOutside(false);
 
-        initBaiduLocation();
+        initAMapLocation();
     }
 
-    private void initBaiduLocation() {
-        // 声明LocationClient类
-        mLocationClient = new LocationClient(getApplicationContext());
-        // 注册监听函数
-        mLocationClient.registerLocationListener(this);
-        // 设置定位参数
-        setLocationOption();
-    }
-
-    /**
-     * 设置定位参数。 定位模式（单次定位，定时定位），返回坐标类型，是否打开GPS等等。
-     */
-    private void setLocationOption() {
-        LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationMode.Hight_Accuracy);// 设置定位模式
-        option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-        option.setScanSpan(24 * 60 * 60 * 1000);// 设置发起定位请求的间隔时间为5000ms
-        option.setIsNeedAddress(true);// 返回的定位结果包含地址信息
-        option.setNeedDeviceDirect(true);// 返回的定位结果包含手机机头的方向
-        mLocationClient.setLocOption(option);
-    }
-
-    /**
-     * 请求位置信息
-     */
-    private void requestLocation() {
-        if (mLocationClient != null) {
-            if (!mLocationClient.isStarted()) {
-                mLocationClient.start();
-            } else {
-                mLocationClient.requestLocation();
-            }
-        } else {
-            Log.d("LocSDK5", "locClient is null or not started");
-        }
-    }
-
-    @Override
-    public void onReceiveLocation(BDLocation location) {
-        mDialog.cancel();
-        if (location == null) {
-            Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        int code = location.getLocType();
-        mCity = location.getCity();
-        if (code == 161 && mCity != null) {
-            // 定位成功
-            mIntent = new Intent();
-            mIntent.putExtra(WeatherActivity.CITY, mCity);
-            setResult(RESULT_OK, mIntent);
-            finish();
-        } else {
-            // 定位失败
-            Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
-        }
+    private void initAMapLocation() {
+        mLocationClient = new AMapLocationClient(getApplicationContext());
+        mLocationClient.setLocationListener(this);
+        // 初始化定位参数
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        // 设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        // 设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        // 设置是否只定位一次,默认为false
+        mLocationOption.setOnceLocation(false);
+        // 设置是否强制刷新WIFI，默认为强制刷新
+        mLocationOption.setWifiActiveScan(true);
+        // 设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(true);
+        // 设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        // 给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
     }
 
     @Override
@@ -139,11 +100,12 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
                 return;
             }
             mDialog.show();
-            requestLocation();
+            // 启动定位
+            mLocationClient.startLocation();
         } else {
-            mIntent = new Intent();
-            mIntent.putExtra(WeatherActivity.CITY, mCity);
-            setResult(RESULT_OK, mIntent);
+            Intent intent = new Intent();
+            intent.putExtra(WeatherActivity.CITY, mCity);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
@@ -156,13 +118,34 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
                 break;
             case R.id.iv_search:
                 mCity = etInputCity.getText().toString();
-                mIntent = new Intent();
-                mIntent.putExtra(WeatherActivity.CITY, mCity);
-                setResult(RESULT_OK, mIntent);
+                Intent intent = new Intent();
+                intent.putExtra(WeatherActivity.CITY, mCity);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                // 定位成功回调信息，设置相关消息
+                mDialog.cancel();
+                mLocationClient.stopLocation();
+                mCity = aMapLocation.getCity();
+                Intent intent = new Intent();
+                intent.putExtra(WeatherActivity.CITY, mCity);
+                setResult(RESULT_OK, intent);
+                finish();
+            } else {
+                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+            }
         }
     }
 
@@ -195,9 +178,9 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
     }
 
     @Override
-    protected void onStop() {
-        mLocationClient.stop();
-        super.onStop();
+    protected void onDestroy() {
+        mLocationClient.onDestroy();
+        super.onDestroy();
     }
 
     @Override
