@@ -152,10 +152,10 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            if (etInputCity.length() == 0) {
-                return true;
+            if (etInputCity.length() > 0) {
+                ivSearch.performClick();
             }
-            ivSearch.performClick();
+            return true;
         }
         return false;
     }
