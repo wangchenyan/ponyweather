@@ -80,9 +80,10 @@
 -keep class **$$ViewInjector { *; }
 -keepnames class * { @butterknife.InjectView *;}
 
-# baidu
--dontwarn com.baidu.**
--keep class com.baidu.** {*;}
+# amap
+-keep class com.amap.api.location.**{*;}
+-keep class com.amap.api.fence.**{*;}
+-keep class com.autonavi.aps.amapapi.model.**{*;}
 
 # volley
 -dontwarn com.android.volley.**
