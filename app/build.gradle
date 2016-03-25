@@ -38,13 +38,24 @@ android {
     }
 }
 
+ext {
+    supportVersion = '23.1.1'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':pulltorefresh')
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile "com.android.support:appcompat-v7:${supportVersion}"
+    compile "com.android.support:design:${supportVersion}"
+    compile "com.android.support:cardview-v7:${supportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.alibaba:fastjson:1.2.6'
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'io.reactivex:rxjava:1.1.2'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
 }

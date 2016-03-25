@@ -138,6 +138,11 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
         }
     }
 
+    @Override
+    protected void setListener() {
+
+    }
+
     private void getCity() {
         mIntent = new Intent();
         mIntent.setClass(this, SelectCityActivity.class);

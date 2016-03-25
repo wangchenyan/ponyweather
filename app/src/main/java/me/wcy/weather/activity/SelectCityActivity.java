@@ -68,6 +68,11 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
         initAMapLocation();
     }
 
+    @Override
+    protected void setListener() {
+
+    }
+
     private void initAMapLocation() {
         mLocationClient = new AMapLocationClient(getApplicationContext());
         mLocationClient.setLocationListener(this);

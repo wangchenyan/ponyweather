@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="选择城市" />
+    <item android:title="小马天气">
+        <menu>
+            <item
+                android:id="@+id/action_search"
+                android:title="分享" />
+            <item
+                android:id="@+id/action_setting"
+                android:title="关于" />
+        </menu>
+    </item>
+</menu>
