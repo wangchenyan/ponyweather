@@ -1,23 +1,18 @@
 package me.wcy.weather.activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 import me.wcy.weather.R;
 
-@SuppressLint("InlinedApi")
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
@@ -27,5 +22,9 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
         }, 500);
+    }
+
+    @Override
+    protected void setListener() {
     }
 }

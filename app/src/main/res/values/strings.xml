@@ -22,4 +22,16 @@
     <string name="update_tips">已更新至最新天气</string>
     <string name="share_content">我正在使用@小马天气，可以随时随地查看天气信息，是您出差、旅行的贴心助手！推荐你也试试：http://m.app.haosou.com/detail/index?pname=me.wcy.weather&#038;id=2826694</string>
     <string name="source_link">&lt;font color="#2196F3"&gt;&lt;a href=\'https://github.com/ChanWong21/PonyWeather\'&gt;源码下载&lt;/a&gt;&lt;/font&gt;</string>
+
+    <string name="temp">%s°</string>
+    <string name="tempC">%s℃</string>
+    <string name="now_max_temp">↑&#160;%s°</string>
+    <string name="now_min_temp">↓&#160;%s°</string>
+    <string name="now_more_info">体感%1$s°&#160;&#160;%2$s&#160;&#160;%3$s%4$s级</string>
+    <string name="now_more_info_with_air">体感%1$s°&#160;&#160;空气%2$s&#160;&#160;%3$s%4$s级</string>
+    <string name="hourly_forecast_hum">%s%%</string>
+    <string name="hourly_forecast_wind">%s级</string>
+    <string name="daily_forecast_temp">%1$s~%2$s°</string>
+    <string name="daily_forecast_detail">%1$s，湿度%2$s%%，%3$s%4$s级，降水几率%5$s%%。</string>
+    <string name="suggestion_title">%1$s——%2$s</string>
 </resources>

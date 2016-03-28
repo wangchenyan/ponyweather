@@ -25,9 +25,8 @@
 
         <activity
             android:name=".activity.SplashActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:theme="@style/AppTheme.Splash" />
         <activity
             android:name=".activity.WeatherActivity"
             android:label="@string/title_activity_weather_activity"

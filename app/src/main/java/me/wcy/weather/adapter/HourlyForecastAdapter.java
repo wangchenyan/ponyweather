@@ -1,11 +1,15 @@
 package me.wcy.weather.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,18 +44,19 @@ public class HourlyForecastAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Context context = parent.getContext();
         HourlyForecastAdapter.ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_hourly_forecast, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.view_holder_hourly_forecast, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tvTime.setText(mData.get(position).date);
-        holder.tvTemp.setText(mData.get(position).tmp);
-        holder.tvHum.setText(mData.get(position).hum);
-        holder.tvWind.setText(mData.get(position).wind.dir);
+        holder.tvTime.setText(timeFormat(mData.get(position).date));
+        holder.tvTemp.setText(context.getString(R.string.temp, mData.get(position).tmp));
+        holder.tvHum.setText(context.getString(R.string.hourly_forecast_hum, mData.get(position).hum));
+        holder.tvWind.setText(windFormat(context, mData.get(position).wind.sc));
         return convertView;
     }
 
@@ -67,6 +72,25 @@ public class HourlyForecastAdapter extends BaseAdapter {
 
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
+        }
+    }
+
+    private String timeFormat(String time) {
+        SimpleDateFormat fromSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat toSdf = new SimpleDateFormat("HH:mm");
+        try {
+            return toSdf.format(fromSdf.parse(time));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return toSdf.format(new Date());
+    }
+
+    private String windFormat(Context context, String wind) {
+        if (wind.contains("风")) {
+            return wind;
+        } else {
+            return context.getString(R.string.hourly_forecast_wind, wind);
         }
     }
 }

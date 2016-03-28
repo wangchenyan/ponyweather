@@ -3,41 +3,22 @@ package me.wcy.weather.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.WindowManager;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 
 /**
  * @author wcy
  */
-@SuppressWarnings("deprecation")
 public class Utils {
     private static final String URL = "http://api.map.baidu.com/telematics/v3/weather?location=%1$s&ak=%2$s&output=%3$s";
     private static final String BAIDU_APP_KEY = "MEMK39Gs9RS2jXyiG3He4VUB";
     private static final String OUTPUT_JSON = "json";
     public static final String STATUS_SUCCESS = "success";
-
-    /**
-     * 检查网络连接
-     */
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager localConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        int k;
-        if (localConnectivityManager != null) {
-            NetworkInfo[] arrayOfNetworkInfo = localConnectivityManager.getAllNetworkInfo();
-            if (arrayOfNetworkInfo != null) {
-                int j = arrayOfNetworkInfo.length;
-                for (k = 0; k < j; k++) {
-                    if (arrayOfNetworkInfo[k].getState() == NetworkInfo.State.CONNECTED)
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * 获取版本号
@@ -74,5 +55,22 @@ public class Utils {
         int x = Integer.parseInt(field.get(obj).toString());
         int statusBarHeight = context.getResources().getDimensionPixelSize(x);
         return displayHeight - statusBarHeight;
+    }
+
+    public static void setRefreshing(SwipeRefreshLayout refreshLayout, boolean refreshing, boolean notify) {
+        Class<? extends SwipeRefreshLayout> refreshLayoutClass = refreshLayout.getClass();
+        if (refreshLayoutClass != null) {
+            try {
+                Method setRefreshing = refreshLayoutClass.getDeclaredMethod("setRefreshing", boolean.class, boolean.class);
+                setRefreshing.setAccessible(true);
+                setRefreshing.invoke(refreshLayout, refreshing, notify);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

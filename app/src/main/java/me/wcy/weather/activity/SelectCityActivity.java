@@ -30,7 +30,7 @@ import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.CityAdapter;
 import me.wcy.weather.utils.DataManager;
-import me.wcy.weather.utils.Utils;
+import me.wcy.weather.utils.NetworkUtils;
 
 public class SelectCityActivity extends BaseActivity implements OnClickListener, TextWatcher,
         OnItemClickListener, OnEditorActionListener, AMapLocationListener {
@@ -98,7 +98,7 @@ public class SelectCityActivity extends BaseActivity implements OnClickListener,
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         mCity = mCities[position];
         if (mCities[0].equals(mCity)) {
-            if (!Utils.isNetworkAvailable(this)) {
+            if (!NetworkUtils.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 return;
             }

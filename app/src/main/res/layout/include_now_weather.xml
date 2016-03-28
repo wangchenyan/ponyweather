@@ -11,9 +11,10 @@
         android:padding="@dimen/activity_horizontal_margin">
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:src="@drawable/ic_weather_icon_fine" />
+            android:id="@+id/iv_icon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_weather_icon_999" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,8 +30,10 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tv_temp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:text="10℃"
                     android:textSize="48dp" />
 
@@ -41,38 +44,33 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_max_temp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:singleLine="true"
                         android:text="↑ 15°"
                         android:textSize="16dp" />
 
                     <TextView
+                        android:id="@+id/tv_min_temp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:gravity="center"
+                        android:singleLine="true"
                         android:text="↓ 3°"
                         android:textSize="16dp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_more_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PM2.5 13 优" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="北风3级" />
-            </LinearLayout>
+                android:singleLine="true"
+                android:text="体感12° 空气优 北风3级"
+                android:textColor="@color/grey" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

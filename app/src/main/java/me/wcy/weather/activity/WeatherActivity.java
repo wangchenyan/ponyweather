@@ -43,6 +43,7 @@ import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherResult;
 import me.wcy.weather.request.JSONRequest;
 import me.wcy.weather.utils.DataManager;
+import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.WeatherImage;
 import me.wcy.weather.widget.ScrollListView;
@@ -188,7 +189,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
     private void autoUpdate() {
         try {
             if (mDataManager.autoUpdate(mWeather)) {
-                if (Utils.isNetworkAvailable(this)) {
+                if (NetworkUtils.isNetworkAvailable(this)) {
                     refresh();
                 }
             }
@@ -318,7 +319,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
 
     @Override
     public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-        if (!Utils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
             svWeather.onRefreshComplete();
             Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
             return;
@@ -360,7 +361,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener, On
             tvCity.setText(mCity);
             llWeatherBg.setBackgroundResource(R.drawable.ic_weather_bg_na);
             llWeather.setVisibility(View.GONE);
-            if (!Utils.isNetworkAvailable(this)) {
+            if (!NetworkUtils.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 tvUpdateTime.setText(getString(
                         R.string.update_fail));

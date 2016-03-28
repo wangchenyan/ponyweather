@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="选择城市" />
-    <item android:title="小马天气">
+    <item
+        android:id="@+id/action_location"
+        android:icon="@drawable/ic_location"
+        android:title="@string/title_activity_select_city" />
+    <item android:title="@string/app_name">
         <menu>
             <item
                 android:id="@+id/action_search"
-                android:title="分享" />
+                android:icon="@drawable/ic_share"
+                android:title="@string/share" />
             <item
                 android:id="@+id/action_setting"
-                android:title="关于" />
+                android:icon="@drawable/ic_about"
+                android:title="@string/about" />
         </menu>
     </item>
 </menu>

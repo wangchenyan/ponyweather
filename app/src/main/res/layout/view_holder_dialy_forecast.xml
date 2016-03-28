@@ -4,13 +4,18 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:paddingBottom="10dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/iv_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_weather_icon_fine" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_weather_icon_100" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,22 +31,28 @@
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="今日"
-                android:textSize="18sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_temp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:singleLine="true"
                 android:text="3~14°"
-                android:textSize="18sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_desc"
+            android:id="@+id/tv_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="多云" />
+            android:text="多云"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>
