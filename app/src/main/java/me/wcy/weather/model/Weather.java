@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by hzwangchenyan on 2016/3/24.
  */
-public class HeWeather implements Serializable {
+public class Weather implements Serializable {
     public String status;
     /**
      * 城市基本信息

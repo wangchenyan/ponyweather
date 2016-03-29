@@ -14,7 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.weather.R;
-import me.wcy.weather.model.HeWeather;
+import me.wcy.weather.model.Weather;
 
 /**
  * Created by hzwangchenyan on 2016/3/25.
@@ -22,9 +22,9 @@ import me.wcy.weather.model.HeWeather;
 public class SuggestionAdapter extends BaseAdapter {
     private List<Integer> mIcon = new ArrayList<>();
     private List<String> mTitle = new ArrayList<>();
-    private List<HeWeather.SuggestionEntity.Entity> mData = new ArrayList<>();
+    private List<Weather.SuggestionEntity.Entity> mData = new ArrayList<>();
 
-    public SuggestionAdapter(HeWeather.SuggestionEntity data) {
+    public SuggestionAdapter(Weather.SuggestionEntity data) {
         mIcon.add(R.drawable.ic_suggestion_clothe);
         mTitle.add("穿衣");
         mData.add(data.drsg);

@@ -22,8 +22,8 @@ import me.wcy.weather.adapter.DailyForecastAdapter;
 import me.wcy.weather.adapter.HourlyForecastAdapter;
 import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.api.Api;
-import me.wcy.weather.model.HeWeather;
-import me.wcy.weather.model.HeWeatherData;
+import me.wcy.weather.model.Weather;
+import me.wcy.weather.model.WeatherData;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.ImageUtils;
@@ -37,7 +37,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class HeWeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class WeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
     private static final int REQUEST_CITY = 0;
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -73,7 +73,7 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_he_weather);
+        setContentView(R.layout.activity_weather);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -94,11 +94,11 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
     }
 
     private void fetchDataFromCache(final String city) {
-        HeWeather heWeather = (HeWeather) mACache.getAsObject(city);
-        if (heWeather == null) {
+        Weather weather = (Weather) mACache.getAsObject(city);
+        if (weather == null) {
             fetchDataFromNetWork(city, false);
         } else {
-            updateView(heWeather);
+            updateView(weather);
         }
     }
 
@@ -116,35 +116,35 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .filter(new Func1<HeWeatherData, Boolean>() {
+                .filter(new Func1<WeatherData, Boolean>() {
                     @Override
-                    public Boolean call(final HeWeatherData heWeatherData) {
-                        boolean success = heWeatherData.heWeathers.get(0).status.equals("ok");
+                    public Boolean call(final WeatherData weatherData) {
+                        boolean success = weatherData.weathers.get(0).status.equals("ok");
                         if (!success) {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    SnackbarUtils.show(HeWeatherActivity.this, heWeatherData.heWeathers.get(0).status);
+                                    SnackbarUtils.show(WeatherActivity.this, weatherData.weathers.get(0).status);
                                 }
                             });
                         }
                         return success;
                     }
                 })
-                .map(new Func1<HeWeatherData, HeWeather>() {
+                .map(new Func1<WeatherData, Weather>() {
                     @Override
-                    public HeWeather call(HeWeatherData heWeatherData) {
-                        return heWeatherData.heWeathers.get(0);
+                    public Weather call(WeatherData weatherData) {
+                        return weatherData.weathers.get(0);
                     }
                 })
-                .doOnNext(new Action1<HeWeather>() {
+                .doOnNext(new Action1<Weather>() {
                     @Override
-                    public void call(HeWeather heWeather) {
+                    public void call(Weather weather) {
                         mACache.put(Extras.CITY, city);
-                        mACache.put(city, heWeather, ACache.TIME_HOUR);
+                        mACache.put(city, weather, ACache.TIME_HOUR);
                     }
                 })
-                .subscribe(new Subscriber<HeWeather>() {
+                .subscribe(new Subscriber<Weather>() {
                     @Override
                     public void onCompleted() {
                         if (mRefreshLayout.isRefreshing()) {
@@ -155,9 +155,9 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
                     @Override
                     public void onError(Throwable e) {
                         if (NetworkUtils.errorByNetwork(e)) {
-                            SnackbarUtils.show(HeWeatherActivity.this, R.string.network_error);
+                            SnackbarUtils.show(WeatherActivity.this, R.string.network_error);
                         } else {
-                            SnackbarUtils.show(HeWeatherActivity.this, e.getMessage());
+                            SnackbarUtils.show(WeatherActivity.this, e.getMessage());
                         }
                         if (mRefreshLayout.isRefreshing()) {
                             mRefreshLayout.setRefreshing(false);
@@ -165,34 +165,34 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
                     }
 
                     @Override
-                    public void onNext(HeWeather heWeather) {
-                        updateView(heWeather);
+                    public void onNext(Weather weather) {
+                        updateView(weather);
                         if (llWeatherContainer.getVisibility() == View.GONE) {
                             llWeatherContainer.setVisibility(View.VISIBLE);
                         }
-                        SnackbarUtils.show(HeWeatherActivity.this, R.string.update_tips);
+                        SnackbarUtils.show(WeatherActivity.this, R.string.update_tips);
                     }
                 });
     }
 
-    private void updateView(HeWeather heWeather) {
-        ivWeatherImage.setImageResource(ImageUtils.getWeatherImage(heWeather.now.cond.txt));
-        ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(this, heWeather.now.cond.code));
-        tvTemp.setText(getString(R.string.tempC, heWeather.now.tmp));
-        tvMaxTemp.setText(getString(R.string.now_max_temp, heWeather.daily_forecast.get(0).tmp.max));
-        tvMinTemp.setText(getString(R.string.now_min_temp, heWeather.daily_forecast.get(0).tmp.min));
+    private void updateView(Weather weather) {
+        ivWeatherImage.setImageResource(ImageUtils.getWeatherImage(weather.now.cond.txt));
+        ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(this, weather.now.cond.code));
+        tvTemp.setText(getString(R.string.tempC, weather.now.tmp));
+        tvMaxTemp.setText(getString(R.string.now_max_temp, weather.daily_forecast.get(0).tmp.max));
+        tvMinTemp.setText(getString(R.string.now_min_temp, weather.daily_forecast.get(0).tmp.min));
         StringBuilder sbMoreInfo = new StringBuilder();
-        sbMoreInfo.append("体感").append(heWeather.now.fl).append("°");
-        if (heWeather.aqi != null && heWeather.aqi.city.qlty.contains("污染")) {
-            sbMoreInfo.append("  ").append(heWeather.aqi.city.qlty);
-        } else if (heWeather.aqi != null && !heWeather.aqi.city.qlty.contains("污染")) {
-            sbMoreInfo.append("  空气").append(heWeather.aqi.city.qlty);
+        sbMoreInfo.append("体感").append(weather.now.fl).append("°");
+        if (weather.aqi != null && weather.aqi.city.qlty.contains("污染")) {
+            sbMoreInfo.append("  ").append(weather.aqi.city.qlty);
+        } else if (weather.aqi != null && !weather.aqi.city.qlty.contains("污染")) {
+            sbMoreInfo.append("  空气").append(weather.aqi.city.qlty);
         }
-        sbMoreInfo.append("  ").append(heWeather.now.wind.dir).append(heWeather.now.wind.sc).append("级");
+        sbMoreInfo.append("  ").append(weather.now.wind.dir).append(weather.now.wind.sc).append("级");
         tvMoreInfo.setText(sbMoreInfo.toString());
-        lvHourlyForecast.setAdapter(new HourlyForecastAdapter(heWeather.hourly_forecast));
-        lvDailyForecast.setAdapter(new DailyForecastAdapter(heWeather.daily_forecast));
-        lvSuggestion.setAdapter(new SuggestionAdapter(heWeather.suggestion));
+        lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
+        lvDailyForecast.setAdapter(new DailyForecastAdapter(weather.daily_forecast));
+        lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));
     }
 
     @Override
@@ -220,7 +220,7 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
         }, 500);
         switch (item.getItemId()) {
             case R.id.action_location:
-                startActivityForResult(new Intent(this, CityActivity.class), REQUEST_CITY);
+                startActivityForResult(new Intent(this, SelectCityActivity.class), REQUEST_CITY);
                 break;
         }
         return false;

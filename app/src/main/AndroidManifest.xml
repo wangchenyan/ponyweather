@@ -14,7 +14,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <service android:name="com.amap.api.location.APSService" />
@@ -28,7 +28,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Splash" />
         <activity
-            android:name=".activity.HeWeatherActivity"
+            android:name=".activity.WeatherActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.CityActivity"
+            android:name=".activity.SelectCityActivity"
             android:label="@string/select_city"
             android:screenOrientation="portrait" />
     </application>

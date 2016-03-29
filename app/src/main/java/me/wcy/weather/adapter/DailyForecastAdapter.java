@@ -17,16 +17,16 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.weather.R;
-import me.wcy.weather.model.HeWeather;
+import me.wcy.weather.model.Weather;
 import me.wcy.weather.utils.ImageUtils;
 
 /**
  * Created by hzwangchenyan on 2016/3/25.
  */
 public class DailyForecastAdapter extends BaseAdapter {
-    private List<HeWeather.DailyForecastEntity> mData;
+    private List<Weather.DailyForecastEntity> mData;
 
-    public DailyForecastAdapter(List<HeWeather.DailyForecastEntity> data) {
+    public DailyForecastAdapter(List<Weather.DailyForecastEntity> data) {
         mData = data;
     }
 

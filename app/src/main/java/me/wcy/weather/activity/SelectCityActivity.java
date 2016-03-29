@@ -33,7 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class CityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener, CityListAdapter.OnItemClickListener {
+public class SelectCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener, CityListAdapter.OnItemClickListener {
     @Bind(R.id.rv_city)
     RecyclerView rvCity;
     @Bind(R.id.swipe_refresh_layout)
@@ -43,13 +43,13 @@ public class CityActivity extends BaseActivity implements View.OnClickListener, 
     private List<CityListEntity.CityInfoEntity> mCityList;
     private CityListAdapter mCityListAdapter;
     private CityListAdapter.Type currentType = CityListAdapter.Type.PROVINCE;
-    private String currentCity;
     private AMapLocationClient mLocationClient;
+    private String currentProvince;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_city);
+        setContentView(R.layout.activity_select_city);
 
         mCityListAdapter = new CityListAdapter();
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
@@ -240,8 +240,16 @@ public class CityActivity extends BaseActivity implements View.OnClickListener, 
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0) {
                 // 定位成功回调信息，设置相关消息
-                String city = aMapLocation.getCity();
-                backToWeather(city);
+                String area = aMapLocation.getDistrict();
+                if (area.endsWith("市") || area.endsWith("县")) {
+                    if (area.length() > 2) {
+                        area = area.replace("市", "").replace("县", "");
+                    }
+                    backToWeather(area);
+                } else {
+                    String city = aMapLocation.getCity().replace("市", "");
+                    backToWeather(city);
+                }
             } else {
                 // 定位失败
                 Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
@@ -267,10 +275,10 @@ public class CityActivity extends BaseActivity implements View.OnClickListener, 
     public void onItemClick(View view, Object data) {
         CityListEntity.CityInfoEntity cityInfo = (CityListEntity.CityInfoEntity) data;
         if (currentType == CityListAdapter.Type.PROVINCE) {
-            showCityList(cityInfo.province);
+            currentProvince = cityInfo.province;
+            showCityList(currentProvince);
         } else if (currentType == CityListAdapter.Type.CITY) {
-            currentCity = cityInfo.city;
-            showAreaList(currentCity);
+            showAreaList(cityInfo.city);
         } else if (currentType == CityListAdapter.Type.AREA) {
             backToWeather(cityInfo.area);
         }
@@ -303,11 +311,9 @@ public class CityActivity extends BaseActivity implements View.OnClickListener, 
         if (currentType == CityListAdapter.Type.PROVINCE) {
             super.onBackPressed();
         } else if (currentType == CityListAdapter.Type.CITY) {
-            currentType = CityListAdapter.Type.PROVINCE;
             showProvList();
         } else if (currentType == CityListAdapter.Type.AREA) {
-            currentType = CityListAdapter.Type.CITY;
-            showCityList(currentCity);
+            showCityList(currentProvince);
         }
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by hzwangchenyan on 2016/3/24.
  */
-public class HeWeatherData {
+public class WeatherData {
     @SerializedName("HeWeather data service 3.0")
-    public List<HeWeather> heWeathers;
+    public List<Weather> weathers;
 }

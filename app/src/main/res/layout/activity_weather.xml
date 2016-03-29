@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/activity_he_weather_include" />
+    <include layout="@layout/activity_weather_content" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
