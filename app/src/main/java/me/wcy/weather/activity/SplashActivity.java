@@ -17,7 +17,7 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 Intent intent = new Intent();
-                intent.setClass(SplashActivity.this, WeatherActivity.class);
+                intent.setClass(SplashActivity.this, HeWeatherActivity.class);
                 SplashActivity.this.startActivity(intent);
                 SplashActivity.this.finish();
             }

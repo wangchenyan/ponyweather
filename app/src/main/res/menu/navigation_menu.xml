@@ -3,7 +3,7 @@
     <item
         android:id="@+id/action_location"
         android:icon="@drawable/ic_location"
-        android:title="@string/title_activity_select_city" />
+        android:title="@string/select_city" />
     <item android:title="@string/app_name">
         <menu>
             <item

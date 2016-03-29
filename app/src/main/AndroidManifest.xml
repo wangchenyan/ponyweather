@@ -28,21 +28,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Splash" />
         <activity
-            android:name=".activity.WeatherActivity"
-            android:label="@string/title_activity_weather_activity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.SelectCityActivity"
-            android:label="@string/title_activity_select_city"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.HeWeatherActivity">
+            android:name=".activity.HeWeatherActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CityActivity"></activity>
+        <activity
+            android:name=".activity.CityActivity"
+            android:label="@string/select_city"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
