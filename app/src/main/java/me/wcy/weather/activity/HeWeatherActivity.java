@@ -1,13 +1,14 @@
 package me.wcy.weather.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,15 +32,19 @@ import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class HeWeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final int REQUEST_CITY = 0;
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
     NavigationView mNavigationView;
+    @Bind(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.iv_weather_image)
     ImageView ivWeatherImage;
     @Bind(R.id.swipe_refresh_layout)
@@ -75,9 +80,9 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
         }
 
         mACache = ACache.get(getApplicationContext());
-        mCity = mACache.getAsString(Extras.KEY_CITY);
+        mCity = mACache.getAsString(Extras.CITY);
         mCity = TextUtils.isEmpty(mCity) ? "北京" : mCity;
-        setTitle(mCity);
+        collapsingToolbar.setTitle(mCity);
 
         fetchDataFromCache(mCity);
     }
@@ -91,25 +96,39 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
     private void fetchDataFromCache(final String city) {
         HeWeather heWeather = (HeWeather) mACache.getAsObject(city);
         if (heWeather == null) {
-            Utils.setRefreshing(mRefreshLayout, true, true);
-            llWeatherContainer.setVisibility(View.GONE);
-            fetchDataFromNetWork(city);
+            fetchDataFromNetWork(city, false);
         } else {
             updateView(heWeather);
         }
     }
 
-    private void fetchDataFromNetWork(final String city) {
+    private void fetchDataFromNetWork(final String city, final boolean isRefresh) {
         Api.getIApi().getWeather(city, Api.HE_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        if (!isRefresh) {
+                            Utils.setRefreshing(mRefreshLayout, true, true);
+                            llWeatherContainer.setVisibility(View.GONE);
+                        }
+                    }
+                })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .filter(new Func1<HeWeatherData, Boolean>() {
                     @Override
-                    public Boolean call(HeWeatherData heWeatherData) {
-                        return heWeatherData.heWeathers != null
-                                && !heWeatherData.heWeathers.isEmpty()
-                                && heWeatherData.heWeathers.get(0).status.equals("ok");
+                    public Boolean call(final HeWeatherData heWeatherData) {
+                        boolean success = heWeatherData.heWeathers.get(0).status.equals("ok");
+                        if (!success) {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SnackbarUtils.show(HeWeatherActivity.this, heWeatherData.heWeathers.get(0).status);
+                                }
+                            });
+                        }
+                        return success;
                     }
                 })
                 .map(new Func1<HeWeatherData, HeWeather>() {
@@ -121,7 +140,7 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
                 .doOnNext(new Action1<HeWeather>() {
                     @Override
                     public void call(HeWeather heWeather) {
-                        mACache.put(Extras.KEY_CITY, city);
+                        mACache.put(Extras.CITY, city);
                         mACache.put(city, heWeather, ACache.TIME_HOUR);
                     }
                 })
@@ -135,11 +154,10 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("fetchDataFromNetWork", "onError:" + e.getMessage());
                         if (NetworkUtils.errorByNetwork(e)) {
-                            SnackbarUtils.show(getWindow().getDecorView().findViewById(android.R.id.content), R.string.network_error);
+                            SnackbarUtils.show(HeWeatherActivity.this, R.string.network_error);
                         } else {
-                            SnackbarUtils.show(getWindow().getDecorView().findViewById(android.R.id.content), e.getMessage());
+                            SnackbarUtils.show(HeWeatherActivity.this, e.getMessage());
                         }
                         if (mRefreshLayout.isRefreshing()) {
                             mRefreshLayout.setRefreshing(false);
@@ -152,7 +170,7 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
                         if (llWeatherContainer.getVisibility() == View.GONE) {
                             llWeatherContainer.setVisibility(View.VISIBLE);
                         }
-                        SnackbarUtils.show(getWindow().getDecorView().findViewById(android.R.id.content), R.string.update_tips);
+                        SnackbarUtils.show(HeWeatherActivity.this, R.string.update_tips);
                     }
                 });
     }
@@ -163,8 +181,15 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
         tvTemp.setText(getString(R.string.tempC, heWeather.now.tmp));
         tvMaxTemp.setText(getString(R.string.now_max_temp, heWeather.daily_forecast.get(0).tmp.max));
         tvMinTemp.setText(getString(R.string.now_min_temp, heWeather.daily_forecast.get(0).tmp.min));
-        int moreInfoStr = heWeather.aqi.city.qlty.contains("污染") ? R.string.now_more_info : R.string.now_more_info_with_air;
-        tvMoreInfo.setText(getString(moreInfoStr, heWeather.now.fl, heWeather.aqi.city.qlty, heWeather.now.wind.dir, heWeather.now.wind.sc));
+        StringBuilder sbMoreInfo = new StringBuilder();
+        sbMoreInfo.append("体感").append(heWeather.now.fl).append("°");
+        if (heWeather.aqi != null && heWeather.aqi.city.qlty.contains("污染")) {
+            sbMoreInfo.append("  ").append(heWeather.aqi.city.qlty);
+        } else if (heWeather.aqi != null && !heWeather.aqi.city.qlty.contains("污染")) {
+            sbMoreInfo.append("  空气").append(heWeather.aqi.city.qlty);
+        }
+        sbMoreInfo.append("  ").append(heWeather.now.wind.dir).append(heWeather.now.wind.sc).append("级");
+        tvMoreInfo.setText(sbMoreInfo.toString());
         lvHourlyForecast.setAdapter(new HourlyForecastAdapter(heWeather.hourly_forecast));
         lvDailyForecast.setAdapter(new DailyForecastAdapter(heWeather.daily_forecast));
         lvSuggestion.setAdapter(new SuggestionAdapter(heWeather.suggestion));
@@ -172,7 +197,7 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
 
     @Override
     public void onRefresh() {
-        fetchDataFromNetWork(mCity);
+        fetchDataFromNetWork(mCity, true);
     }
 
     @Override
@@ -193,7 +218,27 @@ public class HeWeatherActivity extends BaseActivity implements NavigationView.On
                 item.setChecked(false);
             }
         }, 500);
+        switch (item.getItemId()) {
+            case R.id.action_location:
+                startActivityForResult(new Intent(this, CityActivity.class), REQUEST_CITY);
+                break;
+        }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK || data == null) {
+            return;
+        }
+        String city = data.getStringExtra(Extras.CITY);
+        if (mCity.equals(city)) {
+            return;
+        }
+        mCity = city;
+        collapsingToolbar.setTitle(mCity);
+        fetchDataFromNetWork(mCity, false);
     }
 
     @Override
