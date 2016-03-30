@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,8 @@ import rx.schedulers.Schedulers;
 
 public class SelectCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener,
         CityListAdapter.OnItemClickListener {
+    @Bind(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.rv_city)
     RecyclerView rvCity;
     @Bind(R.id.fab_location)
@@ -61,6 +64,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
         rvCity.setAdapter(mCityListAdapter);
         mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
 
         initAMapLocation();
         fetchCityList();
@@ -184,6 +188,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                         mCityListAdapter.setData(cityInfoEntities, CityListAdapter.Type.PROVINCE);
                         mCityListAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
+                        collapsingToolbar.setTitle(getString(R.string.select_city));
                         currentType = CityListAdapter.Type.PROVINCE;
                     }
                 });
@@ -221,6 +226,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                         mCityListAdapter.setData(cityInfoEntities, CityListAdapter.Type.CITY);
                         mCityListAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
+                        collapsingToolbar.setTitle(province);
                         currentType = CityListAdapter.Type.CITY;
                     }
                 });
@@ -252,6 +258,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                         mCityListAdapter.setData(cityInfoEntities, CityListAdapter.Type.AREA);
                         mCityListAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
+                        collapsingToolbar.setTitle(city);
                         currentType = CityListAdapter.Type.AREA;
                     }
                 });

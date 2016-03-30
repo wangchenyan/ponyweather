@@ -3,10 +3,12 @@ package me.wcy.weather.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -43,12 +45,16 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
     NavigationView mNavigationView;
+    @Bind(R.id.appbar)
+    AppBarLayout mAppBar;
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.iv_weather_image)
     ImageView ivWeatherImage;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+    @Bind(R.id.nested_scroll_view)
+    NestedScrollView mScrollView;
     @Bind(R.id.ll_weather_container)
     LinearLayout llWeatherContainer;
     @Bind(R.id.iv_icon)
@@ -110,7 +116,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                     @Override
                     public void call() {
                         if (!isRefresh) {
-                            Utils.setRefreshing(mRefreshLayout, true, true);
+                            Utils.setRefreshing(mRefreshLayout, true, false);
                             llWeatherContainer.setVisibility(View.GONE);
                         }
                     }
@@ -234,6 +240,8 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         }
         mCity = city;
         collapsingToolbar.setTitle(mCity);
+        mScrollView.scrollTo(0, 0);
+        mAppBar.setExpanded(true, false);
         fetchDataFromNetWork(mCity, false);
     }
 
