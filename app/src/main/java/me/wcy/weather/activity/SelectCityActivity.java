@@ -1,16 +1,18 @@
 package me.wcy.weather.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -27,23 +29,27 @@ import me.wcy.weather.R;
 import me.wcy.weather.adapter.CityListAdapter;
 import me.wcy.weather.model.CityListEntity;
 import me.wcy.weather.utils.Extras;
+import me.wcy.weather.utils.SnackbarUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class SelectCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener, CityListAdapter.OnItemClickListener {
+public class SelectCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener,
+        CityListAdapter.OnItemClickListener {
     @Bind(R.id.rv_city)
     RecyclerView rvCity;
-    @Bind(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.fab_location)
     FloatingActionButton fabLocation;
+    @Bind(R.id.fab_top)
+    FloatingActionButton fabTop;
+    private ProgressDialog mProgressDialog;
     private List<CityListEntity.CityInfoEntity> mCityList;
     private CityListAdapter mCityListAdapter;
-    private CityListAdapter.Type currentType = CityListAdapter.Type.PROVINCE;
     private AMapLocationClient mLocationClient;
+    private CityListAdapter.Type currentType = CityListAdapter.Type.PROVINCE;
     private String currentProvince;
 
     @Override
@@ -54,6 +60,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         mCityListAdapter = new CityListAdapter();
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
         rvCity.setAdapter(mCityListAdapter);
+        mProgressDialog = new ProgressDialog(this);
 
         initAMapLocation();
         fetchCityList();
@@ -62,7 +69,9 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void setListener() {
         fabLocation.setOnClickListener(this);
+        fabTop.setOnClickListener(this);
         mCityListAdapter.setOnItemClickListener(this);
+        rvCity.setOnScrollListener(mScrollListener);
     }
 
     private void initAMapLocation() {
@@ -91,6 +100,13 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         Observable.just(assetManager)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mProgressDialog.show();
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .map(new Func1<AssetManager, String>() {
                     @Override
                     public String call(AssetManager assetManager) {
@@ -106,7 +122,8 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                 .map(new Func1<String, CityListEntity>() {
                     @Override
                     public CityListEntity call(String s) {
-                        return new Gson().fromJson(s, CityListEntity.class);
+                        Gson gson = new Gson();
+                        return gson.fromJson(s, CityListEntity.class);
                     }
                 })
                 .map(new Func1<CityListEntity, List<CityListEntity.CityInfoEntity>>() {
@@ -123,18 +140,19 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.cancel();
                         Log.e("fetchCityList", "onError:" + e.getMessage());
                     }
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
                         mCityList = cityInfoEntities;
-                        showProvList();
+                        showProvinceList();
                     }
                 });
     }
 
-    private void showProvList() {
+    private void showProvinceList() {
         Observable.from(mCityList)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -148,12 +166,17 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                 .subscribe(new Subscriber<List<CityListEntity.CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
-
+                        if (mProgressDialog.isShowing()) {
+                            mProgressDialog.cancel();
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("showProvList", "onError:" + e.getMessage());
+                        if (mProgressDialog.isShowing()) {
+                            mProgressDialog.cancel();
+                        }
+                        Log.e("showProvinceList", "onError:" + e.getMessage());
                     }
 
                     @Override
@@ -237,6 +260,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
+            mProgressDialog.cancel();
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0) {
                 // 定位成功回调信息，设置相关消息
@@ -252,7 +276,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
                 }
             } else {
                 // 定位失败
-                Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
+                SnackbarUtils.show(this, R.string.locate_fail);
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Log.e("AmapError", "location Error, ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
@@ -265,8 +289,12 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_location:
+                mProgressDialog.show();
                 // 启动定位
                 mLocationClient.startLocation();
+                break;
+            case R.id.fab_top:
+                rvCity.scrollToPosition(0);
                 break;
         }
     }
@@ -284,6 +312,30 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+        private boolean isShow = false;
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int offsetY = recyclerView.computeVerticalScrollOffset();
+            int itemHeight = recyclerView.getChildAt(0).getHeight();
+            if (offsetY > itemHeight && !isShow) {
+                if (fabTop.getVisibility() != View.VISIBLE) {
+                    fabTop.setVisibility(View.VISIBLE);
+                }
+                fabTop.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                isShow = true;
+            } else if (offsetY <= itemHeight && isShow) {
+                int bottomMargin = ((CoordinatorLayout.LayoutParams) fabTop.getLayoutParams()).bottomMargin;
+                fabTop.animate().translationY(fabTop.getHeight() + bottomMargin)
+                        .setInterpolator(new AccelerateInterpolator(2))
+                        .start();
+                isShow = false;
+            }
+        }
+    };
+
     private String readJsonFromAssets(AssetManager assetManager) {
         try {
             InputStream is = assetManager.open("city.json");
@@ -300,9 +352,9 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     }
 
     private void backToWeather(String city) {
-        Intent intent = new Intent();
-        intent.putExtra(Extras.CITY, city);
-        setResult(RESULT_OK, intent);
+        Intent data = new Intent();
+        data.putExtra(Extras.CITY, city);
+        setResult(RESULT_OK, data);
         finish();
     }
 
@@ -311,9 +363,15 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
         if (currentType == CityListAdapter.Type.PROVINCE) {
             super.onBackPressed();
         } else if (currentType == CityListAdapter.Type.CITY) {
-            showProvList();
+            showProvinceList();
         } else if (currentType == CityListAdapter.Type.AREA) {
             showCityList(currentProvince);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mLocationClient.onDestroy();
+        super.onDestroy();
     }
 }

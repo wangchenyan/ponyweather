@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_location"
-        android:icon="@drawable/ic_location"
+        android:icon="@drawable/ic_menu_location"
         android:title="@string/select_city" />
     <item android:title="@string/app_name">
         <menu>
             <item
                 android:id="@+id/action_search"
-                android:icon="@drawable/ic_share"
+                android:icon="@drawable/ic_menu_share"
                 android:title="@string/share" />
             <item
                 android:id="@+id/action_setting"
-                android:icon="@drawable/ic_about"
+                android:icon="@drawable/ic_menu_about"
                 android:title="@string/about" />
         </menu>
     </item>

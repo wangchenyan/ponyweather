@@ -147,9 +147,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                 .subscribe(new Subscriber<Weather>() {
                     @Override
                     public void onCompleted() {
-                        if (mRefreshLayout.isRefreshing()) {
-                            mRefreshLayout.setRefreshing(false);
-                        }
+                        mRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -159,9 +157,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                         } else {
                             SnackbarUtils.show(WeatherActivity.this, e.getMessage());
                         }
-                        if (mRefreshLayout.isRefreshing()) {
-                            mRefreshLayout.setRefreshing(false);
-                        }
+                        mRefreshLayout.setRefreshing(false);
                     }
 
                     @Override

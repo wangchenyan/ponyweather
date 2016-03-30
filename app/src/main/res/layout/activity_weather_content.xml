@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:clickable="true"
-        android:src="@drawable/ic_favorite"
+        android:src="@drawable/ic_menu_favorite"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>
