@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tvCity.setTag(mCityList.get(position));
+        holder.item.setTag(mCityList.get(position));
         switch (mType) {
             case PROVINCE:
                 holder.tvCity.setText(mCityList.get(position).province);
@@ -65,6 +66,8 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.view_holder_city)
+        public LinearLayout item;
         @Bind(R.id.tv_city)
         public TextView tvCity;
 

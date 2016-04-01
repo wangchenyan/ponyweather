@@ -3,7 +3,7 @@
     <string name="app_name">小马天气</string>
     <string name="sure">确定</string>
     <string name="cancel">取消</string>
-    <string name="share">分享</string>
+    <string name="share">推荐给朋友</string>
     <string name="about">关于</string>
     <string name="temp">%s°</string>
     <string name="tempC">%s℃</string>
@@ -17,4 +17,5 @@
     <string name="network_error">网络异常，请检查网络设置</string>
     <string name="locate_fail">自动定位失败，请稍后再试</string>
     <string name="update_tips">已更新至最新天气</string>
+    <string name="share_content">我正在使用@小马天气，可以随时随地查看天气信息，是您出差、旅行的贴心助手！推荐你也试试：http://m.app.haosou.com/detail/index?pname=me.wcy.weather&#038;id=2826694</string>
 </resources>

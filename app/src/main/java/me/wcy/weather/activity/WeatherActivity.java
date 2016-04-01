@@ -224,8 +224,19 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             case R.id.action_location:
                 startActivityForResult(new Intent(this, SelectCityActivity.class), REQUEST_CITY);
                 break;
+            case R.id.action_share:
+                share();
+                break;
         }
         return false;
+    }
+
+    private void share() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_content));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(intent, getString(R.string.share)));
     }
 
     @Override

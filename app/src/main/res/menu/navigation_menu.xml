@@ -7,11 +7,11 @@
     <item android:title="@string/app_name">
         <menu>
             <item
-                android:id="@+id/action_search"
+                android:id="@+id/action_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/share" />
             <item
-                android:id="@+id/action_setting"
+                android:id="@+id/action_about"
                 android:icon="@drawable/ic_menu_about"
                 android:title="@string/about" />
         </menu>
