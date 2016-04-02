@@ -1,9 +1,9 @@
 小马天气
 ===
-小马天气是一款运行在Android系统上开源天气信息查询软件，无广告，无多余权限。
-* Material Design风格设计
-* 支持中国所有县级以上城市
-* 支持自动定位
+小马天气是一款运行在Android系统上开源天气信息查询软件，无广告，无多余权限。<br>
+界面美观，人性化设计，支持中国所有城市的天气预报软件。<br>
+支持自动定位，空气质量指数实时预报，提供各种生活指数。<br>
+简约，而不简单。
 
 前言
 ---
@@ -49,7 +49,8 @@ TODO
 * [Retrofit](https://github.com/square/retrofit)
 * [ASimpleCache](https://github.com/yangfuhai/ASimpleCache)
 
-**部分源码**<br>
+**部分源码**
+
 网络请求用的是`RxJava+Retrofit`，用`ACache`缓存
 ```java
 private void fetchDataFromCache(final String city) {
