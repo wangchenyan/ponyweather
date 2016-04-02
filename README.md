@@ -7,7 +7,7 @@ PonyWeather
 
 前言
 ---
-部分界面参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！
+部分界面参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
 * **开源不易，希望能给个Star鼓励** 
@@ -16,10 +16,8 @@ PonyWeather
 
 下载地址
 ---
-360手机助手：http://zhushou.360.cn/detail/index/soft_id/2826694
-
-百度应用：http://shouji.baidu.com/software/item?docid=9102703
-
+360手机助手：http://zhushou.360.cn/detail/index/soft_id/2826694<br>
+百度应用：http://shouji.baidu.com/software/item?docid=9102703<br>
 应用宝：http://android.myapp.com/myapp/detail.htm?apkName=me.wcy.weather
 
 更新说明
@@ -51,7 +49,7 @@ TODO
 * [Retrofit](https://github.com/square/retrofit)
 * [ASimpleCache](https://github.com/yangfuhai/ASimpleCache)
 
-**部分源码**
+**部分源码**<br>
 网络请求用的是`RxJava+Retrofit`，用`ACache`缓存
 ```java
 private void fetchDataFromCache(final String city) {
@@ -101,8 +99,7 @@ private void fetchDataFromNetWork(final String city) {
 
 关于作者
 ---
-简书：http://www.jianshu.com/users/3231579893ac
-
+简书：http://www.jianshu.com/users/3231579893ac<br>
 微博：http://weibo.com/wangchenyan1993
 
 License
