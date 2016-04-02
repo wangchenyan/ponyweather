@@ -1,4 +1,4 @@
-PonyWeather
+小马天气
 ===
 小马天气是一款运行在Android系统上开源天气信息查询软件，无广告，无多余权限。
 * MaterialDesign风格设计
@@ -104,7 +104,6 @@ private void fetchDataFromNetWork(final String city) {
 
 License
 ---
-
     Copyright 2016 Chay Wong
 
     Licensed under the Apache License, Version 2.0 (the "License");
