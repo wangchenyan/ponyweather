@@ -30,7 +30,7 @@
     <PreferenceCategory android:title="版权">
         <Preference
             android:summary="和风天气"
-            android:title="天气" />
+            android:title="天气数据" />
         <Preference
             android:summary="高德地图"
             android:title="定位" />

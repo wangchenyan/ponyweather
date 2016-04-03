@@ -72,7 +72,6 @@
 -keep class android.support.** {*;}
 
 # app
--keep class me.wcy.weather.database.** {*;}
 -keep class me.wcy.weather.model.** {*;}
 
 # butterknife
@@ -84,14 +83,3 @@
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
-
-# volley
--dontwarn com.android.volley.**
--keep class com.android.volley.** {*;}
-
-# fastjson
--dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.** {*;}
-
-# ormlite
--keep class com.j256.ormlite.** {*;}
