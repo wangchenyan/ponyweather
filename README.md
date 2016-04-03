@@ -8,6 +8,8 @@
 部分界面参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
+**注意：和风天气和fir的两个key我没有提交，download后需要自己申请和风天气的key才能运行，fir的key可直接忽略。**
+
 * **开源不易，希望能给个Star鼓励** 
 * 项目地址：https://github.com/ChanWong21/PonyWeather
 * 有问题请提Issues
