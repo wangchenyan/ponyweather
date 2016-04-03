@@ -24,6 +24,7 @@ import me.wcy.weather.adapter.DailyForecastAdapter;
 import me.wcy.weather.adapter.HourlyForecastAdapter;
 import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.api.Api;
+import me.wcy.weather.api.ApiKey;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherData;
 import me.wcy.weather.utils.ACache;
@@ -31,6 +32,7 @@ import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.SnackbarUtils;
+import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.Utils;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -91,6 +93,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         collapsingToolbar.setTitle(mCity);
 
         fetchDataFromCache(mCity);
+        UpdateUtils.checkUpdate(this);
     }
 
     @Override
@@ -109,7 +112,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     }
 
     private void fetchDataFromNetWork(final String city, final boolean isRefresh) {
-        Api.getIApi().getWeather(city, Api.HE_KEY)
+        Api.getIApi().getWeather(city, ApiKey.HE_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Action0() {
@@ -183,15 +186,15 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         tvTemp.setText(getString(R.string.tempC, weather.now.tmp));
         tvMaxTemp.setText(getString(R.string.now_max_temp, weather.daily_forecast.get(0).tmp.max));
         tvMinTemp.setText(getString(R.string.now_min_temp, weather.daily_forecast.get(0).tmp.min));
-        StringBuilder sbMoreInfo = new StringBuilder();
-        sbMoreInfo.append("体感").append(weather.now.fl).append("°");
-        if (weather.aqi != null && weather.aqi.city.qlty.contains("污染")) {
-            sbMoreInfo.append("  ").append(weather.aqi.city.qlty);
-        } else if (weather.aqi != null && !weather.aqi.city.qlty.contains("污染")) {
-            sbMoreInfo.append("  空气").append(weather.aqi.city.qlty);
+        StringBuilder sb = new StringBuilder();
+        sb.append("体感").append(weather.now.fl).append("°");
+        if (weather.aqi != null) {
+            sb.append("  ").append(weather.aqi.city.qlty.contains("污染") ? "" : "空气")
+                    .append(weather.aqi.city.qlty);
         }
-        sbMoreInfo.append("  ").append(weather.now.wind.dir).append(weather.now.wind.sc).append("级");
-        tvMoreInfo.setText(sbMoreInfo.toString());
+        sb.append("  ").append(weather.now.wind.dir).append(weather.now.wind.sc)
+                .append(weather.now.wind.sc.contains("风") ? "" : "级");
+        tvMoreInfo.setText(sb.toString());
         lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
         lvDailyForecast.setAdapter(new DailyForecastAdapter(weather.daily_forecast));
         lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));

@@ -12,7 +12,6 @@
     <string name="hourly_forecast_hum">%s%%</string>
     <string name="hourly_forecast_wind">%s级</string>
     <string name="daily_forecast_temp">%1$s~%2$s°</string>
-    <string name="daily_forecast_detail">%1$s，湿度%2$s%%，%3$s%4$s级，降水几率%5$s%%。</string>
     <string name="select_city">选择城市</string>
     <string name="network_error">网络异常，请检查网络设置</string>
     <string name="locate_fail">自动定位失败，请稍后再试</string>

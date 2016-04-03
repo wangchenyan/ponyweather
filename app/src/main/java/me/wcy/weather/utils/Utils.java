@@ -11,20 +11,24 @@ import java.lang.reflect.Method;
  */
 public class Utils {
 
-    /**
-     * 获取版本号
-     *
-     * @param context context
-     * @return 版本号
-     */
-    public static String getVersion(Context context) {
+    public static String getVersionName(Context context) {
         String versionName = "1.0";
         try {
             versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        return "v " + versionName;
+        return versionName;
+    }
+
+    public static int getVersionCode(Context context) {
+        int versionCode = 1;
+        try {
+            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
     }
 
     public static void setRefreshing(SwipeRefreshLayout refreshLayout, boolean refreshing, boolean notify) {

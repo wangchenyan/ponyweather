@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import me.wcy.weather.R;
+import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.Utils;
 
 public class AboutActivity extends BaseActivity {
@@ -43,7 +44,7 @@ public class AboutActivity extends BaseActivity {
             mJianshu = findPreference("jianshu");
             mGithub = findPreference("github");
 
-            mVersion.setSummary(Utils.getVersion(getActivity()));
+            mVersion.setSummary("v " + Utils.getVersionName(getActivity()));
             setListener();
         }
 
@@ -58,6 +59,7 @@ public class AboutActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == mUpdate) {
+                UpdateUtils.checkUpdate(getActivity());
                 return true;
             } else if (preference == mStar) {
                 openUrl(getString(R.string.about_project_url));
