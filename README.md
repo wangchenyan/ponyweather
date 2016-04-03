@@ -44,7 +44,7 @@
 * [ASimpleCache](https://github.com/yangfuhai/ASimpleCache)
 
 ### 关键代码
-网络请求用的是`RxJava+Retrofit`，用`ACache`缓存
+网络请求`RxJava+Retrofit`，缓存`ACache`
 ```java
 private void fetchDataFromCache(final String city) {
     Weather weather = (Weather) mACache.getAsObject(city);
