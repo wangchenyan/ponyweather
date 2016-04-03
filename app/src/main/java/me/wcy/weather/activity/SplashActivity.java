@@ -12,19 +12,16 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                Intent intent = new Intent();
-                intent.setClass(SplashActivity.this, WeatherActivity.class);
-                SplashActivity.this.startActivity(intent);
-                SplashActivity.this.finish();
-            }
-        }, 500);
+        startWeather();
     }
 
     @Override
     protected void setListener() {
+    }
+
+    private void startWeather() {
+        Intent intent = new Intent(this, WeatherActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

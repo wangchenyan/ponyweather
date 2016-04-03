@@ -18,13 +18,13 @@ public class Utils {
      * @return 版本号
      */
     public static String getVersion(Context context) {
-        String versionName = "1.0.0";
+        String versionName = "1.0";
         try {
             versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        return "V " + versionName;
+        return "v " + versionName;
     }
 
     public static void setRefreshing(SwipeRefreshLayout refreshLayout, boolean refreshing, boolean notify) {

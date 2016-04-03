@@ -26,10 +26,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Splash" />
-        <activity
-            android:name=".activity.WeatherActivity"
-            android:screenOrientation="portrait">
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,8 +34,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.WeatherActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.SelectCityActivity"
             android:label="@string/select_city"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/about"
             android:screenOrientation="portrait" />
     </application>
 

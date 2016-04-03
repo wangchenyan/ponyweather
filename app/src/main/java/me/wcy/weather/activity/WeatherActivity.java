@@ -227,6 +227,8 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             case R.id.action_share:
                 share();
                 break;
+            case R.id.action_about:
+                startActivity(new Intent(this, AboutActivity.class));
         }
         return false;
     }
