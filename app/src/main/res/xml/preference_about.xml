@@ -33,9 +33,9 @@
             android:title="天气数据" />
         <Preference
             android:summary="高德地图"
-            android:title="定位" />
+            android:title="定位服务" />
         <Preference
             android:summary="图片素材来源于网络，版权属于原作者"
-            android:title="素材" />
+            android:title="图片素材" />
     </PreferenceCategory>
 </PreferenceScreen>

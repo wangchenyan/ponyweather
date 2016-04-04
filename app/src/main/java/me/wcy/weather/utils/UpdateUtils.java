@@ -90,7 +90,7 @@ public class UpdateUtils {
         SnackbarUtils.show(activity, "正在后台下载");
     }
 
-    public static float B2MB(int B) {
+    private static float B2MB(int B) {
         DecimalFormat decimalFormat = new DecimalFormat(".00");
         String MB = decimalFormat.format((float) B / 1024 / 1024);
         return Float.valueOf(MB);
