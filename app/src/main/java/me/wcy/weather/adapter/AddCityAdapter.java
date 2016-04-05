@@ -4,24 +4,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.CityListEntity;
+import me.wcy.weather.utils.ACache;
+import me.wcy.weather.utils.Extras;
 
 /**
  * Created by hzwangchenyan on 2016/3/29.
  */
-public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHolder> implements View.OnClickListener {
+public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
     private List<CityListEntity.CityInfoEntity> mCityList = new ArrayList<>();
     private Type mType;
     private OnItemClickListener mListener;
+    private List<String> mAddedCityList;
 
     public void setData(List<CityListEntity.CityInfoEntity> data, Type type) {
         mCityList = data;
@@ -33,14 +32,16 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_city, parent, false);
         view.setOnClickListener(this);
-        return new ViewHolder(view);
+        ACache cache = ACache.get(parent.getContext());
+        mAddedCityList = (List<String>) cache.getAsObject(Extras.CITY_LIST);
+        return new CityViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(CityViewHolder holder, int position) {
         holder.item.setTag(mCityList.get(position));
         switch (mType) {
             case PROVINCE:
@@ -51,6 +52,7 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
                 break;
             case AREA:
                 holder.tvCity.setText(mCityList.get(position).area);
+                holder.tvRemark.setText(mAddedCityList.contains(mCityList.get(position).area) ? "已添加" : "");
                 break;
         }
     }
@@ -65,25 +67,9 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
         mListener.onItemClick(v, v.getTag());
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.view_holder_city)
-        public LinearLayout item;
-        @Bind(R.id.tv_city)
-        public TextView tvCity;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
     public enum Type {
         PROVINCE,
         CITY,
         AREA
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, Object data);
     }
 }

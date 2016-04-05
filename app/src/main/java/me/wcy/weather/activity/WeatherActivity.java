@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.DailyForecastAdapter;
@@ -31,6 +33,7 @@ import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
+import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.Utils;
@@ -42,7 +45,6 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class WeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final int REQUEST_CITY = 0;
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
@@ -89,7 +91,10 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
 
         mACache = ACache.get(getApplicationContext());
         mCity = mACache.getAsString(Extras.CITY);
-        mCity = TextUtils.isEmpty(mCity) ? "北京" : mCity;
+        if (TextUtils.isEmpty(mCity)) {
+            mCity = "北京";
+            initCache(mCity);
+        }
         collapsingToolbar.setTitle(mCity);
 
         fetchDataFromCache(mCity);
@@ -130,7 +135,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                     public Boolean call(final WeatherData weatherData) {
                         boolean success = weatherData.weathers.get(0).status.equals("ok");
                         if (!success) {
-                            mHandler.post(new Runnable() {
+                            runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     SnackbarUtils.show(WeatherActivity.this, weatherData.weathers.get(0).status);
@@ -149,7 +154,6 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                 .doOnNext(new Action1<Weather>() {
                     @Override
                     public void call(Weather weather) {
-                        mACache.put(Extras.CITY, city);
                         mACache.put(city, weather, ACache.TIME_HOUR);
                     }
                 })
@@ -200,6 +204,13 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));
     }
 
+    private void initCache(String city) {
+        ArrayList<String> cityList = new ArrayList<>();
+        cityList.add(0, city);
+        mACache.put(Extras.CITY, city);
+        mACache.put(Extras.CITY_LIST, cityList);
+    }
+
     @Override
     public void onRefresh() {
         fetchDataFromNetWork(mCity, true);
@@ -225,7 +236,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         }, 500);
         switch (item.getItemId()) {
             case R.id.action_location:
-                startActivityForResult(new Intent(this, SelectCityActivity.class), REQUEST_CITY);
+                startActivityForResult(new Intent(this, ManageCityActivity.class), RequestCode.REQUEST_CODE);
                 break;
             case R.id.action_share:
                 share();

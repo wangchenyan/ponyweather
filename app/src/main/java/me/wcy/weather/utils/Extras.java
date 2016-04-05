@@ -5,4 +5,5 @@ package me.wcy.weather.utils;
  */
 public class Extras {
     public static final String CITY = "city";
+    public static final String CITY_LIST = "city_list";
 }

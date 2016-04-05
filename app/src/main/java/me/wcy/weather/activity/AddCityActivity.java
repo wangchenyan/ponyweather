@@ -27,7 +27,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import me.wcy.weather.R;
-import me.wcy.weather.adapter.CityListAdapter;
+import me.wcy.weather.adapter.OnItemClickListener;
+import me.wcy.weather.adapter.AddCityAdapter;
 import me.wcy.weather.model.CityListEntity;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.SnackbarUtils;
@@ -38,8 +39,8 @@ import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class SelectCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener,
-        CityListAdapter.OnItemClickListener {
+public class AddCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener,
+        OnItemClickListener {
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.rv_city)
@@ -50,19 +51,19 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     FloatingActionButton fabTop;
     private ProgressDialog mProgressDialog;
     private List<CityListEntity.CityInfoEntity> mCityList;
-    private CityListAdapter mCityListAdapter;
+    private AddCityAdapter mAddCityAdapter;
     private AMapLocationClient mLocationClient;
-    private CityListAdapter.Type currentType = CityListAdapter.Type.PROVINCE;
+    private AddCityAdapter.Type currentType = AddCityAdapter.Type.PROVINCE;
     private String currentProvince;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_city);
+        setContentView(R.layout.activity_add_city);
 
-        mCityListAdapter = new CityListAdapter();
+        mAddCityAdapter = new AddCityAdapter();
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
-        rvCity.setAdapter(mCityListAdapter);
+        rvCity.setAdapter(mAddCityAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
 
@@ -74,7 +75,7 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     protected void setListener() {
         fabLocation.setOnClickListener(this);
         fabTop.setOnClickListener(this);
-        mCityListAdapter.setOnItemClickListener(this);
+        mAddCityAdapter.setOnItemClickListener(this);
         rvCity.setOnScrollListener(mScrollListener);
     }
 
@@ -185,11 +186,11 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
-                        mCityListAdapter.setData(cityInfoEntities, CityListAdapter.Type.PROVINCE);
-                        mCityListAdapter.notifyDataSetChanged();
+                        mAddCityAdapter.setData(cityInfoEntities, AddCityAdapter.Type.PROVINCE);
+                        mAddCityAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
-                        collapsingToolbar.setTitle(getString(R.string.select_city));
-                        currentType = CityListAdapter.Type.PROVINCE;
+                        collapsingToolbar.setTitle(getString(R.string.add_city));
+                        currentType = AddCityAdapter.Type.PROVINCE;
                     }
                 });
     }
@@ -223,11 +224,11 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
-                        mCityListAdapter.setData(cityInfoEntities, CityListAdapter.Type.CITY);
-                        mCityListAdapter.notifyDataSetChanged();
+                        mAddCityAdapter.setData(cityInfoEntities, AddCityAdapter.Type.CITY);
+                        mAddCityAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
                         collapsingToolbar.setTitle(province);
-                        currentType = CityListAdapter.Type.CITY;
+                        currentType = AddCityAdapter.Type.CITY;
                     }
                 });
     }
@@ -255,11 +256,11 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
-                        mCityListAdapter.setData(cityInfoEntities, CityListAdapter.Type.AREA);
-                        mCityListAdapter.notifyDataSetChanged();
+                        mAddCityAdapter.setData(cityInfoEntities, AddCityAdapter.Type.AREA);
+                        mAddCityAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
                         collapsingToolbar.setTitle(city);
-                        currentType = CityListAdapter.Type.AREA;
+                        currentType = AddCityAdapter.Type.AREA;
                     }
                 });
     }
@@ -309,12 +310,12 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onItemClick(View view, Object data) {
         CityListEntity.CityInfoEntity cityInfo = (CityListEntity.CityInfoEntity) data;
-        if (currentType == CityListAdapter.Type.PROVINCE) {
+        if (currentType == AddCityAdapter.Type.PROVINCE) {
             currentProvince = cityInfo.province;
             showCityList(currentProvince);
-        } else if (currentType == CityListAdapter.Type.CITY) {
+        } else if (currentType == AddCityAdapter.Type.CITY) {
             showAreaList(cityInfo.city);
-        } else if (currentType == CityListAdapter.Type.AREA) {
+        } else if (currentType == AddCityAdapter.Type.AREA) {
             backToWeather(cityInfo.area);
         }
     }
@@ -367,11 +368,11 @@ public class SelectCityActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        if (currentType == CityListAdapter.Type.PROVINCE) {
+        if (currentType == AddCityAdapter.Type.PROVINCE) {
             super.onBackPressed();
-        } else if (currentType == CityListAdapter.Type.CITY) {
+        } else if (currentType == AddCityAdapter.Type.CITY) {
             showProvinceList();
-        } else if (currentType == CityListAdapter.Type.AREA) {
+        } else if (currentType == AddCityAdapter.Type.AREA) {
             showCityList(currentProvince);
         }
     }

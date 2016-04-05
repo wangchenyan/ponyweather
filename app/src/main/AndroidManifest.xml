@@ -23,7 +23,6 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2f96bd99854c25bad867af9676c7ea63" />
-
         <meta-data
             android:name="BUG_HD_SDK_GENERAL_KEY"
             android:value="82da7c1af25a3d6b045077813ef2032c" />
@@ -47,8 +46,12 @@
             android:name=".activity.WeatherActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SelectCityActivity"
-            android:label="@string/select_city"
+            android:name=".activity.ManageCityActivity"
+            android:label="@string/manage_city"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AddCityActivity"
+            android:label="@string/add_city"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AboutActivity"
