@@ -102,8 +102,8 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
             Intent data = new Intent();
             data.putExtra(Extras.CITY, currentCity);
             setResult(RESULT_OK, data);
-            mAdapter.notifyDataSetChanged();
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
