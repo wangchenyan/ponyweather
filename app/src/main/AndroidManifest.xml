@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Bmob -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".application.WeatherApplication"
@@ -57,6 +59,8 @@
             android:name=".activity.AboutActivity"
             android:label="@string/about"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.ImageWeatherActivity" />
+        <activity android:name=".activity.UploadImageActivity"></activity>
     </application>
 
 </manifest>

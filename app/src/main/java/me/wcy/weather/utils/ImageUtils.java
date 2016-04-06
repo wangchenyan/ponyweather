@@ -1,7 +1,14 @@
 package me.wcy.weather.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 
+import java.io.File;
 import java.util.Calendar;
 
 import me.wcy.weather.R;
@@ -55,5 +62,37 @@ public class ImageUtils {
             }
             return R.drawable.ic_sunset;
         }
+    }
+
+    public static void pickImage(final Activity activity) {
+        String[] items = new String[]{"拍照", "从相册选择"};
+        new AlertDialog.Builder(activity)
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                startCamera(activity);
+                                break;
+                            case 1:
+                                startAlbum(activity);
+                                break;
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private static void startCamera(Activity activity) {
+        String imagePath = Utils.getCameraImagePath(activity);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(imagePath)));
+        activity.startActivityForResult(intent, RequestCode.REQUEST_CAMERA);
+    }
+
+    private static void startAlbum(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        activity.startActivityForResult(intent, RequestCode.REQUEST_ALBUM);
     }
 }

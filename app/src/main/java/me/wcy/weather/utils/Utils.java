@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 /**
@@ -42,5 +43,17 @@ public class Utils {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static String getCachePath(Context context) {
+        return context.getExternalCacheDir().getPath() + File.separator;
+    }
+
+    public static String getCameraImagePath(Context context) {
+        return getCachePath(context) + "temp.jpg";
+    }
+
+    public static String getCutImagePath(Context context) {
+        return getCachePath(context) + "cut.jpg";
     }
 }

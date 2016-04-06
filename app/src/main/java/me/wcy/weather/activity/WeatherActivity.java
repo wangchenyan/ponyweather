@@ -2,7 +2,6 @@ package me.wcy.weather.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
@@ -228,21 +227,25 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         mDrawerLayout.closeDrawers();
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 item.setChecked(false);
             }
         }, 500);
         switch (item.getItemId()) {
+            case R.id.action_image_weather:
+                startActivity(new Intent(this, ImageWeatherActivity.class));
+                return true;
             case R.id.action_location:
                 startActivityForResult(new Intent(this, ManageCityActivity.class), RequestCode.REQUEST_CODE);
-                break;
+                return true;
             case R.id.action_share:
                 share();
-                break;
+                return true;
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
+                return true;
         }
         return false;
     }

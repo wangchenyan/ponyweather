@@ -5,4 +5,6 @@ package me.wcy.weather.utils;
  */
 public interface RequestCode {
     int REQUEST_CODE = 0;
+    int REQUEST_CAMERA = 1;
+    int REQUEST_ALBUM = 2;
 }
