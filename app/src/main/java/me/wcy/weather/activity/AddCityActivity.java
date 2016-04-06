@@ -27,8 +27,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import me.wcy.weather.R;
-import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.adapter.AddCityAdapter;
+import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.model.CityListEntity;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.SnackbarUtils;
@@ -327,14 +327,14 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             int offsetY = recyclerView.computeVerticalScrollOffset();
-            int itemHeight = recyclerView.getChildAt(0).getHeight();
-            if (offsetY > itemHeight && !isShow) {
+            int firstItemHeight = recyclerView.getChildAt(0).getHeight() + recyclerView.getPaddingTop();
+            if (!isShow && offsetY > firstItemHeight) {
                 if (fabTop.getVisibility() != View.VISIBLE) {
                     fabTop.setVisibility(View.VISIBLE);
                 }
                 fabTop.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
                 isShow = true;
-            } else if (offsetY <= itemHeight && isShow) {
+            } else if (isShow && offsetY <= firstItemHeight) {
                 int bottomMargin = ((CoordinatorLayout.LayoutParams) fabTop.getLayoutParams()).bottomMargin;
                 fabTop.animate().translationY(fabTop.getHeight() + bottomMargin)
                         .setInterpolator(new AccelerateInterpolator(2))

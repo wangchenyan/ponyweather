@@ -104,6 +104,7 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
             setResult(RESULT_OK, data);
         }
         mAdapter.notifyDataSetChanged();
+        SnackbarUtils.show(fabAdd, "删除成功");
     }
 
     @Override
