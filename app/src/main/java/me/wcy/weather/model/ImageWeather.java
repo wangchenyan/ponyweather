@@ -15,9 +15,17 @@ public class ImageWeather extends BmobObject {
      */
     private String imageUrl;
     /**
+     * 这一刻的想法
+     */
+    private String say;
+    /**
      * 位置
      */
-    private String location;
+    private Location location;
+    /**
+     * 城市
+     */
+    private String city;
     /**
      * 标签
      */
@@ -43,12 +51,28 @@ public class ImageWeather extends BmobObject {
         this.imageUrl = imageUrl;
     }
 
-    public String getLocation() {
+    public String getSay() {
+        return say;
+    }
+
+    public void setSay(String say) {
+        this.say = say;
+    }
+
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getTag() {

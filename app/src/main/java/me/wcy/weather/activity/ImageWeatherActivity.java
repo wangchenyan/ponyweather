@@ -4,19 +4,31 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
+import me.wcy.weather.adapter.ImageWeatherAdapter;
+import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.RequestCode;
@@ -29,6 +41,9 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Bind(R.id.fab_add_photo)
     FloatingActionButton fabAddPhoto;
     private ProgressDialog mProgressDialog;
+    private ImageWeatherAdapter mAdapter;
+    private List<ImageWeather> mImageList = new ArrayList<>();
+    private BmobQuery<ImageWeather> mQuery = new BmobQuery<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +52,26 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
+
+        rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mAdapter = new ImageWeatherAdapter(mImageList);
+        rvImage.setAdapter(mAdapter);
+
+        mQuery.addWhereEqualTo("city", "杭州");
+        mQuery.setLimit(20);
+        mQuery.order("-createdAt");
+        mQuery.findObjects(this, new FindListener<ImageWeather>() {
+            @Override
+            public void onSuccess(List<ImageWeather> list) {
+                mImageList.addAll(list);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e("query image fail", "code:" + i + ",msg:" + s);
+            }
+        });
     }
 
     @Override
@@ -91,20 +126,65 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         options.inJustDecodeBounds = false;
         options.inSampleSize = inSampleSize;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        String savePath = Utils.getCutImagePath(ImageWeatherActivity.this);
+        // 自动旋转方向
+        bitmap = autoRotate(path, bitmap);
+        String savePath = save2File(bitmap);
+        if (!TextUtils.isEmpty(savePath)) {
+            Intent intent = new Intent(ImageWeatherActivity.this, UploadImageActivity.class);
+            intent.putExtra(Extras.IMAGE_PATH, savePath);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE);
+        }
+    }
+
+    /**
+     * 图片自动旋转
+     */
+    private Bitmap autoRotate(String path, Bitmap source) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (exif == null) {
+            return source;
+        }
+        int ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        if (ori == ExifInterface.ORIENTATION_NORMAL) {
+            return source;
+        }
+        int degree = 0;
+        switch (ori) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                degree = 90;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                degree = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                degree = 270;
+                break;
+        }
+        // 旋转图片
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    private String save2File(Bitmap bitmap) {
+        String path = Utils.getCutImagePath(ImageWeatherActivity.this);
         FileOutputStream stream = null;
         Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
         int quality = 90;
         try {
-            stream = new FileOutputStream(savePath);
+            stream = new FileOutputStream(path);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        boolean success = bitmap.compress(format, quality, stream);
-        if (success) {
-            Intent intent = new Intent(ImageWeatherActivity.this, UploadImageActivity.class);
-            intent.putExtra(Extras.IMAGE_PATH, savePath);
-            startActivity(intent);
+        if (bitmap.compress(format, quality, stream)) {
+            return path;
+        } else {
+            return null;
         }
     }
 }

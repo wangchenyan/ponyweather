@@ -6,15 +6,38 @@
 
     <include layout="@layout/include_app_bar" />
 
-    <ImageView
-        android:id="@+id/iv_weather_image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop" />
-
-    <Button
-        android:id="@+id/btn_upload"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="发布" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_weather_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/et_say"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="这一刻的想法…" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="发布" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

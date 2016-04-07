@@ -3,9 +3,12 @@ package me.wcy.weather.utils;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author wcy
@@ -32,6 +35,16 @@ public class Utils {
         return versionCode;
     }
 
+    public static int getScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        return wm.getDefaultDisplay().getWidth();
+    }
+
+    public static int dp2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
     public static void setRefreshing(SwipeRefreshLayout refreshLayout, boolean refreshing, boolean notify) {
         Class<? extends SwipeRefreshLayout> refreshLayoutClass = refreshLayout.getClass();
         if (refreshLayoutClass != null) {
@@ -54,6 +67,7 @@ public class Utils {
     }
 
     public static String getCutImagePath(Context context) {
-        return getCachePath(context) + "cut.jpg";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        return getCachePath(context) + "image_" + sdf.format(new Date()) + ".jpg";
     }
 }
