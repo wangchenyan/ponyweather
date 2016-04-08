@@ -1,25 +1,26 @@
 package me.wcy.weather.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationListener;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,55 +29,124 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
+import me.wcy.weather.adapter.LoadMoreListener;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.Extras;
+import me.wcy.weather.utils.FileUtils;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.Utils;
+import me.wcy.weather.utils.SystemUtils;
 
-public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener {
+public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
+        , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener {
+    private static final int LIMIT = 20;
+    @Bind(R.id.appbar)
+    AppBarLayout mAppBar;
+    @Bind(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.rv_image)
     RecyclerView rvImage;
     @Bind(R.id.fab_add_photo)
     FloatingActionButton fabAddPhoto;
-    private ProgressDialog mProgressDialog;
     private ImageWeatherAdapter mAdapter;
+    private LoadMoreListener mLoadMoreListener;
     private List<ImageWeather> mImageList = new ArrayList<>();
     private BmobQuery<ImageWeather> mQuery = new BmobQuery<>();
+    private AMapLocationClient mLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_weather);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-
-        rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mAdapter = new ImageWeatherAdapter(mImageList);
+        mLoadMoreListener = new LoadMoreListener(this);
+        rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         rvImage.setAdapter(mAdapter);
 
-        mQuery.addWhereEqualTo("city", "杭州");
-        mQuery.setLimit(20);
+        mQuery.setLimit(LIMIT);
         mQuery.order("-createdAt");
+
+        mLocationClient = SystemUtils.initAMapLocation(this, this);
+        mLocationClient.startLocation();
+
+        SystemUtils.setRefreshingOnCreate(mRefreshLayout);
+    }
+
+    @Override
+    protected void setListener() {
+        mRefreshLayout.setOnRefreshListener(this);
+        rvImage.setOnScrollListener(mLoadMoreListener);
+        fabAddPhoto.setOnClickListener(this);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            mLocationClient.stopLocation();
+            if (aMapLocation.getErrorCode() == 0) {
+                // 定位成功回调信息，设置相关消息
+                String city = aMapLocation.getCity().replace("市", "");
+                mQuery.addWhereEqualTo("city", city);
+                onRefresh();
+            } else {
+                // 定位失败
+                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+                Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        mQuery.setSkip(0);
         mQuery.findObjects(this, new FindListener<ImageWeather>() {
             @Override
             public void onSuccess(List<ImageWeather> list) {
+                mImageList.clear();
                 mImageList.addAll(list);
                 mAdapter.notifyDataSetChanged();
+                mRefreshLayout.setRefreshing(false);
+                mLoadMoreListener.setEnableLoadMore(true);
             }
 
             @Override
             public void onError(int i, String s) {
                 Log.e("query image fail", "code:" + i + ",msg:" + s);
+                mRefreshLayout.setRefreshing(false);
+                SnackbarUtils.show(fabAddPhoto, "加载失败，请下拉刷新");
             }
         });
     }
 
     @Override
-    protected void setListener() {
-        fabAddPhoto.setOnClickListener(this);
+    public void onLoadMore() {
+        mQuery.setSkip(mImageList.size());
+        mQuery.findObjects(this, new FindListener<ImageWeather>() {
+            @Override
+            public void onSuccess(List<ImageWeather> list) {
+                mLoadMoreListener.onLoadComplete();
+                if (!list.isEmpty()) {
+                    mImageList.addAll(list);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    mLoadMoreListener.setEnableLoadMore(false);
+                    SnackbarUtils.show(fabAddPhoto, "没有更多了");
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e("query image fail", "code:" + i + ",msg:" + s);
+                mLoadMoreListener.onLoadComplete();
+                SnackbarUtils.show(fabAddPhoto, "加载失败");
+            }
+        });
     }
 
     @Override
@@ -100,11 +170,17 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         }
         switch (requestCode) {
             case RequestCode.REQUEST_CAMERA:
-                compressImage(Utils.getCameraImagePath(this));
+                compressImage(FileUtils.getCameraImagePath(this));
                 break;
             case RequestCode.REQUEST_ALBUM:
                 Uri uri = data.getData();
                 compressImage(uri.getPath());
+                break;
+            case RequestCode.REQUEST_UPLOAD:
+                rvImage.scrollToPosition(0);
+                mAppBar.setExpanded(true, false);
+                mRefreshLayout.setRefreshing(true);
+                onRefresh();
                 break;
         }
     }
@@ -126,65 +202,20 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         options.inJustDecodeBounds = false;
         options.inSampleSize = inSampleSize;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        // 自动旋转方向
-        bitmap = autoRotate(path, bitmap);
-        String savePath = save2File(bitmap);
+        bitmap = ImageUtils.autoRotate(path, bitmap);
+        String savePath = ImageUtils.save2File(this, bitmap);
         if (!TextUtils.isEmpty(savePath)) {
             Intent intent = new Intent(ImageWeatherActivity.this, UploadImageActivity.class);
             intent.putExtra(Extras.IMAGE_PATH, savePath);
-            startActivityForResult(intent, RequestCode.REQUEST_CODE);
-        }
-    }
-
-    /**
-     * 图片自动旋转
-     */
-    private Bitmap autoRotate(String path, Bitmap source) {
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (exif == null) {
-            return source;
-        }
-        int ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        if (ori == ExifInterface.ORIENTATION_NORMAL) {
-            return source;
-        }
-        int degree = 0;
-        switch (ori) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                degree = 90;
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                degree = 180;
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                degree = 270;
-                break;
-        }
-        // 旋转图片
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-    }
-
-    private String save2File(Bitmap bitmap) {
-        String path = Utils.getCutImagePath(ImageWeatherActivity.this);
-        FileOutputStream stream = null;
-        Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-        int quality = 90;
-        try {
-            stream = new FileOutputStream(path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (bitmap.compress(format, quality, stream)) {
-            return path;
+            startActivityForResult(intent, RequestCode.REQUEST_UPLOAD);
         } else {
-            return null;
+            SnackbarUtils.show(fabAddPhoto, "图片保存失败");
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mLocationClient.onDestroy();
+        super.onDestroy();
     }
 }

@@ -35,10 +35,9 @@ import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.UpdateUtils;
-import me.wcy.weather.utils.Utils;
+import me.wcy.weather.utils.SystemUtils;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -109,26 +108,18 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     private void fetchDataFromCache(final String city) {
         Weather weather = (Weather) mACache.getAsObject(city);
         if (weather == null) {
-            fetchDataFromNetWork(city, false);
+            llWeatherContainer.setVisibility(View.GONE);
+            SystemUtils.setRefreshingOnCreate(mRefreshLayout);
+            fetchDataFromNetWork(city);
         } else {
             updateView(weather);
         }
     }
 
-    private void fetchDataFromNetWork(final String city, final boolean isRefresh) {
+    private void fetchDataFromNetWork(final String city) {
         Api.getIApi().getWeather(city, ApiKey.HE_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        if (!isRefresh) {
-                            Utils.setRefreshing(mRefreshLayout, true, false);
-                            llWeatherContainer.setVisibility(View.GONE);
-                        }
-                    }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
                 .filter(new Func1<WeatherData, Boolean>() {
                     @Override
                     public Boolean call(final WeatherData weatherData) {
@@ -175,9 +166,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                     @Override
                     public void onNext(Weather weather) {
                         updateView(weather);
-                        if (llWeatherContainer.getVisibility() == View.GONE) {
-                            llWeatherContainer.setVisibility(View.VISIBLE);
-                        }
+                        llWeatherContainer.setVisibility(View.VISIBLE);
                         SnackbarUtils.show(WeatherActivity.this, R.string.update_tips);
                     }
                 });
@@ -212,7 +201,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
 
     @Override
     public void onRefresh() {
-        fetchDataFromNetWork(mCity, true);
+        fetchDataFromNetWork(mCity);
     }
 
     @Override
@@ -272,7 +261,9 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         collapsingToolbar.setTitle(mCity);
         mScrollView.scrollTo(0, 0);
         mAppBar.setExpanded(true, false);
-        fetchDataFromNetWork(mCity, false);
+        llWeatherContainer.setVisibility(View.GONE);
+        mRefreshLayout.setRefreshing(true);
+        fetchDataFromNetWork(mCity);
     }
 
     @Override

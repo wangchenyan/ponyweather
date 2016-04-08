@@ -17,7 +17,6 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.google.gson.Gson;
 
@@ -32,6 +31,7 @@ import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.model.CityListEntity;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.SnackbarUtils;
+import me.wcy.weather.utils.SystemUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -67,7 +67,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
 
-        initAMapLocation();
+        mLocationClient = SystemUtils.initAMapLocation(this, this);
         fetchCityList();
     }
 
@@ -77,27 +77,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         fabTop.setOnClickListener(this);
         mAddCityAdapter.setOnItemClickListener(this);
         rvCity.setOnScrollListener(mScrollListener);
-    }
-
-    private void initAMapLocation() {
-        mLocationClient = new AMapLocationClient(getApplicationContext());
-        mLocationClient.setLocationListener(this);
-        // 初始化定位参数
-        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
-        // 设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        // 设置是否返回地址信息（默认返回地址信息）
-        mLocationOption.setNeedAddress(true);
-        // 设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(false);
-        // 设置是否强制刷新WIFI，默认为强制刷新
-        mLocationOption.setWifiActiveScan(true);
-        // 设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption.setMockEnable(true);
-        // 设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
-        // 给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
     }
 
     private void fetchCityList() {
@@ -284,11 +263,11 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 }
             } else {
                 // 定位失败
-                SnackbarUtils.show(this, R.string.locate_fail);
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Log.e("AmapError", "location Error, ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo());
+                SnackbarUtils.show(this, R.string.locate_fail);
             }
         }
     }

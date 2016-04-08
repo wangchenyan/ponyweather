@@ -4,11 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 import me.wcy.weather.R;
@@ -84,7 +90,7 @@ public class ImageUtils {
     }
 
     private static void startCamera(Activity activity) {
-        String imagePath = Utils.getCameraImagePath(activity);
+        String imagePath = FileUtils.getCameraImagePath(activity);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(imagePath)));
         activity.startActivityForResult(intent, RequestCode.REQUEST_CAMERA);
@@ -94,5 +100,56 @@ public class ImageUtils {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         activity.startActivityForResult(intent, RequestCode.REQUEST_ALBUM);
+    }
+
+    /**
+     * 图片自动旋转
+     */
+    public static Bitmap autoRotate(String path, Bitmap source) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (exif == null) {
+            return source;
+        }
+        int ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        if (ori == ExifInterface.ORIENTATION_NORMAL) {
+            return source;
+        }
+        int degree = 0;
+        switch (ori) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                degree = 90;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                degree = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                degree = 270;
+                break;
+        }
+        // 旋转图片
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    public static String save2File(Context context, Bitmap bitmap) {
+        String path = FileUtils.getCutImagePath(context);
+        FileOutputStream stream = null;
+        Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+        int quality = 90;
+        try {
+            stream = new FileOutputStream(path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (bitmap.compress(format, quality, stream)) {
+            return path;
+        }
+        return null;
     }
 }

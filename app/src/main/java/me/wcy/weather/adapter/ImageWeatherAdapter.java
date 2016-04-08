@@ -19,7 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
-import me.wcy.weather.utils.Utils;
+import me.wcy.weather.utils.ScreenUtils;
 
 /**
  * Created by hzwangchenyan on 2016/4/7.
@@ -70,7 +70,7 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            int minHeight = Utils.getScreenWidth(itemView.getContext()) / 2 - Utils.dp2px(itemView.getContext(), 4) * 2;
+            int minHeight = ScreenUtils.getScreenWidth() / 2 - ScreenUtils.dp2px(4) * 2;
             ivImage.setMinimumHeight(minHeight);
         }
     }

@@ -8,7 +8,7 @@ import android.preference.PreferenceFragment;
 
 import me.wcy.weather.R;
 import me.wcy.weather.utils.UpdateUtils;
-import me.wcy.weather.utils.Utils;
+import me.wcy.weather.utils.SystemUtils;
 
 public class AboutActivity extends BaseActivity {
 
@@ -44,7 +44,7 @@ public class AboutActivity extends BaseActivity {
             mJianshu = findPreference("jianshu");
             mGithub = findPreference("github");
 
-            mVersion.setSummary("v " + Utils.getVersionName(getActivity()));
+            mVersion.setSummary("v " + SystemUtils.getVersionName(getActivity()));
             setListener();
         }
 

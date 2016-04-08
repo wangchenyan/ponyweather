@@ -15,6 +15,8 @@
     <string name="manage_city">城市管理</string>
     <string name="add_city">添加城市</string>
     <string name="image_weather">实景天气</string>
+    <string name="moment">身边此刻</string>
+    <string name="upload_image">发布</string>
     <string name="network_error">网络异常，请检查网络设置</string>
     <string name="locate_fail">自动定位失败，请稍后再试</string>
     <string name="update_tips">已更新至最新天气</string>

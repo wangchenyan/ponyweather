@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import cn.bmob.v3.Bmob;
 import im.fir.sdk.FIR;
 import me.wcy.weather.api.ApiKey;
+import me.wcy.weather.utils.ScreenUtils;
 
 /**
  * Created by wcy on 2016/4/3.
@@ -18,6 +19,7 @@ public class WeatherApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        ScreenUtils.init(this);
         Bmob.initialize(this, ApiKey.BMOB_KEY);
         FIR.init(this);
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this)

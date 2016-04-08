@@ -41,7 +41,7 @@ public class UpdateUtils {
                 Gson gson = new Gson();
                 UpdateInfo updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
                 int version = Integer.valueOf(updateInfo.version);
-                if (version > Utils.getVersionCode(activity)) {
+                if (version > SystemUtils.getVersionCode(activity)) {
                     updateDialog(activity, updateInfo);
                 } else {
                     if (activity instanceof AboutActivity) {

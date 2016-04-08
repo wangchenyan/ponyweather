@@ -48,6 +48,14 @@
             android:name=".activity.WeatherActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.ImageWeatherActivity"
+            android:label="@string/moment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.UploadImageActivity"
+            android:label="@string/upload_image"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.ManageCityActivity"
             android:label="@string/manage_city"
             android:screenOrientation="portrait" />
@@ -59,8 +67,6 @@
             android:name=".activity.AboutActivity"
             android:label="@string/about"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.ImageWeatherActivity" />
-        <activity android:name=".activity.UploadImageActivity"></activity>
     </application>
 
 </manifest>
