@@ -20,7 +20,7 @@
         android:id="@+id/tv_tag_plant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tag_plant"
+        android:background="@drawable/tag_plant_selector"
         android:gravity="center"
         android:text="植物"
         android:textColor="@color/white" />
@@ -34,7 +34,7 @@
         android:id="@+id/tv_tag_people"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tag_people"
+        android:background="@drawable/tag_people_selector"
         android:gravity="center"
         android:text="人物"
         android:textColor="@color/white" />
@@ -48,7 +48,7 @@
         android:id="@+id/tv_tag_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tag_weather"
+        android:background="@drawable/tag_weather_selector"
         android:gravity="center"
         android:text="天气"
         android:textColor="@color/white" />
@@ -62,7 +62,7 @@
         android:id="@+id/tv_tag_architecture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tag_architecture"
+        android:background="@drawable/tag_architecture_selector"
         android:gravity="center"
         android:text="建筑"
         android:textColor="@color/white" />
@@ -76,7 +76,7 @@
         android:id="@+id/tv_tag_animal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tag_animal"
+        android:background="@drawable/tag_animal_selector"
         android:gravity="center"
         android:text="动物"
         android:textColor="@color/white" />

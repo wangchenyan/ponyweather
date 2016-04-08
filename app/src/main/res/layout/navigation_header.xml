@@ -2,5 +2,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="@drawable/ic_navigation_header_bg"
+    android:background="@drawable/header_navigation"
     android:theme="@style/ThemeOverlay.AppCompat.Dark" />

@@ -47,7 +47,7 @@
                     android:id="@+id/iv_praise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_praise_border" />
+                    android:src="@drawable/ic_praise" />
 
                 <TextView
                     android:id="@+id/tv_praise_num"
