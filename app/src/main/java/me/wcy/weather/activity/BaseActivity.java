@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,6 +64,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract void setListener();
+
+    public void showSoftKeyboard(final EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(editText, 0);
+            }
+        }, 200L);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class WeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = "WeatherActivity";
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
@@ -155,6 +157,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.e(TAG, "update weather fail. msg:" + e.getMessage());
                         if (NetworkUtils.errorByNetwork(e)) {
                             SnackbarUtils.show(WeatherActivity.this, R.string.network_error);
                         } else {

@@ -28,11 +28,13 @@ import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.Extras;
+import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.widget.TagLayout;
 
 public class UploadImageActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener {
+    private static final String TAG = "UploadImageActivity";
     @Bind(R.id.iv_weather_image)
     ImageView ivWeatherImage;
     @Bind(R.id.tv_location)
@@ -55,6 +57,9 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
 
         path = getIntent().getStringExtra(Extras.IMAGE_PATH);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
+        int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
+        int imageHeight = (int) ((float) bitmap.getHeight() / (float) bitmap.getWidth() * (float) imageWidth);
+        ivWeatherImage.setMinimumHeight(imageHeight);
         ivWeatherImage.setImageBitmap(bitmap);
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -87,6 +92,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         if (aMapLocation != null) {
             mLocationClient.stopLocation();
             cancelProgress();
+            showSoftKeyboard(etSay);
             if (aMapLocation.getErrorCode() == 0) {
                 // 定位成功回调信息，设置相关消息
                 imageWeather.setCity(aMapLocation.getCity().replace("市", ""));
@@ -134,7 +140,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onFailure(int i, String s) {
-                        Log.e("upload object fail", "code:" + i + ",msg:" + s);
+                        Log.e(TAG, "upload object fail. code:" + i + ",msg:" + s);
                         cancelProgress();
                         SnackbarUtils.show(UploadImageActivity.this, "发布失败：" + s);
                     }
@@ -143,7 +149,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onFailure(int i, String s) {
-                Log.e("upload image fail", "code:" + i + ",msg:" + s);
+                Log.e(TAG, "upload image fail. code:" + i + ",msg:" + s);
                 cancelProgress();
                 SnackbarUtils.show(UploadImageActivity.this, "图片上传失败：" + s);
             }

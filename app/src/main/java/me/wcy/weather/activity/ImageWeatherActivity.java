@@ -30,6 +30,7 @@ import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
 import me.wcy.weather.adapter.LoadMoreListener;
+import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.FileUtils;
@@ -39,7 +40,9 @@ import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
-        , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener {
+        , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
+        , OnItemClickListener {
+    private static final String TAG = "ImageWeatherActivity";
     private static final int LIMIT = 20;
     @Bind(R.id.appbar)
     AppBarLayout mAppBar;
@@ -79,6 +82,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         mRefreshLayout.setOnRefreshListener(this);
         rvImage.setOnScrollListener(mLoadMoreListener);
         fabAddPhoto.setOnClickListener(this);
+        mAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -117,7 +121,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(int i, String s) {
-                Log.e("query image fail", "code:" + i + ",msg:" + s);
+                Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
                 mRefreshLayout.setRefreshing(false);
                 SnackbarUtils.show(fabAddPhoto, "加载失败，请下拉刷新");
             }
@@ -142,7 +146,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(int i, String s) {
-                Log.e("query image fail", "code:" + i + ",msg:" + s);
+                Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
                 mLoadMoreListener.onLoadComplete();
                 SnackbarUtils.show(fabAddPhoto, "加载失败");
             }
@@ -160,6 +164,12 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                 ImageUtils.pickImage(this);
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(View view, Object data) {
+        ImageWeather imageWeather = (ImageWeather) data;
+        ViewImageActivity.start(this, imageWeather);
     }
 
     @Override
@@ -181,6 +191,16 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                 mAppBar.setExpanded(true, false);
                 mRefreshLayout.setRefreshing(true);
                 onRefresh();
+                break;
+            case RequestCode.REQUEST_VIEW_IMAGE:
+                ImageWeather imageWeather = (ImageWeather) data.getSerializableExtra(Extras.IMAGE_WEATHER);
+                for (ImageWeather weather : mImageList) {
+                    if (weather.getObjectId().equals(imageWeather.getObjectId())) {
+                        weather.setPraise(imageWeather.getPraise());
+                        break;
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
                 break;
         }
     }

@@ -56,6 +56,10 @@
             android:label="@string/upload_image"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.ViewImageActivity"
+            android:label="@string/view_image"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.ManageCityActivity"
             android:label="@string/manage_city"
             android:screenOrientation="portrait" />

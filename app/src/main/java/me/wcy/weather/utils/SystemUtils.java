@@ -2,6 +2,7 @@ package me.wcy.weather.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
  * @author wcy
@@ -65,5 +67,13 @@ public class SystemUtils {
         // 给定位客户端对象设置定位参数
         aMapLocationClient.setLocationOption(mLocationOption);
         return aMapLocationClient;
+    }
+
+    public static DisplayImageOptions getDefaultDisplayOption() {
+        return new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 }

@@ -39,8 +39,9 @@ import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class AddCityActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener,
-        OnItemClickListener {
+public class AddCityActivity extends BaseActivity implements View.OnClickListener
+        , AMapLocationListener, OnItemClickListener {
+    private static final String TAG = "AddCityActivity";
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.rv_city)
@@ -87,6 +88,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
+                        mProgressDialog.setMessage("");
                         mProgressDialog.show();
                     }
                 })
@@ -125,7 +127,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onError(Throwable e) {
                         mProgressDialog.cancel();
-                        Log.e("fetchCityList", "onError:" + e.getMessage());
+                        Log.e(TAG, "fetchCityList fail. msg:" + e.getMessage());
                     }
 
                     @Override
@@ -276,6 +278,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_location:
+                mProgressDialog.setMessage("正在定位…");
                 mProgressDialog.show();
                 // 启动定位
                 mLocationClient.startLocation();
