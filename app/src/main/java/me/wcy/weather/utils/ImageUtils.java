@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 
@@ -71,6 +72,10 @@ public class ImageUtils {
     }
 
     public static void pickImage(final Activity activity) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            SnackbarUtils.show(activity, "请确认已插入SD卡");
+            return;
+        }
         String[] items = new String[]{"拍照", "从相册选择"};
         new AlertDialog.Builder(activity)
                 .setItems(items, new DialogInterface.OnClickListener() {

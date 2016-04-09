@@ -1,7 +1,9 @@
 package me.wcy.weather.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,10 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationListener;
-
 import java.io.File;
 
 import butterknife.Bind;
@@ -28,12 +26,12 @@ import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.Extras;
+import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.widget.TagLayout;
 
-public class UploadImageActivity extends BaseActivity implements View.OnClickListener, AMapLocationListener {
+public class UploadImageActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "UploadImageActivity";
     @Bind(R.id.iv_weather_image)
     ImageView ivWeatherImage;
@@ -46,9 +44,15 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
     @Bind(R.id.btn_upload)
     Button btnUpload;
     private ImageWeather imageWeather = new ImageWeather();
-    private AMapLocationClient mLocationClient;
     private ProgressDialog mProgressDialog;
     private String path;
+
+    public static void start(Activity activity, Location location, String path) {
+        Intent intent = new Intent(activity, UploadImageActivity.class);
+        intent.putExtra(Extras.IMAGE_PATH, path);
+        intent.putExtra(Extras.LOCATION, location);
+        activity.startActivityForResult(intent, RequestCode.REQUEST_UPLOAD);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +66,20 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         ivWeatherImage.setMinimumHeight(imageHeight);
         ivWeatherImage.setImageBitmap(bitmap);
 
+        Location location = (Location) getIntent().getSerializableExtra(Extras.LOCATION);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String deviceId = telephonyManager.getDeviceId();
         String userName = "马儿" + deviceId.substring(7);
+        imageWeather.setLocation(location);
+        imageWeather.setCity(location.getCity().replace("市", ""));
         imageWeather.setUserName(userName);
         imageWeather.setPraise(0L);
+        tvLocation.setText(location.getAddress());
 
-        mLocationClient = SystemUtils.initAMapLocation(this, this);
-        mLocationClient.startLocation();
-        showProgress("正在定位…");
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+
+        showSoftKeyboard(etSay);
     }
 
     @Override
@@ -87,52 +96,21 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            mLocationClient.stopLocation();
-            cancelProgress();
-            showSoftKeyboard(etSay);
-            if (aMapLocation.getErrorCode() == 0) {
-                // 定位成功回调信息，设置相关消息
-                imageWeather.setCity(aMapLocation.getCity().replace("市", ""));
-                Location location = new Location();
-                location.setAddress(aMapLocation.getAddress());
-                location.setCountry(aMapLocation.getCountry());
-                location.setProvince(aMapLocation.getProvince());
-                location.setCity(aMapLocation.getCity());
-                location.setDistrict(aMapLocation.getDistrict());
-                location.setStreet(aMapLocation.getStreet());
-                location.setStreetNum(aMapLocation.getStreetNum());
-                imageWeather.setLocation(location);
-                tvLocation.setText(aMapLocation.getAddress());
-            } else {
-                // 定位失败
-                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError", "location Error, ErrCode:"
-                        + aMapLocation.getErrorCode() + ", errInfo:"
-                        + aMapLocation.getErrorInfo());
-                Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
-
     private void upload() {
-        showProgress("正在上传图片…");
+        mProgressDialog.setMessage("正在上传图片…");
+        mProgressDialog.show();
         final BmobFile file = new BmobFile(new File(path));
         file.upload(this, new UploadFileListener() {
             @Override
             public void onSuccess() {
-                cancelProgress();
-                showProgress("正在发布…");
+                mProgressDialog.setMessage("正在发布…");
                 imageWeather.setImageUrl(file.getFileUrl(UploadImageActivity.this));
                 imageWeather.setSay(etSay.getText().toString());
                 imageWeather.setTag(tagLayout.getTag());
                 imageWeather.save(UploadImageActivity.this, new SaveListener() {
                     @Override
                     public void onSuccess() {
-                        cancelProgress();
+                        mProgressDialog.cancel();
                         Toast.makeText(UploadImageActivity.this, "成功发布到" + imageWeather.getLocation().getCity(), Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
@@ -141,7 +119,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onFailure(int i, String s) {
                         Log.e(TAG, "upload object fail. code:" + i + ",msg:" + s);
-                        cancelProgress();
+                        mProgressDialog.cancel();
                         SnackbarUtils.show(UploadImageActivity.this, "发布失败：" + s);
                     }
                 });
@@ -150,30 +128,9 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(int i, String s) {
                 Log.e(TAG, "upload image fail. code:" + i + ",msg:" + s);
-                cancelProgress();
+                mProgressDialog.cancel();
                 SnackbarUtils.show(UploadImageActivity.this, "图片上传失败：" + s);
             }
         });
-    }
-
-    private void showProgress(String msg) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setCancelable(false);
-        }
-        mProgressDialog.setMessage(msg);
-        mProgressDialog.show();
-    }
-
-    private void cancelProgress() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.cancel();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        mLocationClient.onDestroy();
-        super.onDestroy();
     }
 }

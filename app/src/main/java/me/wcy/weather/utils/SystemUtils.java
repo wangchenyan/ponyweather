@@ -12,6 +12,8 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import me.wcy.weather.R;
+
 /**
  * @author wcy
  */
@@ -74,6 +76,9 @@ public class SystemUtils {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
+                .showImageForEmptyUri(R.drawable.image_weather_placeholder_small)
+                .showImageOnFail(R.drawable.image_weather_placeholder_small)
+                .showImageOnLoading(R.drawable.image_weather_placeholder_small)
                 .build();
     }
 }

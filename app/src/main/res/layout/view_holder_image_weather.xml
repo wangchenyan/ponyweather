@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/image_weather_placeholder" />
+            android:src="@drawable/image_weather_placeholder_small" />
 
         <RelativeLayout
             android:layout_width="match_parent"

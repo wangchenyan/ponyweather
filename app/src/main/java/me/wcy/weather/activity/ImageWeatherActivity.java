@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +31,7 @@ import me.wcy.weather.adapter.ImageWeatherAdapter;
 import me.wcy.weather.adapter.LoadMoreListener;
 import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.model.ImageWeather;
+import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.FileUtils;
 import me.wcy.weather.utils.ImageUtils;
@@ -57,6 +57,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     private List<ImageWeather> mImageList = new ArrayList<>();
     private BmobQuery<ImageWeather> mQuery = new BmobQuery<>();
     private AMapLocationClient mLocationClient;
+    private Location mLocation = new Location();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,15 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0) {
                 // 定位成功回调信息，设置相关消息
-                String city = aMapLocation.getCity().replace("市", "");
+                mLocation.setAddress(aMapLocation.getAddress());
+                mLocation.setCountry(aMapLocation.getCountry());
+                mLocation.setProvince(aMapLocation.getProvince());
+                mLocation.setCity(aMapLocation.getCity());
+                mLocation.setDistrict(aMapLocation.getDistrict());
+                mLocation.setStreet(aMapLocation.getStreet());
+                mLocation.setStreetNum(aMapLocation.getStreetNum());
+
+                String city = mLocation.getCity().replace("市", "");
                 mQuery.addWhereEqualTo("city", city);
                 onRefresh();
             } else {
@@ -157,10 +166,6 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_photo:
-                if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    SnackbarUtils.show(fabAddPhoto, "请确认已插入SD卡");
-                    return;
-                }
                 ImageUtils.pickImage(this);
                 break;
         }
@@ -225,9 +230,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         bitmap = ImageUtils.autoRotate(path, bitmap);
         String savePath = ImageUtils.save2File(this, bitmap);
         if (!TextUtils.isEmpty(savePath)) {
-            Intent intent = new Intent(ImageWeatherActivity.this, UploadImageActivity.class);
-            intent.putExtra(Extras.IMAGE_PATH, savePath);
-            startActivityForResult(intent, RequestCode.REQUEST_UPLOAD);
+            UploadImageActivity.start(this, mLocation, savePath);
         } else {
             SnackbarUtils.show(fabAddPhoto, "图片保存失败");
         }

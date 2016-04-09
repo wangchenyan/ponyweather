@@ -32,7 +32,7 @@
                         android:layout_margin="4dp"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/image_weather_placeholder" />
+                        android:src="@drawable/image_weather_placeholder_big" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
