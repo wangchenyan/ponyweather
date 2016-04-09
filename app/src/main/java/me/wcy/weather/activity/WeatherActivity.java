@@ -18,6 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationListener;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -35,15 +39,16 @@ import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.UpdateUtils;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class WeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class WeatherActivity extends BaseActivity implements AMapLocationListener
+        , NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "WeatherActivity";
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -78,6 +83,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     @Bind(R.id.lv_suggestion)
     ListView lvSuggestion;
     private ACache mACache;
+    private AMapLocationClient mLocationClient;
     private String mCity;
 
     @Override
@@ -91,13 +97,16 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
 
         mACache = ACache.get(getApplicationContext());
         mCity = mACache.getAsString(Extras.CITY);
-        if (TextUtils.isEmpty(mCity)) {
-            mCity = "北京";
-            initCache(mCity);
-        }
-        collapsingToolbar.setTitle(mCity);
 
-        fetchDataFromCache(mCity);
+        if (TextUtils.isEmpty(mCity)) {// 首次进入，自动定位
+            llWeatherContainer.setVisibility(View.GONE);
+            SystemUtils.setRefreshingOnCreate(mRefreshLayout);
+            locate();
+        } else {
+            collapsingToolbar.setTitle(mCity);
+            fetchDataFromCache(mCity);
+        }
+
         UpdateUtils.checkUpdate(this);
     }
 
@@ -195,16 +204,57 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));
     }
 
-    private void initCache(String city) {
-        ArrayList<String> cityList = new ArrayList<>();
-        cityList.add(0, city);
-        mACache.put(Extras.CITY, city);
-        mACache.put(Extras.CITY_LIST, cityList);
+    private void locate() {
+        mLocationClient = SystemUtils.initAMapLocation(this, this);
+        mLocationClient.startLocation();
     }
 
     @Override
     public void onRefresh() {
         fetchDataFromNetWork(mCity);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            mLocationClient.stopLocation();
+            if (aMapLocation.getErrorCode() == 0) {
+                // 定位成功回调信息，设置相关消息
+                String area = aMapLocation.getDistrict();
+                if (area.endsWith("市") || area.endsWith("县")) {
+                    if (area.length() > 2) {
+                        area = area.replace("市", "").replace("县", "");
+                    }
+                    onLocated(area);
+                } else {
+                    String city = aMapLocation.getCity().replace("市", "");
+                    onLocated(city);
+                }
+            } else {
+                // 定位失败
+                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+                onLocated("北京");
+                SnackbarUtils.show(this, R.string.locate_fail);
+            }
+        }
+    }
+
+    private void onLocated(String city) {
+        mCity = city;
+        initCache(mCity);
+
+        collapsingToolbar.setTitle(mCity);
+        fetchDataFromNetWork(mCity);
+    }
+
+    private void initCache(String city) {
+        ArrayList<String> cityList = new ArrayList<>();
+        cityList.add(0, city);
+        mACache.put(Extras.CITY, city);
+        mACache.put(Extras.CITY_LIST, cityList);
     }
 
     @Override
@@ -276,5 +326,13 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             return;
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mLocationClient != null) {
+            mLocationClient.onDestroy();
+        }
+        super.onDestroy();
     }
 }

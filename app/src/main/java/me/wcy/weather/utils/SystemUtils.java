@@ -39,12 +39,12 @@ public class SystemUtils {
 
     public static void setRefreshingOnCreate(final SwipeRefreshLayout refreshLayout) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
             }
-        });
+        }, 200);
     }
 
     public static AMapLocationClient initAMapLocation(Context context, AMapLocationListener aMapLocationListener) {
