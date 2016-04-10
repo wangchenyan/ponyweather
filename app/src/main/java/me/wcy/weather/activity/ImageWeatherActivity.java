@@ -90,7 +90,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             mLocationClient.stopLocation();
-            if (aMapLocation.getErrorCode() == 0) {
+            if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
                 mLocation.setAddress(aMapLocation.getAddress());
                 mLocation.setCountry(aMapLocation.getCountry());
@@ -132,7 +132,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
             public void onError(int i, String s) {
                 Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
                 mRefreshLayout.setRefreshing(false);
-                SnackbarUtils.show(fabAddPhoto, "加载失败，请下拉刷新");
+                SnackbarUtils.show(fabAddPhoto, R.string.refresh_fail);
             }
         });
     }
@@ -149,7 +149,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                     mAdapter.notifyDataSetChanged();
                 } else {
                     mLoadMoreListener.setEnableLoadMore(false);
-                    SnackbarUtils.show(fabAddPhoto, "没有更多了");
+                    SnackbarUtils.show(fabAddPhoto, R.string.no_more);
                 }
             }
 
@@ -157,7 +157,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
             public void onError(int i, String s) {
                 Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
                 mLoadMoreListener.onLoadComplete();
-                SnackbarUtils.show(fabAddPhoto, "加载失败");
+                SnackbarUtils.show(fabAddPhoto, R.string.load_fail);
             }
         });
     }
@@ -213,7 +213,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     private void compressImage(final String path) {
         File file = new File(path);
         if (!file.exists()) {
-            SnackbarUtils.show(fabAddPhoto, "打开失败，请重试");
+            SnackbarUtils.show(fabAddPhoto, R.string.image_open_fail);
             return;
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -232,7 +232,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         if (!TextUtils.isEmpty(savePath)) {
             UploadImageActivity.start(this, mLocation, savePath);
         } else {
-            SnackbarUtils.show(fabAddPhoto, "图片保存失败");
+            SnackbarUtils.show(fabAddPhoto, R.string.image_save_fail);
         }
     }
 

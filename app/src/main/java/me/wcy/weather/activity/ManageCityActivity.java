@@ -77,20 +77,20 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
         final String city = (String) data;
         new AlertDialog.Builder(this)
                 .setTitle(city)
-                .setMessage("是否删除该城市？")
-                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                .setMessage(R.string.whether_delete)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteCity(city);
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
     private void deleteCity(String city) {
         if (mCityList.size() <= 1) {
-            SnackbarUtils.show(fabAdd, "请至少保留一个城市");
+            SnackbarUtils.show(fabAdd, R.string.at_least_one);
             return;
         }
         mCityList.remove(city);
@@ -104,7 +104,7 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
             setResult(RESULT_OK, data);
         }
         mAdapter.notifyDataSetChanged();
-        SnackbarUtils.show(fabAdd, "删除成功");
+        SnackbarUtils.show(fabAdd, R.string.delete_success);
     }
 
     @Override

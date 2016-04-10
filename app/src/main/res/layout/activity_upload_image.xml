@@ -71,7 +71,8 @@
                                 android:id="@+id/tv_location"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="正在定位…" />
+                                android:text="正在定位…"
+                                android:textColor="@color/grey" />
                         </LinearLayout>
 
                         <Button

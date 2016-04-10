@@ -9,7 +9,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="选择\n标签" />
+        android:text="选择\n标签"
+        android:textColor="@color/grey" />
 
     <View
         android:layout_width="0dp"

@@ -73,12 +73,11 @@ public class ImageUtils {
 
     public static void pickImage(final Activity activity) {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            SnackbarUtils.show(activity, "请确认已插入SD卡");
+            SnackbarUtils.show(activity, R.string.no_sdcard);
             return;
         }
-        String[] items = new String[]{"拍照", "从相册选择"};
         new AlertDialog.Builder(activity)
-                .setItems(items, new DialogInterface.OnClickListener() {
+                .setItems(R.array.image_source, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {

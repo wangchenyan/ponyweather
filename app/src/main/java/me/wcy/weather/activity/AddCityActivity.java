@@ -251,7 +251,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         if (aMapLocation != null) {
             mProgressDialog.cancel();
             mLocationClient.stopLocation();
-            if (aMapLocation.getErrorCode() == 0) {
+            if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
                 String area = aMapLocation.getDistrict();
                 if (area.endsWith("市") || area.endsWith("县")) {
@@ -278,7 +278,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_location:
-                mProgressDialog.setMessage("正在定位…");
+                mProgressDialog.setMessage(getString(R.string.locating));
                 mProgressDialog.show();
                 // 启动定位
                 mLocationClient.startLocation();

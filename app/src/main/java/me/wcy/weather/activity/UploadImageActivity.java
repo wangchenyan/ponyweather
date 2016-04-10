@@ -69,7 +69,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         Location location = (Location) getIntent().getSerializableExtra(Extras.LOCATION);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String deviceId = telephonyManager.getDeviceId();
-        String userName = "马儿" + deviceId.substring(7);
+        String userName = getString(R.string.user_name, deviceId.substring(7));
         imageWeather.setLocation(location);
         imageWeather.setCity(location.getCity().replace("市", ""));
         imageWeather.setUserName(userName);
@@ -97,13 +97,13 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void upload() {
-        mProgressDialog.setMessage("正在上传图片…");
+        mProgressDialog.setMessage(getString(R.string.uploading_image));
         mProgressDialog.show();
         final BmobFile file = new BmobFile(new File(path));
         file.upload(this, new UploadFileListener() {
             @Override
             public void onSuccess() {
-                mProgressDialog.setMessage("正在发布…");
+                mProgressDialog.setMessage(getString(R.string.publishing));
                 imageWeather.setImageUrl(file.getFileUrl(UploadImageActivity.this));
                 imageWeather.setSay(etSay.getText().toString());
                 imageWeather.setTag(tagLayout.getTag());
@@ -111,7 +111,8 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onSuccess() {
                         mProgressDialog.cancel();
-                        Toast.makeText(UploadImageActivity.this, "成功发布到" + imageWeather.getLocation().getCity(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UploadImageActivity.this, getString(R.string.publish_success,
+                                imageWeather.getLocation().getCity()), Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -120,7 +121,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
                     public void onFailure(int i, String s) {
                         Log.e(TAG, "upload object fail. code:" + i + ",msg:" + s);
                         mProgressDialog.cancel();
-                        SnackbarUtils.show(UploadImageActivity.this, "发布失败：" + s);
+                        SnackbarUtils.show(UploadImageActivity.this, getString(R.string.publish_fail, s));
                     }
                 });
             }
@@ -129,7 +130,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
             public void onFailure(int i, String s) {
                 Log.e(TAG, "upload image fail. code:" + i + ",msg:" + s);
                 mProgressDialog.cancel();
-                SnackbarUtils.show(UploadImageActivity.this, "图片上传失败：" + s);
+                SnackbarUtils.show(UploadImageActivity.this, getString(R.string.upload_image_fail, s));
             }
         });
     }

@@ -21,6 +21,27 @@
     <string name="network_error">网络异常，请检查网络设置</string>
     <string name="locate_fail">自动定位失败，请稍后再试</string>
     <string name="update_tips">已更新至最新天气</string>
+    <string name="refresh_fail">加载失败，请下拉刷新</string>
+    <string name="no_more">没有更多了</string>
+    <string name="load_fail">加载失败</string>
+    <string name="image_open_fail">打开失败，请重试</string>
+    <string name="image_save_fail">图片保存失败</string>
+    <string name="no_sdcard">请确认已插入SD卡</string>
+    <string name="camera_file_name">temp.jpg</string>
+    <string name="compress_file_name">image_%s.jpg</string>
+    <string name="user_name">马儿%s</string>
+    <string name="uploading_image">正在上传图片…</string>
+    <string name="upload_image_fail">图片上传失败：%s</string>
+    <string name="publishing">正在发布…</string>
+    <string name="publish_success">成功发布到%s</string>
+    <string name="publish_fail">发布失败：%s</string>
+    <string name="image_time_praise">%1$s拍摄&#160;&#160;%2$s个赞</string>
+    <string name="image_tag">标签&#160;&#160;%s</string>
+    <string name="delete">删除</string>
+    <string name="whether_delete">是否删除该城市？</string>
+    <string name="delete_success">删除成功</string>
+    <string name="at_least_one">请至少保留一个城市</string>
+    <string name="locating">正在定位…</string>
     <string name="share_content">我正在使用@小马天气，可以随时随地查看天气信息，是您出差、旅行的贴心助手！推荐你也试试：http://m.app.haosou.com/detail/index?pname=me.wcy.weather&#038;id=2826694</string>
     <string name="about_project_url">https://github.com/ChanWong21/PonyWeather</string>
     <string name="about_weibo">http://weibo.com/wangchenyan1993</string>

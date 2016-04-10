@@ -218,8 +218,9 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             mLocationClient.stopLocation();
-            if (aMapLocation.getErrorCode() == 0) {
+            if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
+                String city = aMapLocation.getCity();
                 String area = aMapLocation.getDistrict();
                 if (area.endsWith("市") || area.endsWith("县")) {
                     if (area.length() > 2) {
@@ -227,7 +228,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     }
                     onLocated(area);
                 } else {
-                    String city = aMapLocation.getCity().replace("市", "");
+                    city = city.replace("市", "");
                     onLocated(city);
                 }
             } else {
@@ -236,14 +237,14 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                 Log.e("AmapError", "location Error, ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo());
-                onLocated("北京");
+                onLocated(null);
                 SnackbarUtils.show(this, R.string.locate_fail);
             }
         }
     }
 
     private void onLocated(String city) {
-        mCity = city;
+        mCity = TextUtils.isEmpty(city) ? "北京" : city;
         initCache(mCity);
 
         collapsingToolbar.setTitle(mCity);

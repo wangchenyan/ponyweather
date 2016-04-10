@@ -6,6 +6,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import me.wcy.weather.R;
+
 /**
  * Created by hzwangchenyan on 2016/4/8.
  */
@@ -16,11 +18,11 @@ public class FileUtils {
     }
 
     public static String getCameraImagePath(Context context) {
-        return getCachePath(context) + "temp.jpg";
+        return getCachePath(context) + context.getString(R.string.camera_file_name);
     }
 
     public static String getCutImagePath(Context context) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        return getCachePath(context) + "image_" + sdf.format(new Date()) + ".jpg";
+        return getCachePath(context) + context.getString(R.string.compress_file_name, sdf.format(new Date()));
     }
 }

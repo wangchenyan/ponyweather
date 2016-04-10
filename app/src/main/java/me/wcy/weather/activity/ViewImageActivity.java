@@ -5,7 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -60,22 +63,25 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
 
-        ImageLoader.getInstance().loadImage(mImageWeather.getImageUrl(), SystemUtils.getDefaultDisplayOption(), new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                super.onLoadingComplete(imageUri, view, loadedImage);
-                int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
-                int imageHeight = (int) ((float) loadedImage.getHeight() / (float) loadedImage.getWidth() * (float) imageWidth);
-                ivWeatherImage.setMinimumHeight(imageHeight);
-                ivWeatherImage.setImageBitmap(loadedImage);
-            }
-        });
+        ImageLoader.getInstance().loadImage(mImageWeather.getImageUrl(), SystemUtils.getDefaultDisplayOption()
+                , new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
+                        int imageHeight = (int) ((float) loadedImage.getHeight() / (float) loadedImage.getWidth() * (float) imageWidth);
+                        ivWeatherImage.setMinimumHeight(imageHeight);
+                        ivWeatherImage.setImageBitmap(loadedImage);
+                    }
+                });
+
         tvLocation.setText(mImageWeather.getLocation().getAddress());
         tvUserName.setText(mImageWeather.getUserName());
         tvSay.setText(mImageWeather.getSay());
         tvSay.setVisibility(TextUtils.isEmpty(mImageWeather.getSay()) ? View.GONE : View.VISIBLE);
-        tvTag.setText("标签  " + mImageWeather.getTag());
-        initTimeAndPraise();
+        tvTag.setText(getTagText(mImageWeather.getTag()));
+        tvTag.setMovementMethod(LinkMovementMethod.getInstance());
+        setTimeAndPraise();
     }
 
     @Override
@@ -83,7 +89,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvPraise.setOnClickListener(this);
     }
 
-    private void initTimeAndPraise() {
+    private void setTimeAndPraise() {
         SimpleDateFormat fullSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat timeSdf = new SimpleDateFormat("HH:mm");
         String time = "00:00";
@@ -92,7 +98,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        tvTime.setText(time + "拍摄  " + mImageWeather.getPraise() + "个赞");
+        tvTime.setText(getString(R.string.image_time_praise, time, mImageWeather.getPraise()));
     }
 
     @Override
@@ -112,7 +118,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
             public void onSuccess() {
                 mProgressDialog.cancel();
                 mImageWeather.setPraise(mImageWeather.getPraise() + 1);
-                initTimeAndPraise();
+                setTimeAndPraise();
 
                 Intent data = new Intent();
                 data.putExtra(Extras.IMAGE_WEATHER, mImageWeather);
@@ -125,5 +131,29 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
                 mProgressDialog.cancel();
             }
         });
+    }
+
+    private Spanned getTagText(String tag) {
+        int intColor = R.color.blue_300;
+        switch (tag) {
+            case "植物":
+                intColor = R.color.green_300;
+                break;
+            case "人物":
+                intColor = R.color.orange_300;
+                break;
+            case "天气":
+                intColor = R.color.blue_300;
+                break;
+            case "建筑":
+                intColor = R.color.cyan_300;
+                break;
+            case "动物":
+                intColor = R.color.pink_300;
+                break;
+        }
+        String strColor = String.format("#%06X", 0xFFFFFF & getResources().getColor(intColor));
+        String html = "<font color='%1$s'>%2$s</font>";
+        return Html.fromHtml(getString(R.string.image_tag, String.format(html, strColor, tag)));
     }
 }

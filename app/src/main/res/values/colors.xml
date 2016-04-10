@@ -6,4 +6,9 @@
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="grey">#9E9E9E</color>
+    <color name="green_300">#81C784</color>
+    <color name="orange_300">#FFB74D</color>
+    <color name="blue_300">#64B5F6</color>
+    <color name="cyan_300">#4DD0E1</color>
+    <color name="pink_300">#F06292</color>
 </resources>
