@@ -1,9 +1,11 @@
 package me.wcy.weather.activity;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.baidu.speechsynthesizer.SpeechSynthesizer;
 
 import java.util.ArrayList;
 
@@ -31,6 +34,7 @@ import me.wcy.weather.adapter.HourlyForecastAdapter;
 import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.api.Api;
 import me.wcy.weather.api.ApiKey;
+import me.wcy.weather.application.SpeechListener;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherData;
 import me.wcy.weather.utils.ACache;
@@ -48,7 +52,8 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class WeatherActivity extends BaseActivity implements AMapLocationListener
-        , NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+        , NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener
+        , View.OnClickListener {
     private static final String TAG = "WeatherActivity";
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -60,6 +65,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.iv_weather_image)
     ImageView ivWeatherImage;
+    @Bind(R.id.fab_speech)
+    FloatingActionButton fabSpeech;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.nested_scroll_view)
@@ -84,6 +91,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     ListView lvSuggestion;
     private ACache mACache;
     private AMapLocationClient mLocationClient;
+    private SpeechSynthesizer mSpeechSynthesizer;
     private String mCity;
 
     @Override
@@ -108,11 +116,26 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }
 
         UpdateUtils.checkUpdate(this);
+        SystemUtils.voiceAnimation(fabSpeech, false);
+        fabSpeech.show(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onShown(FloatingActionButton fab) {
+                super.onShown(fab);
+                Log.e(TAG, "onShown");
+            }
+
+            @Override
+            public void onHidden(FloatingActionButton fab) {
+                super.onHidden(fab);
+                Log.e(TAG, "onHidden");
+            }
+        });
     }
 
     @Override
     protected void setListener() {
         mNavigationView.setNavigationItemSelectedListener(this);
+        fabSpeech.setOnClickListener(this);
         mRefreshLayout.setOnRefreshListener(this);
     }
 
@@ -210,6 +233,15 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_speech:
+                speech();
+                break;
+        }
+    }
+
+    @Override
     public void onRefresh() {
         fetchDataFromNetWork(mCity);
     }
@@ -256,6 +288,16 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         cityList.add(0, city);
         mACache.put(Extras.CITY, city);
         mACache.put(Extras.CITY_LIST, cityList);
+    }
+
+    private void speech() {
+        if (mSpeechSynthesizer == null) {
+            mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", new SpeechListener(this));
+            mSpeechSynthesizer.setApiKey(ApiKey.BD_TTS_API_KEY, ApiKey.BD_TTS_SECRET_KEY);
+            mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        }
+        mSpeechSynthesizer.speak(mCity);
     }
 
     @Override

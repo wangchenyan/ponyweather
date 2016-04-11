@@ -3,8 +3,10 @@ package me.wcy.weather.utils;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.amap.api.location.AMapLocationClient;
@@ -80,5 +82,15 @@ public class SystemUtils {
                 .showImageOnFail(R.drawable.image_weather_placeholder_small)
                 .showImageOnLoading(R.drawable.image_weather_placeholder_small)
                 .build();
+    }
+
+    public static void voiceAnimation(FloatingActionButton fab, boolean start) {
+        AnimationDrawable animation = (AnimationDrawable) fab.getDrawable();
+        if (start) {
+            animation.start();
+        } else {
+            animation.stop();
+            animation.selectDrawable(animation.getNumberOfFrames() - 1);
+        }
     }
 }
