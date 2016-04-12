@@ -60,11 +60,22 @@ public class DailyForecastAdapter extends BaseAdapter {
         holder.tvDate.setText(dateFormat(mData.get(position).date));
         holder.tvTemp.setText(context.getString(R.string.daily_forecast_temp, mData.get(position).tmp.min, mData.get(position).tmp.max));
         StringBuilder sb = new StringBuilder();
-        sb.append(mData.get(position).cond.txt_d)
-                .append("，").append(mData.get(position).wind.dir)
-                .append(mData.get(position).wind.sc).append(mData.get(position).wind.sc.contains("风") ? "" : "级")
-                .append("，").append("湿度").append(mData.get(position).hum).append("%")
-                .append("，").append("降水几率").append(mData.get(position).pop).append("%。");
+        sb.append(mData.get(position).cond.txt_d);
+        if (!mData.get(position).cond.txt_d.equals(mData.get(position).cond.txt_n)) {
+            sb.append("转")
+                    .append(mData.get(position).cond.txt_n);
+        }
+        sb.append("，")
+                .append(mData.get(position).wind.dir)
+                .append(mData.get(position).wind.sc)
+                .append(mData.get(position).wind.sc.contains("风") ? "" : "级")
+                .append("，")
+                .append("湿度")
+                .append(mData.get(position).hum)
+                .append("%，")
+                .append("降水几率")
+                .append(mData.get(position).pop)
+                .append("%。");
         holder.tvDetail.setText(sb.toString());
         return convertView;
     }

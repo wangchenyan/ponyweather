@@ -14,7 +14,10 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.util.Calendar;
+
 import me.wcy.weather.R;
+import me.wcy.weather.model.Weather;
 
 /**
  * @author wcy
@@ -92,5 +95,37 @@ public class SystemUtils {
             animation.stop();
             animation.selectDrawable(animation.getNumberOfFrames() - 1);
         }
+    }
+
+    public static String voiceText(Context context, Weather weather) {
+        StringBuilder sb = new StringBuilder();
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour >= 7 && hour < 12) {
+            sb.append("上午好");
+        } else if (hour < 19) {
+            sb.append("下午好");
+        } else {
+            sb.append("晚上好");
+        }
+        sb.append("，");
+        sb.append(context.getString(R.string.app_name))
+                .append("为您播报")
+                .append("，");
+        sb.append("今天白天到夜间")
+                .append(weather.daily_forecast.get(0).cond.txt_d)
+                .append("转")
+                .append(weather.daily_forecast.get(0).cond.txt_n)
+                .append("，");
+        sb.append("温度")
+                .append(weather.daily_forecast.get(0).tmp.min)
+                .append("~")
+                .append(weather.daily_forecast.get(0).tmp.max)
+                .append("℃")
+                .append("，");
+        sb.append(weather.daily_forecast.get(0).wind.dir)
+                .append(weather.daily_forecast.get(0).wind.sc)
+                .append(weather.daily_forecast.get(0).wind.sc.contains("风") ? "" : "级")
+                .append("。");
+        return sb.toString();
     }
 }

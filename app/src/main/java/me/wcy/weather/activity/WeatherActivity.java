@@ -65,8 +65,6 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.iv_weather_image)
     ImageView ivWeatherImage;
-    @Bind(R.id.fab_speech)
-    FloatingActionButton fabSpeech;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.nested_scroll_view)
@@ -89,9 +87,12 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     ListView lvDailyForecast;
     @Bind(R.id.lv_suggestion)
     ListView lvSuggestion;
+    @Bind(R.id.fab_speech)
+    FloatingActionButton fabSpeech;
     private ACache mACache;
     private AMapLocationClient mLocationClient;
     private SpeechSynthesizer mSpeechSynthesizer;
+    private SpeechListener mSpeechListener;
     private String mCity;
 
     @Override
@@ -106,6 +107,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         mACache = ACache.get(getApplicationContext());
         mCity = mACache.getAsString(Extras.CITY);
 
+        SystemUtils.voiceAnimation(fabSpeech, false);
+
         if (TextUtils.isEmpty(mCity)) {// 首次进入，自动定位
             llWeatherContainer.setVisibility(View.GONE);
             SystemUtils.setRefreshingOnCreate(mRefreshLayout);
@@ -116,20 +119,6 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }
 
         UpdateUtils.checkUpdate(this);
-        SystemUtils.voiceAnimation(fabSpeech, false);
-        fabSpeech.show(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onShown(FloatingActionButton fab) {
-                super.onShown(fab);
-                Log.e(TAG, "onShown");
-            }
-
-            @Override
-            public void onHidden(FloatingActionButton fab) {
-                super.onHidden(fab);
-                Log.e(TAG, "onHidden");
-            }
-        });
     }
 
     @Override
@@ -162,7 +151,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    SnackbarUtils.show(WeatherActivity.this, weatherData.weathers.get(0).status);
+                                    SnackbarUtils.show(fabSpeech, weatherData.weathers.get(0).status);
                                 }
                             });
                         }
@@ -191,9 +180,9 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     public void onError(Throwable e) {
                         Log.e(TAG, "update weather fail. msg:" + e.getMessage());
                         if (NetworkUtils.errorByNetwork(e)) {
-                            SnackbarUtils.show(WeatherActivity.this, R.string.network_error);
+                            SnackbarUtils.show(fabSpeech, R.string.network_error);
                         } else {
-                            SnackbarUtils.show(WeatherActivity.this, e.getMessage());
+                            SnackbarUtils.show(fabSpeech, e.getMessage());
                         }
                         mRefreshLayout.setRefreshing(false);
                     }
@@ -202,7 +191,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     public void onNext(Weather weather) {
                         updateView(weather);
                         llWeatherContainer.setVisibility(View.VISIBLE);
-                        SnackbarUtils.show(WeatherActivity.this, R.string.update_tips);
+                        SnackbarUtils.show(fabSpeech, R.string.update_tips);
                     }
                 });
     }
@@ -214,12 +203,17 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         tvMaxTemp.setText(getString(R.string.now_max_temp, weather.daily_forecast.get(0).tmp.max));
         tvMinTemp.setText(getString(R.string.now_min_temp, weather.daily_forecast.get(0).tmp.min));
         StringBuilder sb = new StringBuilder();
-        sb.append("体感").append(weather.now.fl).append("°");
+        sb.append("体感")
+                .append(weather.now.fl)
+                .append("°");
         if (weather.aqi != null) {
-            sb.append("  ").append(weather.aqi.city.qlty.contains("污染") ? "" : "空气")
+            sb.append("  ")
+                    .append(weather.aqi.city.qlty.contains("污染") ? "" : "空气")
                     .append(weather.aqi.city.qlty);
         }
-        sb.append("  ").append(weather.now.wind.dir).append(weather.now.wind.sc)
+        sb.append("  ")
+                .append(weather.now.wind.dir)
+                .append(weather.now.wind.sc)
                 .append(weather.now.wind.sc.contains("风") ? "" : "级");
         tvMoreInfo.setText(sb.toString());
         lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
@@ -270,7 +264,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo());
                 onLocated(null);
-                SnackbarUtils.show(this, R.string.locate_fail);
+                SnackbarUtils.show(fabSpeech, R.string.locate_fail);
             }
         }
     }
@@ -291,13 +285,18 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     }
 
     private void speech() {
+        if (llWeatherContainer.getVisibility() != View.VISIBLE) {
+            return;
+        }
         if (mSpeechSynthesizer == null) {
-            mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", new SpeechListener(this));
+            mSpeechListener = new SpeechListener(this);
+            mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", mSpeechListener);
             mSpeechSynthesizer.setApiKey(ApiKey.BD_TTS_API_KEY, ApiKey.BD_TTS_SECRET_KEY);
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
         }
-        mSpeechSynthesizer.speak(mCity);
+        String text = SystemUtils.voiceText(this, (Weather) mACache.getAsObject(mCity));
+        mSpeechSynthesizer.speak(text);
     }
 
     @Override
@@ -375,6 +374,10 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     protected void onDestroy() {
         if (mLocationClient != null) {
             mLocationClient.onDestroy();
+        }
+        if (mSpeechSynthesizer != null) {
+            mSpeechSynthesizer.cancel();
+            mSpeechListener.release();
         }
         super.onDestroy();
     }
