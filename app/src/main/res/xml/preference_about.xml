@@ -35,6 +35,12 @@
             android:summary="高德地图"
             android:title="定位服务" />
         <Preference
+            android:summary="百度语音"
+            android:title="语音合成" />
+        <Preference
+            android:summary="Bmob后端云"
+            android:title="云存储" />
+        <Preference
             android:summary="图片素材来源于网络，版权属于原作者"
             android:title="图片素材" />
     </PreferenceCategory>

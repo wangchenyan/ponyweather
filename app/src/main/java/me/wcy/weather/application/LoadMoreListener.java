@@ -1,5 +1,6 @@
-package me.wcy.weather.adapter;
+package me.wcy.weather.application;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -9,8 +10,6 @@ import android.util.Log;
  */
 public class LoadMoreListener extends RecyclerView.OnScrollListener {
     private static final String TAG = "LoadMoreListener";
-    private StaggeredGridLayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
     private Listener mListener;
     private boolean enableLoadMore = true;
     private boolean isLoading = false;
@@ -31,25 +30,28 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        if (!enableLoadMore) {
+        if (!enableLoadMore || isLoading) {
             return;
         }
 
-        if (mLayoutManager == null) {
-            mLayoutManager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-        }
-        if (mAdapter == null) {
-            mAdapter = recyclerView.getAdapter();
+        int lastVisibleItem = 0;
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+
+        if (layoutManager instanceof LinearLayoutManager) {
+            LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+            lastVisibleItem = linearManager.findLastVisibleItemPosition();
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            StaggeredGridLayoutManager staggeredManager = (StaggeredGridLayoutManager) layoutManager;
+            int[] lastPositions = new int[staggeredManager.getSpanCount()];
+            staggeredManager.findLastVisibleItemPositions(lastPositions);
+            lastVisibleItem = max(lastPositions);
         }
 
-        int[] lastPositions = new int[mLayoutManager.getSpanCount()];
-        mLayoutManager.findLastVisibleItemPositions(lastPositions);
-        int lastVisibleItem = max(lastPositions);
-
-        if (!isLoading && lastVisibleItem + 1 == mAdapter.getItemCount()) {
+        if (lastVisibleItem + 1 == adapter.getItemCount()) {
             Log.d(TAG, "onLoadMore");
-            mListener.onLoadMore();
             isLoading = true;
+            mListener.onLoadMore();
         }
     }
 

@@ -28,7 +28,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
-import me.wcy.weather.adapter.LoadMoreListener;
+import me.wcy.weather.application.LoadMoreListener;
 import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
