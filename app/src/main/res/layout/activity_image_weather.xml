@@ -48,11 +48,35 @@
             android:layout_height="wrap_content" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_photo"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/fam_add_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_menu_add_photo" />
+        android:visibility="gone"
+        app:fab_addButtonColorNormal="?attr/colorAccent"
+        app:fab_addButtonColorPressed="?attr/colorAccent"
+        app:fab_labelStyle="@style/AppTheme.FabLabel">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="?attr/colorAccent"
+            app:fab_colorPressed="?attr/colorAccent"
+            app:fab_icon="@drawable/ic_menu_camera"
+            app:fab_size="mini"
+            app:fab_title="拍照" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="?attr/colorAccent"
+            app:fab_colorPressed="?attr/colorAccent"
+            app:fab_icon="@drawable/ic_menu_image"
+            app:fab_size="mini"
+            app:fab_title="从相册选择" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </android.support.design.widget.CoordinatorLayout>

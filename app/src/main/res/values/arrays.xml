@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="image_source">
-        <item>拍照</item>
-        <item>从相册选择</item>
-    </string-array>
-</resources>

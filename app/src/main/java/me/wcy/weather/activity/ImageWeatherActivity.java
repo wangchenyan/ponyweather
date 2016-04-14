@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
-import me.wcy.weather.application.LoadMoreListener;
 import me.wcy.weather.adapter.OnItemClickListener;
+import me.wcy.weather.application.LoadMoreListener;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.Extras;
@@ -43,15 +43,19 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
         , OnItemClickListener {
     private static final String TAG = "ImageWeatherActivity";
-    private static final int LIMIT = 20;
+    private static final int QUERY_LIMIT = 20;
     @Bind(R.id.appbar)
     AppBarLayout mAppBar;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.rv_image)
     RecyclerView rvImage;
-    @Bind(R.id.fab_add_photo)
-    FloatingActionButton fabAddPhoto;
+    @Bind(R.id.fam_add_photo)
+    FloatingActionsMenu famAddPhoto;
+    @Bind(R.id.fab_camera)
+    com.getbase.floatingactionbutton.FloatingActionButton fabCamera;
+    @Bind(R.id.fab_album)
+    com.getbase.floatingactionbutton.FloatingActionButton fabAlbum;
     private ImageWeatherAdapter mAdapter;
     private LoadMoreListener mLoadMoreListener;
     private List<ImageWeather> mImageList = new ArrayList<>();
@@ -69,7 +73,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         rvImage.setAdapter(mAdapter);
 
-        mQuery.setLimit(LIMIT);
+        mQuery.setLimit(QUERY_LIMIT);
         mQuery.order("-createdAt");
 
         mLocationClient = SystemUtils.initAMapLocation(this, this);
@@ -82,8 +86,15 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     protected void setListener() {
         mRefreshLayout.setOnRefreshListener(this);
         rvImage.setOnScrollListener(mLoadMoreListener);
-        fabAddPhoto.setOnClickListener(this);
         mAdapter.setOnItemClickListener(this);
+        fabCamera.setOnClickListener(this);
+        fabAlbum.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        famAddPhoto.collapse();
     }
 
     @Override
@@ -126,13 +137,14 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                 mAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);
                 mLoadMoreListener.setEnableLoadMore(true);
+                famAddPhoto.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onError(int i, String s) {
                 Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
                 mRefreshLayout.setRefreshing(false);
-                SnackbarUtils.show(fabAddPhoto, R.string.refresh_fail);
+                SnackbarUtils.show(ImageWeatherActivity.this, R.string.refresh_fail);
             }
         });
     }
@@ -149,7 +161,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                     mAdapter.notifyDataSetChanged();
                 } else {
                     mLoadMoreListener.setEnableLoadMore(false);
-                    SnackbarUtils.show(fabAddPhoto, R.string.no_more);
+                    SnackbarUtils.show(ImageWeatherActivity.this, R.string.no_more);
                 }
             }
 
@@ -157,7 +169,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
             public void onError(int i, String s) {
                 Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
                 mLoadMoreListener.onLoadComplete();
-                SnackbarUtils.show(fabAddPhoto, R.string.load_fail);
+                SnackbarUtils.show(ImageWeatherActivity.this, R.string.load_fail);
             }
         });
     }
@@ -165,8 +177,11 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fab_add_photo:
-                ImageUtils.pickImage(this);
+            case R.id.fab_camera:
+                ImageUtils.pickImage(this, ImageUtils.ImageType.CAMERA);
+                break;
+            case R.id.fab_album:
+                ImageUtils.pickImage(this, ImageUtils.ImageType.ALBUM);
                 break;
         }
     }
@@ -213,7 +228,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     private void compressImage(final String path) {
         File file = new File(path);
         if (!file.exists()) {
-            SnackbarUtils.show(fabAddPhoto, R.string.image_open_fail);
+            SnackbarUtils.show(this, R.string.image_open_fail);
             return;
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -232,7 +247,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         if (!TextUtils.isEmpty(savePath)) {
             UploadImageActivity.start(this, mLocation, savePath);
         } else {
-            SnackbarUtils.show(fabAddPhoto, R.string.image_save_fail);
+            SnackbarUtils.show(this, R.string.image_save_fail);
         }
     }
 

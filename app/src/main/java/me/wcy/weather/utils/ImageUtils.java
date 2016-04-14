@@ -2,7 +2,6 @@ package me.wcy.weather.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -10,7 +9,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,26 +69,21 @@ public class ImageUtils {
         }
     }
 
-    public static void pickImage(final Activity activity) {
+    public static void pickImage(Activity activity, ImageType type) {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             SnackbarUtils.show(activity, R.string.no_sdcard);
             return;
         }
-        new AlertDialog.Builder(activity)
-                .setItems(R.array.image_source, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                startCamera(activity);
-                                break;
-                            case 1:
-                                startAlbum(activity);
-                                break;
-                        }
-                    }
-                })
-                .show();
+        if (type == ImageType.CAMERA) {
+            startCamera(activity);
+        } else if (type == ImageType.ALBUM) {
+            startAlbum(activity);
+        }
+    }
+
+    public enum ImageType {
+        CAMERA,
+        ALBUM
     }
 
     private static void startCamera(Activity activity) {
