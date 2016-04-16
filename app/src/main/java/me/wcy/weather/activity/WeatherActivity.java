@@ -109,7 +109,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
         SystemUtils.voiceAnimation(fabSpeech, false);
 
-        if (TextUtils.isEmpty(mCity)) {// 首次进入，自动定位
+        // 首次进入，自动定位
+        if (TextUtils.isEmpty(mCity)) {
             llWeatherContainer.setVisibility(View.GONE);
             SystemUtils.setRefreshingOnCreate(mRefreshLayout);
             locate();

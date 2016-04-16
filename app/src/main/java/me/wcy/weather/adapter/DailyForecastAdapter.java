@@ -1,6 +1,7 @@
 package me.wcy.weather.adapter;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +103,7 @@ public class DailyForecastAdapter extends BaseAdapter {
             Date source = sdf.parse(date);
             if (today.equals(source)) {
                 return "今天";
-            } else if (source.getTime() - today.getTime() == 24 * 60 * 60 * 1000) {
+            } else if (source.getTime() - today.getTime() == DateUtils.DAY_IN_MILLIS) {
                 return "明天";
             } else {
                 Calendar calendar = Calendar.getInstance();

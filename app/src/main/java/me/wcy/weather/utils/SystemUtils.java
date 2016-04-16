@@ -8,13 +8,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.format.DateUtils;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
@@ -127,5 +131,35 @@ public class SystemUtils {
                 .append(weather.daily_forecast.get(0).wind.sc.contains("风") ? "" : "级")
                 .append("。");
         return sb.toString();
+    }
+
+    public static String timeFormat(String source) {
+        SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        try {
+            Date date = sourceSdf.parse(source);
+            if (date.getYear() != now.getYear()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                return sdf.format(date);
+            } else if (date.getMonth() != now.getMonth()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                return sdf.format(date);
+            } else if (date.getDay() != now.getDay()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (sdf.parse(sdf.format(now)).getTime() - sdf.parse(sdf.format(date)).getTime() == DateUtils.DAY_IN_MILLIS) {
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+                    return "昨天 " + sdf2.format(date);
+                } else {
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("MM-dd HH:mm");
+                    return sdf2.format(date);
+                }
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                return sdf.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return source;
     }
 }

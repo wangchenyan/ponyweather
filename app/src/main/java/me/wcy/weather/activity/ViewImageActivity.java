@@ -17,9 +17,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import butterknife.Bind;
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
@@ -81,7 +78,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvSay.setVisibility(TextUtils.isEmpty(mImageWeather.getSay()) ? View.GONE : View.VISIBLE);
         tvTag.setText(getTagText(mImageWeather.getTag()));
         tvTag.setMovementMethod(LinkMovementMethod.getInstance());
-        setTimeAndPraise();
+        initTimeAndPraise();
     }
 
     @Override
@@ -89,15 +86,8 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvPraise.setOnClickListener(this);
     }
 
-    private void setTimeAndPraise() {
-        SimpleDateFormat fullSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat timeSdf = new SimpleDateFormat("HH:mm");
-        String time = "00:00";
-        try {
-            time = timeSdf.format(fullSdf.parseObject(mImageWeather.getCreatedAt()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    private void initTimeAndPraise() {
+        String time = SystemUtils.timeFormat(mImageWeather.getCreatedAt());
         tvTime.setText(getString(R.string.image_time_praise, time, mImageWeather.getPraise()));
     }
 
@@ -118,7 +108,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
             public void onSuccess() {
                 mProgressDialog.cancel();
                 mImageWeather.setPraise(mImageWeather.getPraise() + 1);
-                setTimeAndPraise();
+                initTimeAndPraise();
 
                 Intent data = new Intent();
                 data.putExtra(Extras.IMAGE_WEATHER, mImageWeather);
