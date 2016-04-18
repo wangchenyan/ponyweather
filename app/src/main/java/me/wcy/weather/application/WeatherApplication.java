@@ -8,8 +8,6 @@ import android.util.DisplayMetrics;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import java.util.Calendar;
-
 import cn.bmob.v3.Bmob;
 import im.fir.sdk.FIR;
 import me.wcy.weather.api.ApiKey;
@@ -19,12 +17,13 @@ import me.wcy.weather.utils.ScreenUtils;
  * Created by wcy on 2016/4/3.
  */
 public class WeatherApplication extends Application {
+    private static Resources sRes;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        initNightMode();
+        sRes = getResources();
         ScreenUtils.init(this);
         Bmob.initialize(this, ApiKey.BMOB_KEY);
         FIR.init(this);
@@ -34,13 +33,7 @@ public class WeatherApplication extends Application {
                 .build());
     }
 
-    private void initNightMode() {
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        updateNightMode(hour >= 19 || hour < 7);
-    }
-
-    private void updateNightMode(boolean on) {
-        Resources sRes = getResources();
+    public static void updateNightMode(boolean on) {
         DisplayMetrics dm = sRes.getDisplayMetrics();
         Configuration config = sRes.getConfiguration();
         config.uiMode &= ~Configuration.UI_MODE_NIGHT_MASK;

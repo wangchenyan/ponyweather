@@ -48,13 +48,15 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_praise" />
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_image_weather_praise" />
 
                 <TextView
                     android:id="@+id/tv_praise_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1" />
+                    android:text="1"
+                    android:textColor="@color/grey" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

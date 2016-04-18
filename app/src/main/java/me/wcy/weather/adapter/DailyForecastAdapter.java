@@ -76,7 +76,14 @@ public class DailyForecastAdapter extends BaseAdapter {
                 .append("%，")
                 .append("降水几率")
                 .append(mData.get(position).pop)
-                .append("%。");
+                .append("%")
+                .append("，")
+                .append("日出")
+                .append(mData.get(position).astro.sr)
+                .append("，")
+                .append("日落")
+                .append(mData.get(position).astro.ss)
+                .append("。");
         holder.tvDetail.setText(sb.toString());
         return convertView;
     }

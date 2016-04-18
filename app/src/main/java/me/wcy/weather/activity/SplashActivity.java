@@ -3,37 +3,39 @@ package me.wcy.weather.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.amap.api.location.AMapLocationClient;
+import java.util.Calendar;
 
 import me.wcy.weather.R;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.application.WeatherApplication;
 
 public class SplashActivity extends BaseActivity {
-    private AMapLocationClient mLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // 申请定位权限
-        mLocationClient = SystemUtils.initAMapLocation(this, null);
-        startWeather();
+        initNightMode();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startWeather();
+            }
+        }, 1000);
     }
 
     @Override
     protected void setListener() {
     }
 
+    private void initNightMode() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        WeatherApplication.updateNightMode(hour >= 19 || hour < 7);
+    }
+
     private void startWeather() {
         Intent intent = new Intent(this, WeatherActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        mLocationClient.onDestroy();
-        super.onDestroy();
     }
 }
