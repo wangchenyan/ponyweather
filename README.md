@@ -19,8 +19,8 @@
 
 ## 更新说明
 `v 2.0`
-* 新增城市管理
 * 新增实景天气
+* 新增城市管理
 * 新增语音播报
 * 支持自动夜间模式
 
@@ -33,26 +33,31 @@
 * 支持x86手机
 
 ## 下载地址
+fir.im：http://fir.im/ponyweather<br>
 360手机助手：http://zhushou.360.cn/detail/index/soft_id/2826694<br>
 百度应用：http://shouji.baidu.com/software/item?docid=9102703<br>
 应用宝：http://android.myapp.com/myapp/detail.htm?apkName=me.wcy.weather
 
 ## TODO
-* ~~城市管理~~
-* ~~自动夜间模式~~
 * ~~实景天气~~
+* ~~城市管理~~
 * ~~语音播报~~
+* ~~自动夜间模式~~
 * 桌面小部件
 
 ## 项目
 ### 公开API
 * 天气：[和风天气](http://www.heweather.com/)
 * 定位：[高德定位](http://lbs.amap.com/api/android-location-sdk/)
+* 语音合成：[百度语音](http://yuyin.baidu.com/)
+* 云存储：[BMob后端云](http://www.bmob.cn/)
 
 ### 开源技术
 * [Rxjava](https://github.com/ReactiveX/RxJava)
 * [Retrofit](https://github.com/square/retrofit)
 * [ASimpleCache](https://github.com/yangfuhai/ASimpleCache)
+* [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
+* [android-floating-action-button](https://github.com/futuresimple/android-floating-action-button)
 
 ### 关键代码
 网络请求`RxJava+Retrofit`，缓存`ACache`
