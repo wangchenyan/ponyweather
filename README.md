@@ -1,11 +1,7 @@
 # 小马天气
-小马天气是一款运行在Android系统上开源天气信息查询软件，无广告，无多余权限。<br>
-界面美观，人性化设计，支持中国所有城市的天气预报软件。<br>
-支持自动定位，空气质量指数实时预报，提供各种生活指数。<br>
-简约，而不简单。
 
 ## 前言
-部分界面参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
+部分设计参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
 **注意：和风天气和fir的两个key我没有提交，download后需要自己申请和风天气的key才能运行，fir的key可直接忽略。**
@@ -14,12 +10,20 @@
 * 项目地址：https://github.com/ChanWong21/PonyWeather
 * 有问题请提Issues
 
-## 下载地址
-360手机助手：http://zhushou.360.cn/detail/index/soft_id/2826694<br>
-百度应用：http://shouji.baidu.com/software/item?docid=9102703<br>
-应用宝：http://android.myapp.com/myapp/detail.htm?apkName=me.wcy.weather
+## 简介
+小马天气是一款运行在Android系统上，轻量、开源的天气信息查询软件，无广告，无冗余权限。<br>
+实景天气，寻找你身边的美景。多城市天气预报，记得提醒远方的TA。语音播报，一键听天气。<br>
+全新 Material Design 设计风格，从未如此简约。自动夜间模式，更加贴心。<br>
+支持自动定位，空气质量指数实时预报，提供各种生活指数。<br>
+简约，而不简单。
 
 ## 更新说明
+`v 2.0`
+* 新增城市管理
+* 新增实景天气
+* 新增语音播报
+* 支持自动夜间模式
+
 `v 1.5`
 * 重构代码，全新风格设计
 * 增加支持国内全部县级以上城市可选
@@ -28,11 +32,16 @@
 * 支持Android 6.0
 * 支持x86手机
 
+## 下载地址
+360手机助手：http://zhushou.360.cn/detail/index/soft_id/2826694<br>
+百度应用：http://shouji.baidu.com/software/item?docid=9102703<br>
+应用宝：http://android.myapp.com/myapp/detail.htm?apkName=me.wcy.weather
+
 ## TODO
-* 城市管理
-* 自动夜间模式
-* 实景天气
-* 语音播报
+* ~~城市管理~~
+* ~~自动夜间模式~~
+* ~~实景天气~~
+* ~~语音播报~~
 * 桌面小部件
 
 ## 项目
