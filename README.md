@@ -4,7 +4,7 @@
 部分设计参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
-**注意：和风天气和fir的两个key我没有提交，download后需要自己申请和风天气的key才能运行，fir的key可直接忽略。**
+**注意：隐私相关的key我没有提交，clone后需要自己申请和风天气的key才能运行，其他key可直接忽略。**
 
 * **开源不易，希望能给个Star鼓励** 
 * 项目地址：https://github.com/ChanWong21/PonyWeather
@@ -47,10 +47,10 @@ fir.im：http://fir.im/ponyweather<br>
 
 ## 项目
 ### 公开API
-* 天气：[和风天气](http://www.heweather.com/)
-* 定位：[高德定位](http://lbs.amap.com/api/android-location-sdk/)
+* 天气数据：[和风天气](http://www.heweather.com/)
+* 定位服务：[高德定位](http://lbs.amap.com/api/android-location-sdk/)
 * 语音合成：[百度语音](http://yuyin.baidu.com/)
-* 云存储：[BMob后端云](http://www.bmob.cn/)
+* 云存储：[Bmob后端云](http://www.bmob.cn/)
 
 ### 开源技术
 * [Rxjava](https://github.com/ReactiveX/RxJava)
@@ -125,5 +125,3 @@ private void fetchDataFromNetWork(final String city) {
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-图片来源于网络，版权属于原作者。
