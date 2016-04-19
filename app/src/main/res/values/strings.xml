@@ -42,7 +42,7 @@
     <string name="delete_success">删除成功</string>
     <string name="at_least_one">请至少保留一个城市</string>
     <string name="locating">正在定位…</string>
-    <string name="share_content">我正在使用@小马天气，可以随时随地查看天气信息，是您出差、旅行的贴心助手！推荐你也试试：http://m.app.haosou.com/detail/index?pname=me.wcy.weather&#038;id=2826694</string>
+    <string name="share_content">我正在使用@小马天气，可以随时随地查看天气信息，是您出差、旅行的贴心助手！推荐你也试试：http://fir.im/ponyweather</string>
     <string name="about_project_url">https://github.com/ChanWong21/PonyWeather</string>
     <string name="about_weibo">http://weibo.com/wangchenyan1993</string>
     <string name="about_jianshu">http://www.jianshu.com/users/3231579893ac</string>
