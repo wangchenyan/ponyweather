@@ -294,7 +294,6 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", mSpeechListener);
             mSpeechSynthesizer.setApiKey(ApiKey.BD_TTS_API_KEY, ApiKey.BD_TTS_SECRET_KEY);
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            setVolumeControlStream(AudioManager.STREAM_MUSIC);
         }
         String text = SystemUtils.voiceText(this, (Weather) mACache.getAsObject(mCity));
         mSpeechSynthesizer.speak(text);
