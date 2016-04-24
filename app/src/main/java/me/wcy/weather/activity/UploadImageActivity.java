@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -69,7 +70,12 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         Location location = (Location) getIntent().getSerializableExtra(Extras.LOCATION);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String deviceId = telephonyManager.getDeviceId();
-        String userName = getString(R.string.user_name, deviceId.substring(7));
+        String userName;
+        if (!TextUtils.isEmpty(deviceId) && deviceId.length() == 15) {
+            userName = getString(R.string.user_name, deviceId.substring(7));
+        } else {
+            userName = "马儿";
+        }
         imageWeather.setLocation(location);
         imageWeather.setCity(location.getCity().replace("市", ""));
         imageWeather.setUserName(userName);
