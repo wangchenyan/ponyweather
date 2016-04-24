@@ -207,7 +207,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         sb.append("体感")
                 .append(weather.now.fl)
                 .append("°");
-        if (weather.aqi != null) {
+        if (weather.aqi != null && !TextUtils.isEmpty(weather.aqi.city.qlty)) {
             sb.append("  ")
                     .append(weather.aqi.city.qlty.contains("污染") ? "" : "空气")
                     .append(weather.aqi.city.qlty);
