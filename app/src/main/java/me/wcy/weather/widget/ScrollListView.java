@@ -9,10 +9,7 @@ import android.widget.ListView;
 
 /**
  * 重写ListView解决ScrollView嵌套ListView问题
- *
- * @author wcy
  */
-
 public class ScrollListView extends ListView {
 
     public ScrollListView(Context context) {

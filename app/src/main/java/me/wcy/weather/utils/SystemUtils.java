@@ -23,9 +23,6 @@ import java.util.Date;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
 
-/**
- * @author wcy
- */
 public class SystemUtils {
 
     public static String getVersionName(Context context) {
