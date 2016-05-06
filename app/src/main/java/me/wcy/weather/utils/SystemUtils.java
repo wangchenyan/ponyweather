@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import com.amap.api.location.AMapLocationClient;
@@ -158,5 +159,25 @@ public class SystemUtils {
             e.printStackTrace();
         }
         return source;
+    }
+
+    public static String formatCity(String city) {
+        return formatCity(city, null);
+    }
+
+    public static String formatCity(String city, String area) {
+        if (!TextUtils.isEmpty(area) && (area.endsWith("市") || area.endsWith("县"))) {
+            if (area.length() > 2) {
+                if (area.endsWith("市")) {
+                    area = area.substring(0, area.lastIndexOf('市'));
+                } else if (area.endsWith("县")) {
+                    area = area.substring(0, area.lastIndexOf('县'));
+                }
+            }
+            return area;
+        } else {
+            return city.replace("市", "")
+                    .replace("盟", "");
+        }
     }
 }

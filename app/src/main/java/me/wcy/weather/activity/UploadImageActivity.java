@@ -30,6 +30,7 @@ import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
+import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.widget.TagLayout;
 
 public class UploadImageActivity extends BaseActivity implements View.OnClickListener {
@@ -77,7 +78,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
             userName = "马儿";
         }
         imageWeather.setLocation(location);
-        imageWeather.setCity(location.getCity().replace("市", ""));
+        imageWeather.setCity(SystemUtils.formatCity(location.getCity()));
         imageWeather.setUserName(userName);
         imageWeather.setPraise(0L);
         tvLocation.setText(location.getAddress());

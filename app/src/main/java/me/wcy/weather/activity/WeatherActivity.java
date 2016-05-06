@@ -183,7 +183,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                         if (NetworkUtils.errorByNetwork(e)) {
                             SnackbarUtils.show(fabSpeech, R.string.network_error);
                         } else {
-                            SnackbarUtils.show(fabSpeech, e.getMessage());
+                            SnackbarUtils.show(fabSpeech, TextUtils.isEmpty(e.getMessage()) ? "加载失败" : e.getMessage());
                         }
                         mRefreshLayout.setRefreshing(false);
                     }
@@ -247,17 +247,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
-                String city = aMapLocation.getCity();
-                String area = aMapLocation.getDistrict();
-                if (area.endsWith("市") || area.endsWith("县")) {
-                    if (area.length() > 2) {
-                        area = area.replace("市", "").replace("县", "");
-                    }
-                    onLocated(area);
-                } else {
-                    city = city.replace("市", "");
-                    onLocated(city);
-                }
+                onLocated(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
             } else {
                 // 定位失败
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

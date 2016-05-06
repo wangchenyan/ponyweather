@@ -111,7 +111,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                 mLocation.setStreet(aMapLocation.getStreet());
                 mLocation.setStreetNum(aMapLocation.getStreetNum());
 
-                String city = mLocation.getCity().replace("市", "");
+                String city = SystemUtils.formatCity(mLocation.getCity());
                 mQuery.addWhereEqualTo("city", city);
                 onRefresh();
             } else {

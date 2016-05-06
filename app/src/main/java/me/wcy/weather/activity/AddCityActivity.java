@@ -253,16 +253,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
-                String area = aMapLocation.getDistrict();
-                if (area.endsWith("市") || area.endsWith("县")) {
-                    if (area.length() > 2) {
-                        area = area.replace("市", "").replace("县", "");
-                    }
-                    backToWeather(area);
-                } else {
-                    String city = aMapLocation.getCity().replace("市", "");
-                    backToWeather(city);
-                }
+                backToWeather(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
             } else {
                 // 定位失败
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
