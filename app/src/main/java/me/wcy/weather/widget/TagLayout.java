@@ -14,9 +14,6 @@ import java.util.List;
 
 import me.wcy.weather.R;
 
-/**
- * Created by hzwangchenyan on 2016/4/8.
- */
 public class TagLayout extends LinearLayout implements View.OnClickListener {
     private List<View> tagViews = new ArrayList<>(5);
 

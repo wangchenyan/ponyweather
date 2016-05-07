@@ -5,9 +5,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
 
-/**
- * Created by hzwangchenyan on 2016/3/24.
- */
 public interface IApi {
     @GET("weather")
     Observable<WeatherData> getWeather(@Query("city") String city, @Query("key") String key);

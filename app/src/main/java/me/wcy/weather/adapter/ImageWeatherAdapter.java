@@ -23,9 +23,6 @@ import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SystemUtils;
 
-/**
- * Created by hzwangchenyan on 2016/4/7.
- */
 public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapter.ViewHolder> implements View.OnClickListener {
     private static final String TAG = "ImageWeatherAdapter";
     private Context mContext;

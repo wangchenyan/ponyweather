@@ -8,9 +8,6 @@ import java.util.Date;
 
 import me.wcy.weather.R;
 
-/**
- * Created by hzwangchenyan on 2016/4/8.
- */
 public class FileUtils {
 
     private static String getCachePath(Context context) {

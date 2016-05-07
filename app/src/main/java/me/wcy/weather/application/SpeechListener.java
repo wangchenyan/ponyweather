@@ -14,9 +14,6 @@ import me.wcy.weather.R;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 
-/**
- * Created by hzwangchenyan on 2016/4/11.
- */
 public class SpeechListener implements SpeechSynthesizerListener {
     private static final String TAG = "SpeechListener";
     private Activity activity;

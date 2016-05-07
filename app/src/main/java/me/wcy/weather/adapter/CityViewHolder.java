@@ -9,9 +9,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.weather.R;
 
-/**
- * Created by hzwangchenyan on 2016/4/5.
- */
 public class CityViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.view_holder_city)
     public LinearLayout item;

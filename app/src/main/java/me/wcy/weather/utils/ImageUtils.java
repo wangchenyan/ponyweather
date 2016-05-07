@@ -18,9 +18,6 @@ import java.util.Calendar;
 
 import me.wcy.weather.R;
 
-/**
- * Created by hzwangchenyan on 2016/3/28.
- */
 public class ImageUtils {
 
     public static int getIconByCode(Context context, String code) {

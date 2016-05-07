@@ -10,9 +10,6 @@ import java.io.File;
 
 import me.wcy.weather.utils.UpdateUtils;
 
-/**
- * Created by wcy on 2016/4/3.
- */
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {

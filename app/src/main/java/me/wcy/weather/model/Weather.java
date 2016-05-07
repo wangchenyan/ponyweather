@@ -3,9 +3,6 @@ package me.wcy.weather.model;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by hzwangchenyan on 2016/3/24.
- */
 public class Weather implements Serializable {
     public String status;
     /**

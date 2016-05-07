@@ -2,9 +2,6 @@ package me.wcy.weather.model;
 
 import cn.bmob.v3.BmobObject;
 
-/**
- * Created by hzwangchenyan on 2016/4/6.
- */
 public class ImageWeather extends BmobObject {
     /**
      * 用户名

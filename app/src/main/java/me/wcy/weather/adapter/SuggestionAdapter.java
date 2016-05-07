@@ -16,9 +16,6 @@ import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
 
-/**
- * Created by hzwangchenyan on 2016/3/25.
- */
 public class SuggestionAdapter extends BaseAdapter {
     private List<Integer> mIcon = new ArrayList<>();
     private List<String> mTitle = new ArrayList<>();

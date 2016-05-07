@@ -5,9 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 
-/**
- * Created by hzwangchenyan on 2016/4/8.
- */
 public class LoadMoreListener extends RecyclerView.OnScrollListener {
     private static final String TAG = "LoadMoreListener";
     private Listener mListener;

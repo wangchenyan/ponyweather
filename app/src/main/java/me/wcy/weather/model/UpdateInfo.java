@@ -1,8 +1,5 @@
 package me.wcy.weather.model;
 
-/**
- * Created by wcy on 2016/4/3.
- */
 public class UpdateInfo {
     public String name;
     public String version;

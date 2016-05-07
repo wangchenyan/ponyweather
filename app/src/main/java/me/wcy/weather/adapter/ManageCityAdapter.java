@@ -11,9 +11,6 @@ import me.wcy.weather.R;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 
-/**
- * Created by hzwangchenyan on 2016/4/5.
- */
 public class ManageCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener, View.OnLongClickListener {
     private List<String> mCityList;
     private OnItemClickListener mClickListener;

@@ -13,9 +13,6 @@ import im.fir.sdk.FIR;
 import me.wcy.weather.api.ApiKey;
 import me.wcy.weather.utils.ScreenUtils;
 
-/**
- * Created by wcy on 2016/4/3.
- */
 public class WeatherApplication extends Application {
     private static Resources sRes;
 

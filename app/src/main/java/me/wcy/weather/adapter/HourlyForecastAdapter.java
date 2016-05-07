@@ -17,9 +17,6 @@ import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
 
-/**
- * Created by hzwangchenyan on 2016/3/25.
- */
 public class HourlyForecastAdapter extends BaseAdapter {
     private List<Weather.HourlyForecastEntity> mData;
 

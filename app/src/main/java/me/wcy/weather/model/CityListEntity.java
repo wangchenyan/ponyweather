@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-/**
- * Created by hzwangchenyan on 2016/3/29.
- */
 public class CityListEntity {
     public List<CityInfoEntity> city;
 

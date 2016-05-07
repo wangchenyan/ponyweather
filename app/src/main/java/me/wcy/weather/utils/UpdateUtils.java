@@ -18,9 +18,6 @@ import me.wcy.weather.activity.AboutActivity;
 import me.wcy.weather.api.ApiKey;
 import me.wcy.weather.model.UpdateInfo;
 
-/**
- * Created by wcy on 2016/4/3.
- */
 public class UpdateUtils {
     public static long sDownloadId = 0;
 

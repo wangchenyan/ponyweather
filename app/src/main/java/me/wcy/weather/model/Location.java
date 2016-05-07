@@ -2,9 +2,6 @@ package me.wcy.weather.model;
 
 import java.io.Serializable;
 
-/**
- * Created by hzwangchenyan on 2016/4/7.
- */
 public class Location implements Serializable {
     private String address;
     private String country;

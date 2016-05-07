@@ -4,9 +4,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by hzwangchenyan on 2016/3/24.
- */
 public class Api {
     private static final String BASE_URL = "https://api.heweather.com/x3/";
 

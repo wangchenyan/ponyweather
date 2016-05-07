@@ -13,9 +13,6 @@ import me.wcy.weather.model.CityListEntity;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 
-/**
- * Created by hzwangchenyan on 2016/3/29.
- */
 public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
     private List<CityListEntity.CityInfoEntity> mCityList = new ArrayList<>();
     private Type mType;

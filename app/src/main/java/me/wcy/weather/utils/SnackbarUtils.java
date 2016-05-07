@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-/**
- * Created by hzwangchenyan on 2016/3/28.
- */
 public class SnackbarUtils {
 
     public static void show(Activity activity, int resId) {
