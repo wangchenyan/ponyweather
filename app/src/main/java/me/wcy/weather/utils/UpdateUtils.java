@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 
 import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
+import me.wcy.weather.BuildConfig;
 import me.wcy.weather.activity.AboutActivity;
 import me.wcy.weather.api.ApiKey;
 import me.wcy.weather.model.UpdateInfo;
@@ -38,7 +39,7 @@ public class UpdateUtils {
                 Gson gson = new Gson();
                 UpdateInfo updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
                 int version = Integer.valueOf(updateInfo.version);
-                if (version > SystemUtils.getVersionCode(activity)) {
+                if (version > BuildConfig.VERSION_CODE) {
                     updateDialog(activity, updateInfo);
                 } else {
                     if (activity instanceof AboutActivity) {

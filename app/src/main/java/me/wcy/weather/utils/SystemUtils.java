@@ -1,7 +1,6 @@
 package me.wcy.weather.utils;
 
 import android.content.Context;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
@@ -25,26 +24,6 @@ import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
 
 public class SystemUtils {
-
-    public static String getVersionName(Context context) {
-        String versionName = "1.0";
-        try {
-            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionName;
-    }
-
-    public static int getVersionCode(Context context) {
-        int versionCode = 1;
-        try {
-            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionCode;
-    }
 
     public static void setRefreshingOnCreate(final SwipeRefreshLayout refreshLayout) {
         Handler handler = new Handler(Looper.getMainLooper());
