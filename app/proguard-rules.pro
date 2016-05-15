@@ -83,3 +83,19 @@
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
+
+# rxjava
+-dontwarn rx.**
+-keep class rx.** { *; }
+
+# retrofit
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+
+# okio
+-dontwarn okio.**
+-keep class okio.** { *; }
+
+# bmob
+-dontwarn cn.bmob.v3.**
+-keep class cn.bmob.v3.** { *; }
