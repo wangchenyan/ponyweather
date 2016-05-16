@@ -69,20 +69,20 @@
 
 # android-support
 -dontwarn android.support.**
--keep class android.support.** {*;}
+-keep class android.support.** { *; }
 
 # app
--keep class me.wcy.weather.model.** {*;}
+-keep class me.wcy.weather.model.** { *; }
 
 # butterknife
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
--keepnames class * { @butterknife.InjectView *;}
+-keepnames class * { @butterknife.InjectView *; }
 
 # amap
--keep class com.amap.api.location.**{*;}
--keep class com.amap.api.fence.**{*;}
--keep class com.autonavi.aps.amapapi.model.**{*;}
+-keep class com.amap.api.location.** { *; }
+-keep class com.amap.api.fence.** { *; }
+-keep class com.autonavi.aps.amapapi.model.** { *; }
 
 # rxjava
 -dontwarn rx.**
