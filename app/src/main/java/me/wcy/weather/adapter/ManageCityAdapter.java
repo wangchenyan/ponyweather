@@ -8,16 +8,17 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import me.wcy.weather.R;
+import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 
 public class ManageCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener, View.OnLongClickListener {
-    private List<String> mCityList;
+    private List<CityEntity> mCityList;
     private OnItemClickListener mClickListener;
     private OnItemLongClickListener mLongClickListener;
     private ACache mACache;
 
-    public ManageCityAdapter(List<String> cityList) {
+    public ManageCityAdapter(List<CityEntity> cityList) {
         mCityList = cityList;
     }
 
@@ -41,8 +42,9 @@ public class ManageCityAdapter extends RecyclerView.Adapter<CityViewHolder> impl
     @Override
     public void onBindViewHolder(CityViewHolder holder, int position) {
         holder.item.setTag(mCityList.get(position));
-        holder.tvCity.setText(mCityList.get(position));
-        String currentCity = mACache.getAsString(Extras.CITY);
+        holder.tvCity.setText(mCityList.get(position).name);
+        holder.ivLocate.setVisibility(mCityList.get(position).isAutoLocate ? View.VISIBLE : View.GONE);
+        CityEntity currentCity = (CityEntity) mACache.getAsObject(Extras.CITY);
         holder.tvRemark.setText(mCityList.get(position).equals(currentCity) ? "当前城市" : "");
     }
 

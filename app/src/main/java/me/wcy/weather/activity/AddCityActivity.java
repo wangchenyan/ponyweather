@@ -22,13 +22,16 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.AddCityAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
+import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityListEntity;
+import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
@@ -253,7 +256,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
-                backToWeather(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
+                backToWeather(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()), true);
             } else {
                 // 定位失败
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
@@ -269,10 +272,13 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_location:
-                mProgressDialog.setMessage(getString(R.string.locating));
-                mProgressDialog.show();
-                // 启动定位
-                mLocationClient.startLocation();
+                if (!hasAutoLocate()) {
+                    mProgressDialog.setMessage(getString(R.string.locating));
+                    mProgressDialog.show();
+                    mLocationClient.startLocation();
+                } else {
+                    SnackbarUtils.show(this, "已添加自动定位");
+                }
                 break;
             case R.id.fab_top:
                 rvCity.scrollToPosition(0);
@@ -289,8 +295,19 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         } else if (currentType == AddCityAdapter.Type.CITY) {
             showAreaList(cityInfo.city);
         } else if (currentType == AddCityAdapter.Type.AREA) {
-            backToWeather(cityInfo.area);
+            backToWeather(cityInfo.area, false);
         }
+    }
+
+    private boolean hasAutoLocate() {
+        ACache aCache = ACache.get(getApplicationContext());
+        ArrayList<CityEntity> cityList = (ArrayList<CityEntity>) aCache.getAsObject(Extras.CITY_LIST);
+        for (CityEntity entity : cityList) {
+            if (entity.isAutoLocate) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
@@ -332,7 +349,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         return null;
     }
 
-    private void backToWeather(String city) {
+    private void backToWeather(String name, boolean isAutoLocate) {
+        CityEntity city = new CityEntity(name, isAutoLocate);
         Intent data = new Intent();
         data.putExtra(Extras.CITY, city);
         setResult(RESULT_OK, data);
