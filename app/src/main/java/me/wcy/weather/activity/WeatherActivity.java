@@ -116,15 +116,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }
 
         collapsingToolbar.setTitle(mCity.name);
-
-        if (mCity.isAutoLocate) {
-            llWeatherContainer.setVisibility(View.GONE);
-            SystemUtils.setRefreshingOnCreate(mRefreshLayout);
-            locate();
-        } else {
-            fetchDataFromCache(mCity);
-        }
-
+        fetchDataFromCache(mCity);
         UpdateUtils.checkUpdate(this);
     }
 
@@ -140,7 +132,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         if (weather == null) {
             llWeatherContainer.setVisibility(View.GONE);
             SystemUtils.setRefreshingOnCreate(mRefreshLayout);
-            fetchDataFromNetWork(city);
+            onRefresh();
         } else {
             updateView(weather);
         }
@@ -272,13 +264,13 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
     private void onLocated(String city) {
         mCity.name = TextUtils.isEmpty(city) ? "北京" : city;
-        initCache(mCity);
+        cache(mCity);
 
         collapsingToolbar.setTitle(mCity.name);
         fetchDataFromNetWork(mCity);
     }
 
-    private void initCache(CityEntity city) {
+    private void cache(CityEntity city) {
         ArrayList<CityEntity> cityList = (ArrayList<CityEntity>) mACache.getAsObject(Extras.CITY_LIST);
         if (cityList == null) {
             cityList = new ArrayList<>();
