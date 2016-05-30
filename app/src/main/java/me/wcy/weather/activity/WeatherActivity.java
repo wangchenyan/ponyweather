@@ -263,7 +263,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     }
 
     private void onLocated(String city) {
-        mCity.name = TextUtils.isEmpty(city) ? "北京" : city;
+        mCity.name = TextUtils.isEmpty(city) ? (TextUtils.equals(mCity.name, "正在定位") ? "北京" : mCity.name) : city;
         cache(mCity);
 
         collapsingToolbar.setTitle(mCity.name);
