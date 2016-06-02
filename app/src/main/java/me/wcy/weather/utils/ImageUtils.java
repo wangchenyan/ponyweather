@@ -132,7 +132,7 @@ public class ImageUtils {
     }
 
     public static String save2File(Context context, Bitmap bitmap) {
-        String path = FileUtils.getCutImagePath(context);
+        String path = FileUtils.getCompressImagePath(context);
         FileOutputStream stream = null;
         Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
         int quality = 90;

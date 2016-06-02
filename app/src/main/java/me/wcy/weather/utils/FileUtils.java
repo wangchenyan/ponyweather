@@ -18,8 +18,8 @@ public class FileUtils {
         return getCachePath(context) + context.getString(R.string.camera_file_name);
     }
 
-    public static String getCutImagePath(Context context) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+    public static String getCompressImagePath(Context context) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         return getCachePath(context) + context.getString(R.string.compress_file_name, sdf.format(new Date()));
     }
 }
