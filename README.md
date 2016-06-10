@@ -1,4 +1,5 @@
 # 小马天气
+![](https://raw.githubusercontent.com/ChanWong21/PonyWeather/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
 ## 前言
 部分设计参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
