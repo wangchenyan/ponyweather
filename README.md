@@ -36,8 +36,6 @@
 
 ## 下载地址
 fir.im：http://fir.im/ponyweather<br>
-360手机助手：http://zhushou.360.cn/detail/index/soft_id/2826694<br>
-百度应用：http://shouji.baidu.com/software/item?docid=9102703<br>
 应用宝：http://android.myapp.com/myapp/detail.htm?apkName=me.wcy.weather
 
 ## TODO
