@@ -10,14 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.weather.R;
+import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityListEntity;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 
 public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
     private List<CityListEntity.CityInfoEntity> mCityList = new ArrayList<>();
+    private List<String> mAddedCityList = new ArrayList<>();
     private OnItemClickListener mListener;
-    private List<String> mAddedCityList;
     private Type mType;
 
     public void setDataAndType(List<CityListEntity.CityInfoEntity> data, Type type) {
@@ -34,7 +35,12 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_city, parent, false);
         view.setOnClickListener(this);
         ACache cache = ACache.get(parent.getContext());
-        mAddedCityList = (List<String>) cache.getAsObject(Extras.CITY_LIST);
+        List<CityEntity> cityList = (List<CityEntity>) cache.getAsObject(Extras.CITY_LIST);
+        for (CityEntity cityEntity : cityList) {
+            if (!cityEntity.isAutoLocate) {
+                mAddedCityList.add(cityEntity.name);
+            }
+        }
         return new CityViewHolder(view);
     }
 

@@ -100,6 +100,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         mSearchView.setTag(text);
         if (TextUtils.isEmpty(text)) {
             tvSearchTips.setVisibility(View.GONE);
+            rvCity.setVisibility(View.VISIBLE);
             showProvinceList();
             return true;
         }
@@ -116,6 +117,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     public void call() {
                         tvSearchTips.setText("正在搜索…");
                         tvSearchTips.setVisibility(View.VISIBLE);
+                        rvCity.setVisibility(View.GONE);
+                        currentType = AddCityAdapter.Type.SEARCH;
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -146,11 +149,11 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                             tvSearchTips.setText("无匹配城市");
                         } else {
                             tvSearchTips.setVisibility(View.GONE);
+                            rvCity.setVisibility(View.VISIBLE);
+                            rvCity.scrollToPosition(0);
+                            mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.SEARCH);
+                            mAddCityAdapter.notifyDataSetChanged();
                         }
-                        rvCity.scrollToPosition(0);
-                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.SEARCH);
-                        mAddCityAdapter.notifyDataSetChanged();
-                        currentType = AddCityAdapter.Type.SEARCH;
                     }
                 });
     }
@@ -413,7 +416,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onBackPressed() {
-        if (currentType == AddCityAdapter.Type.PROVINCE) {
+        if (currentType == AddCityAdapter.Type.PROVINCE || currentType == AddCityAdapter.Type.SEARCH) {
             super.onBackPressed();
         } else if (currentType == AddCityAdapter.Type.CITY) {
             showProvinceList();
