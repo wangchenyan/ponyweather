@@ -4,16 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -43,16 +43,15 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class AddCityActivity extends BaseActivity implements View.OnClickListener
-        , AMapLocationListener, OnItemClickListener {
+        , AMapLocationListener, OnItemClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = "AddCityActivity";
-    @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.rv_city)
     RecyclerView rvCity;
     @Bind(R.id.fab_location)
     FloatingActionButton fabLocation;
-    @Bind(R.id.fab_top)
-    FloatingActionButton fabTop;
+    @Bind(R.id.tv_search_tips)
+    TextView tvSearchTips;
+    private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
     private List<CityListEntity.CityInfoEntity> mCityList;
     private AddCityAdapter mAddCityAdapter;
@@ -78,9 +77,82 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void setListener() {
         fabLocation.setOnClickListener(this);
-        fabTop.setOnClickListener(this);
         mAddCityAdapter.setOnItemClickListener(this);
-        rvCity.setOnScrollListener(mScrollListener);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_city, menu);
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView.setQueryHint("城市名");
+        mSearchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(final String newText) {
+        String text = newText.replace(" ", "");
+        mSearchView.setTag(text);
+        if (TextUtils.isEmpty(text)) {
+            tvSearchTips.setVisibility(View.GONE);
+            showProvinceList();
+            return true;
+        }
+        searchCity(text);
+        return true;
+    }
+
+    private void searchCity(final String text) {
+        Observable.from(mCityList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        tvSearchTips.setText("正在搜索…");
+                        tvSearchTips.setVisibility(View.VISIBLE);
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .filter(new Func1<CityListEntity.CityInfoEntity, Boolean>() {
+                    @Override
+                    public Boolean call(CityListEntity.CityInfoEntity cityInfoEntity) {
+                        return cityInfoEntity.area.contains(text);
+                    }
+                })
+                .toList()
+                .subscribe(new Subscriber<List<CityListEntity.CityInfoEntity>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "search city error", e);
+                        tvSearchTips.setText("无匹配城市");
+                    }
+
+                    @Override
+                    public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
+                        if (!mSearchView.getTag().equals(text)) {
+                            return;
+                        }
+                        if (cityInfoEntities.isEmpty()) {
+                            tvSearchTips.setText("无匹配城市");
+                        } else {
+                            tvSearchTips.setVisibility(View.GONE);
+                        }
+                        rvCity.scrollToPosition(0);
+                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.SEARCH);
+                        mAddCityAdapter.notifyDataSetChanged();
+                        currentType = AddCityAdapter.Type.SEARCH;
+                    }
+                });
     }
 
     private void fetchCityList() {
@@ -91,7 +163,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        mProgressDialog.setMessage("");
+                        mProgressDialog.setMessage(getString(R.string.loading));
                         mProgressDialog.show();
                     }
                 })
@@ -130,7 +202,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onError(Throwable e) {
                         mProgressDialog.cancel();
-                        Log.e(TAG, "fetchCityList fail. msg:" + e.getMessage());
+                        Log.e(TAG, "fetchCityList", e);
                     }
 
                     @Override
@@ -165,15 +237,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         if (mProgressDialog.isShowing()) {
                             mProgressDialog.cancel();
                         }
-                        Log.e("showProvinceList", "onError:" + e.getMessage());
+                        Log.e(TAG, "showProvinceList" + e.getMessage());
                     }
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
-                        mAddCityAdapter.setData(cityInfoEntities, AddCityAdapter.Type.PROVINCE);
-                        mAddCityAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
-                        collapsingToolbar.setTitle(getString(R.string.add_city));
+                        mToolbar.setTitle(getString(R.string.add_city));
+                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.PROVINCE);
+                        mAddCityAdapter.notifyDataSetChanged();
                         currentType = AddCityAdapter.Type.PROVINCE;
                     }
                 });
@@ -203,15 +275,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("showCityList", "onError:" + e.getMessage());
+                        Log.e(TAG, "showCityList", e);
                     }
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
-                        mAddCityAdapter.setData(cityInfoEntities, AddCityAdapter.Type.CITY);
-                        mAddCityAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
-                        collapsingToolbar.setTitle(province);
+                        mToolbar.setTitle(province);
+                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.CITY);
+                        mAddCityAdapter.notifyDataSetChanged();
                         currentType = AddCityAdapter.Type.CITY;
                     }
                 });
@@ -235,15 +307,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("showAreaList", "onError:" + e.getMessage());
+                        Log.e(TAG, "showAreaList", e);
                     }
 
                     @Override
                     public void onNext(List<CityListEntity.CityInfoEntity> cityInfoEntities) {
-                        mAddCityAdapter.setData(cityInfoEntities, AddCityAdapter.Type.AREA);
-                        mAddCityAdapter.notifyDataSetChanged();
                         rvCity.scrollToPosition(0);
-                        collapsingToolbar.setTitle(city);
+                        mToolbar.setTitle(city);
+                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.AREA);
+                        mAddCityAdapter.notifyDataSetChanged();
                         currentType = AddCityAdapter.Type.AREA;
                     }
                 });
@@ -280,9 +352,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     SnackbarUtils.show(this, "已添加自动定位");
                 }
                 break;
-            case R.id.fab_top:
-                rvCity.scrollToPosition(0);
-                break;
         }
     }
 
@@ -294,7 +363,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
             showCityList(currentProvince);
         } else if (currentType == AddCityAdapter.Type.CITY) {
             showAreaList(cityInfo.city);
-        } else if (currentType == AddCityAdapter.Type.AREA) {
+        } else if (currentType == AddCityAdapter.Type.AREA || currentType == AddCityAdapter.Type.SEARCH) {
             backToWeather(cityInfo.area, false);
         }
     }
@@ -309,30 +378,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         }
         return false;
     }
-
-    private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
-        private boolean isShow = false;
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            int offsetY = recyclerView.computeVerticalScrollOffset();
-            int firstItemHeight = recyclerView.getChildAt(0).getHeight() + recyclerView.getPaddingTop();
-            if (!isShow && offsetY > firstItemHeight) {
-                if (fabTop.getVisibility() != View.VISIBLE) {
-                    fabTop.setVisibility(View.VISIBLE);
-                }
-                fabTop.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                isShow = true;
-            } else if (isShow && offsetY <= firstItemHeight) {
-                int bottomMargin = ((CoordinatorLayout.LayoutParams) fabTop.getLayoutParams()).bottomMargin;
-                fabTop.animate().translationY(fabTop.getHeight() + bottomMargin)
-                        .setInterpolator(new AccelerateInterpolator(2))
-                        .start();
-                isShow = false;
-            }
-        }
-    };
 
     private String readJsonFromAssets(AssetManager assetManager) {
         try {
@@ -355,6 +400,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         data.putExtra(Extras.CITY, city);
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

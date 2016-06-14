@@ -1,5 +1,6 @@
 package me.wcy.weather.adapter;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,11 @@ import me.wcy.weather.utils.Extras;
 
 public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
     private List<CityListEntity.CityInfoEntity> mCityList = new ArrayList<>();
-    private Type mType;
     private OnItemClickListener mListener;
     private List<String> mAddedCityList;
+    private Type mType;
 
-    public void setData(List<CityListEntity.CityInfoEntity> data, Type type) {
+    public void setDataAndType(List<CityListEntity.CityInfoEntity> data, Type type) {
         mCityList = data;
         mType = type;
     }
@@ -37,6 +38,7 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
         return new CityViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(CityViewHolder holder, int position) {
         holder.item.setTag(mCityList.get(position));
@@ -50,6 +52,11 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
             case AREA:
                 holder.tvCity.setText(mCityList.get(position).area);
                 holder.tvRemark.setText(mAddedCityList.contains(mCityList.get(position).area) ? "已添加" : "");
+                break;
+            case SEARCH:
+                String result = mCityList.get(position).area + " - " + mCityList.get(position).city +
+                        ", " + mCityList.get(position).province;
+                holder.tvCity.setText(result);
                 break;
         }
     }
@@ -67,6 +74,7 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
     public enum Type {
         PROVINCE,
         CITY,
-        AREA
+        AREA,
+        SEARCH
     }
 }

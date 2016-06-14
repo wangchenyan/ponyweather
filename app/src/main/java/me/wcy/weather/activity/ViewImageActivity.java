@@ -58,6 +58,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
 
         mImageWeather = (ImageWeather) getIntent().getSerializableExtra(Extras.IMAGE_WEATHER);
         mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.setCancelable(false);
 
         ImageLoader.getInstance().loadImage(mImageWeather.getImageUrl(), SystemUtils.getDefaultDisplayOption()

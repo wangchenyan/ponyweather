@@ -5,6 +5,8 @@
     <string name="cancel">取消</string>
     <string name="share">推荐给朋友</string>
     <string name="about">关于</string>
+    <string name="loading">加载中…</string>
+    <string name="load_fail">加载失败</string>
     <string name="temp">%s°</string>
     <string name="tempC">%s℃</string>
     <string name="now_max_temp">↑&#160;%s°</string>
@@ -23,7 +25,6 @@
     <string name="update_tips">已更新至最新天气</string>
     <string name="refresh_fail">加载失败，请下拉刷新</string>
     <string name="no_more">没有更多了</string>
-    <string name="load_fail">加载失败</string>
     <string name="image_open_fail">打开失败，请重试</string>
     <string name="image_save_fail">图片保存失败</string>
     <string name="no_sdcard">请确认已插入SD卡</string>
