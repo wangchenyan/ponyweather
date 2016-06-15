@@ -128,7 +128,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         return cityInfoEntity.area.contains(text);
                     }
                 })
-                .toList()
+                .toSortedList()
                 .subscribe(new Subscriber<List<CityListEntity.CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
