@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/auto_refresh_entries"
+        android:entryValues="@array/auto_refresh_values"
+        android:key="refresh_interval"
+        android:title="自动更新间隔" />
+</PreferenceScreen>

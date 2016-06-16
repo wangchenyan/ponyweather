@@ -11,6 +11,10 @@
     <item android:title="@string/app_name">
         <menu>
             <item
+                android:id="@+id/action_setting"
+                android:icon="@drawable/ic_menu_setting"
+                android:title="@string/setting" />
+            <item
                 android:id="@+id/action_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/share" />

@@ -1,10 +1,13 @@
 package me.wcy.weather.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -23,6 +26,7 @@ import java.util.Date;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
 
+@SuppressLint("SimpleDateFormat")
 public class SystemUtils {
 
     public static void setRefreshingOnCreate(final SwipeRefreshLayout refreshLayout) {
@@ -158,5 +162,21 @@ public class SystemUtils {
             return city.replace("市", "")
                     .replace("盟", "");
         }
+    }
+
+    public static boolean shouldRefresh(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        int refreshInterval = Integer.valueOf(sp.getString(Extras.KEY_REFRESH_INTERVAL, "1"));
+        if (refreshInterval == 0) {
+            return false;
+        }
+        long lastRefreshTime = sp.getLong(Extras.KEY_LAST_REFRESH_TIME, 0);
+        long nowTime = System.currentTimeMillis();
+        return nowTime - lastRefreshTime >= refreshInterval * DateUtils.HOUR_IN_MILLIS;
+    }
+
+    public static void saveRefreshTime(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putLong(Extras.KEY_LAST_REFRESH_TIME, System.currentTimeMillis()).apply();
     }
 }

@@ -69,6 +69,10 @@
             android:label="@string/add_city"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/setting"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.AboutActivity"
             android:label="@string/about"
             android:screenOrientation="portrait" />

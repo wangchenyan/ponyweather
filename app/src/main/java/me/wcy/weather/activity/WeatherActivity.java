@@ -116,7 +116,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }
 
         collapsingToolbar.setTitle(mCity.name);
-        fetchDataFromCache(mCity);
+        checkIfRefresh(mCity);
         UpdateUtils.checkUpdate(this);
     }
 
@@ -127,14 +127,16 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         mRefreshLayout.setOnRefreshListener(this);
     }
 
-    private void fetchDataFromCache(final CityEntity city) {
+    private void checkIfRefresh(CityEntity city) {
         Weather weather = (Weather) mACache.getAsObject(city.name);
-        if (weather == null) {
+        if (weather != null) {
+            updateView(weather);
+        } else {
             llWeatherContainer.setVisibility(View.GONE);
+        }
+        if (weather == null || SystemUtils.shouldRefresh(this)) {
             SystemUtils.setRefreshingOnCreate(mRefreshLayout);
             onRefresh();
-        } else {
-            updateView(weather);
         }
     }
 
@@ -166,7 +168,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                 .doOnNext(new Action1<Weather>() {
                     @Override
                     public void call(Weather weather) {
-                        mACache.put(city.name, weather, ACache.TIME_HOUR);
+                        mACache.put(city.name, weather);
+                        SystemUtils.saveRefreshTime(WeatherActivity.this);
                     }
                 })
                 .subscribe(new Subscriber<Weather>() {
@@ -177,11 +180,12 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "update weather fail. msg:" + e.getMessage());
+                        Log.e(TAG, "update weather fail", e);
                         if (NetworkUtils.errorByNetwork(e)) {
                             SnackbarUtils.show(fabSpeech, R.string.network_error);
                         } else {
-                            SnackbarUtils.show(fabSpeech, TextUtils.isEmpty(e.getMessage()) ? "加载失败" : e.getMessage());
+                            SnackbarUtils.show(fabSpeech, TextUtils.isEmpty(e.getMessage()) ?
+                                    "加载失败" : e.getMessage());
                         }
                         mRefreshLayout.setRefreshing(false);
                     }
@@ -292,7 +296,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     }
 
     private void speech() {
-        if (llWeatherContainer.getVisibility() != View.VISIBLE) {
+        Weather weather = (Weather) mACache.getAsObject(mCity.name);
+        if (weather == null) {
             return;
         }
         if (mSpeechSynthesizer == null) {
@@ -301,7 +306,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mSpeechSynthesizer.setApiKey(ApiKey.BD_TTS_API_KEY, ApiKey.BD_TTS_SECRET_KEY);
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
-        String text = SystemUtils.voiceText(this, (Weather) mACache.getAsObject(mCity.name));
+        String text = SystemUtils.voiceText(this, weather);
         mSpeechSynthesizer.speak(text);
     }
 
@@ -330,6 +335,9 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             case R.id.action_location:
                 startActivityForResult(new Intent(this, ManageCityActivity.class), RequestCode.REQUEST_CODE);
                 return true;
+            case R.id.action_setting:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
             case R.id.action_share:
                 share();
                 return true;
