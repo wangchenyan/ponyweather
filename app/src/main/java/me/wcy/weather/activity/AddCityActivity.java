@@ -84,6 +84,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_city, menu);
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
         mSearchView.setQueryHint("城市名");
         mSearchView.setOnQueryTextListener(this);
         return super.onCreateOptionsMenu(menu);
