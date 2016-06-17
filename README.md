@@ -5,7 +5,7 @@
 部分设计参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
-**注意：隐私相关的key我没有提交，clone后需要自己申请和风天气的key才能运行，其他key可直接忽略。**
+**注意：隐私相关的key我没有提交，clone后需要自行申请*和风天气*和*bmob*的key才能运行，其他key可直接忽略。**
 
 * **开源不易，希望能给个Star鼓励** 
 * 项目地址：https://github.com/ChanWong21/PonyWeather
@@ -20,6 +20,10 @@
 - 自动夜间模式，更加贴心
 
 ## 更新说明
+`v 2.1`
+* 新增搜索城市
+* 新增设置自动更新时间间隔
+
 `v 2.0`
 * 新增实景天气
 * 新增城市管理
@@ -60,25 +64,17 @@ fir.im：http://fir.im/ponyweather<br>
 * [android-floating-action-button](https://github.com/futuresimple/android-floating-action-button)
 
 ### 关键代码
-网络请求`RxJava+Retrofit`，缓存`ACache`
+网络请求`RxJava+Retrofit`
 ```java
-private void fetchDataFromCache(final String city) {
-    Weather weather = (Weather) mACache.getAsObject(city);
-    if (weather == null) {
-        fetchDataFromNetWork(city, false);
-    } else {
-        updateView(weather);
-    }
-}
-
-private void fetchDataFromNetWork(final String city) {
-    Api.getIApi().getWeather(city, Api.HE_KEY)
+private void fetchDataFromNetWork(final CityEntity city) {
+    Api.getIApi().getWeather(city.name, ApiKey.HE_KEY)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .filter(new Func1<WeatherData, Boolean>() {
                 @Override
                 public Boolean call(final WeatherData weatherData) {
-                    return weatherData.weathers.get(0).status.equals("ok");
+                    boolean success = weatherData.weathers.get(0).status.equals("ok");
+                    return success;
                 }
             })
             .map(new Func1<WeatherData, Weather>() {
@@ -90,12 +86,14 @@ private void fetchDataFromNetWork(final String city) {
             .doOnNext(new Action1<Weather>() {
                 @Override
                 public void call(Weather weather) {
-                    mACache.put(Extras.CITY, city);
-                    mACache.put(city, weather, ACache.TIME_HOUR);
+                    mACache.put(city.name, weather);
+                    SystemUtils.saveRefreshTime(WeatherActivity.this);
                 }
             })
             .subscribe(new Subscriber<Weather>() {
-                updateView(weather);
+                ...
+				updateView(weather);
+				...
             });
 }
 ```
