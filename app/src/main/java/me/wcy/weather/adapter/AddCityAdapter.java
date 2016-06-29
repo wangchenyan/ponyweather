@@ -11,17 +11,17 @@ import java.util.List;
 
 import me.wcy.weather.R;
 import me.wcy.weather.model.CityEntity;
-import me.wcy.weather.model.CityListEntity;
+import me.wcy.weather.model.CityInfoEntity;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.Extras;
 
 public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
-    private List<CityListEntity.CityInfoEntity> mCityList = new ArrayList<>();
+    private List<CityInfoEntity> mCityList = new ArrayList<>();
     private List<String> mAddedCityList = new ArrayList<>();
     private OnItemClickListener mListener;
     private Type mType;
 
-    public void setDataAndType(List<CityListEntity.CityInfoEntity> data, Type type) {
+    public void setDataAndType(List<CityInfoEntity> data, Type type) {
         mCityList = data;
         mType = type;
     }
