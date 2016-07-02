@@ -36,7 +36,6 @@
 
 `v 1.4`
 * 支持Android 6.0
-* 支持x86手机
 
 ## 下载地址
 fir.im：http://fir.im/ponyweather<br>
