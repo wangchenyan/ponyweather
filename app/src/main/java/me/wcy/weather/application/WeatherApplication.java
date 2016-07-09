@@ -22,6 +22,7 @@ public class WeatherApplication extends Application {
 
         sRes = getResources();
         ScreenUtils.init(this);
+        // BMOB_KEY是实景天气需要的key，需要从bmob官网申请后方能使用实景天气，可用""代替
         Bmob.initialize(this, ApiKey.BMOB_KEY);
         FIR.init(this);
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this)

@@ -141,6 +141,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     }
 
     private void fetchDataFromNetWork(final CityEntity city) {
+        // HE_KEY是更新天气需要的key，需要从和风天气官网申请后方能更新天气
         Api.getIApi().getWeather(city.name, ApiKey.HE_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -303,6 +304,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         if (mSpeechSynthesizer == null) {
             mSpeechListener = new SpeechListener(this);
             mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", mSpeechListener);
+            // BD_TTS_API_KEY和BD_TTS_SECRET_KEY是语音播报需要的key，
+            // 需要从百度语音官网申请后方能使用语音播报，可用""代替
             mSpeechSynthesizer.setApiKey(ApiKey.BD_TTS_API_KEY, ApiKey.BD_TTS_SECRET_KEY);
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
