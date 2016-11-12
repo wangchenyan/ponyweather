@@ -304,8 +304,6 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         if (mSpeechSynthesizer == null) {
             mSpeechListener = new SpeechListener(this);
             mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", mSpeechListener);
-            // BD_TTS_API_KEY和BD_TTS_SECRET_KEY是语音播报需要的key，
-            // 需要从百度语音官网申请后方能使用语音播报，可用""代替
             mSpeechSynthesizer.setApiKey(Key.get(this, Key.BD_TTS_API_KEY), Key.get(this, Key.BD_TTS_SECRET_KEY));
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }

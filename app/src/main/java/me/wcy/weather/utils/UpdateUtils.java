@@ -24,7 +24,6 @@ public class UpdateUtils {
     public static long sDownloadId = 0;
 
     public static void checkUpdate(final Activity activity) {
-        // FIR_KEY是检查更新需要的key，可直接用""代替
         FIR.checkForUpdateInFIR(Key.get(activity, Key.FIR_KEY), new VersionCheckCallback() {
             @Override
             public void onStart() {
