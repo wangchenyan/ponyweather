@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import cn.bmob.v3.Bmob;
 import im.fir.sdk.FIR;
-import me.wcy.weather.api.ApiKey;
+import me.wcy.weather.api.Key;
 import me.wcy.weather.utils.ScreenUtils;
 
 public class WeatherApplication extends Application {
@@ -23,7 +23,7 @@ public class WeatherApplication extends Application {
         sRes = getResources();
         ScreenUtils.init(this);
         // BMOB_KEY是实景天气需要的key，需要从bmob官网申请后方能使用实景天气，可用""代替
-        Bmob.initialize(this, ApiKey.BMOB_KEY);
+        Bmob.initialize(this, Key.get(this, Key.BMOB_KEY));
         FIR.init(this);
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheSize(2 * 1024 * 1024)

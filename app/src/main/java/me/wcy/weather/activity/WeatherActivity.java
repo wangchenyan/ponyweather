@@ -33,7 +33,7 @@ import me.wcy.weather.adapter.DailyForecastAdapter;
 import me.wcy.weather.adapter.HourlyForecastAdapter;
 import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.api.Api;
-import me.wcy.weather.api.ApiKey;
+import me.wcy.weather.api.Key;
 import me.wcy.weather.application.SpeechListener;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.Weather;
@@ -142,7 +142,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
     private void fetchDataFromNetWork(final CityEntity city) {
         // HE_KEY是更新天气需要的key，需要从和风天气官网申请后方能更新天气
-        Api.getIApi().getWeather(city.name, ApiKey.HE_KEY)
+        Api.getIApi().getWeather(city.name, Key.get(this, Key.HE_KEY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(new Func1<WeatherData, Boolean>() {
@@ -306,7 +306,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", mSpeechListener);
             // BD_TTS_API_KEY和BD_TTS_SECRET_KEY是语音播报需要的key，
             // 需要从百度语音官网申请后方能使用语音播报，可用""代替
-            mSpeechSynthesizer.setApiKey(ApiKey.BD_TTS_API_KEY, ApiKey.BD_TTS_SECRET_KEY);
+            mSpeechSynthesizer.setApiKey(Key.get(this, Key.BD_TTS_API_KEY), Key.get(this, Key.BD_TTS_SECRET_KEY));
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
         String text = SystemUtils.voiceText(this, weather);
