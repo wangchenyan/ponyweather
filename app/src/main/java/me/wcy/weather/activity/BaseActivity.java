@@ -13,13 +13,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.weather.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
+    protected Toolbar mToolbar;
     protected Handler mHandler;
 
     @Override
@@ -50,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initView() {
         ButterKnife.bind(this);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar == null) {
             throw new IllegalStateException("Layout is required to include a Toolbar with id 'toolbar'");
         }

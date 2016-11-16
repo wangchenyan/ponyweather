@@ -48,6 +48,7 @@ import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.UpdateUtils;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.Exceptions;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -144,20 +145,14 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         // HE_KEY是更新天气需要的key，需要从和风天气官网申请后方能更新天气
         Api.getIApi().getWeather(city.name, Key.get(this, Key.HE_KEY))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(new Func1<WeatherData, Boolean>() {
+                .observeOn(Schedulers.io())
+                .doOnNext(new Action1<WeatherData>() {
                     @Override
-                    public Boolean call(final WeatherData weatherData) {
+                    public void call(WeatherData weatherData) {
                         boolean success = weatherData.weathers.get(0).status.equals("ok");
                         if (!success) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SnackbarUtils.show(fabSpeech, weatherData.weathers.get(0).status);
-                                }
-                            });
+                            throw Exceptions.propagate(new Throwable(weatherData.weathers.get(0).status));
                         }
-                        return success;
                     }
                 })
                 .map(new Func1<WeatherData, Weather>() {
@@ -173,10 +168,10 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                         SystemUtils.saveRefreshTime(WeatherActivity.this);
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Weather>() {
                     @Override
                     public void onCompleted() {
-                        mRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -196,6 +191,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                         updateView(weather);
                         llWeatherContainer.setVisibility(View.VISIBLE);
                         SnackbarUtils.show(fabSpeech, R.string.update_tips);
+                        mRefreshLayout.setRefreshing(false);
                     }
                 });
     }

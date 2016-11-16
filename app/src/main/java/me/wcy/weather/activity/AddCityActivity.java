@@ -41,7 +41,9 @@ import me.wcy.weather.utils.SystemUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.Exceptions;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -125,7 +127,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         currentType = AddCityAdapter.Type.SEARCH;
                     }
                 })
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .filter(new Func1<CityInfoEntity, Boolean>() {
                     @Override
                     public Boolean call(CityInfoEntity cityInfoEntity) {
@@ -133,6 +135,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
                 })
                 .toSortedList()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
@@ -149,6 +152,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         if (!mSearchView.getTag().equals(text)) {
                             return;
                         }
+
                         if (cityInfoEntities.isEmpty()) {
                             tvSearchTips.setText("无匹配城市");
                         } else {
@@ -174,17 +178,19 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         mProgressDialog.show();
                     }
                 })
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .map(new Func1<AssetManager, String>() {
                     @Override
                     public String call(AssetManager assetManager) {
                         return readJsonFromAssets(assetManager);
                     }
                 })
-                .filter(new Func1<String, Boolean>() {
+                .doOnNext(new Action1<String>() {
                     @Override
-                    public Boolean call(String s) {
-                        return !TextUtils.isEmpty(s);
+                    public void call(String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            throw Exceptions.propagate(new Throwable("read city list failed"));
+                        }
                     }
                 })
                 .map(new Func1<String, List<CityInfoEntity>>() {
@@ -193,16 +199,16 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         return parseCityList(s);
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mProgressDialog.cancel();
-                        Log.e(TAG, "fetchCityList", e);
+                        finish();
                     }
 
                     @Override
@@ -215,8 +221,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     private void showProvinceList() {
         Observable.from(mCityList)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .distinct(new Func1<CityInfoEntity, String>() {
                     @Override
                     public String call(CityInfoEntity cityInfoEntity) {
@@ -224,12 +230,10 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
                 })
                 .toSortedList()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.cancel();
-                        }
                     }
 
                     @Override
@@ -238,10 +242,14 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                             mProgressDialog.cancel();
                         }
                         Log.e(TAG, "showProvinceList" + e.getMessage());
+                        finish();
                     }
 
                     @Override
                     public void onNext(List<CityInfoEntity> cityInfoEntities) {
+                        if (mProgressDialog.isShowing()) {
+                            mProgressDialog.cancel();
+                        }
                         rvCity.scrollToPosition(0);
                         mToolbar.setTitle(getString(R.string.add_city));
                         mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.PROVINCE);
@@ -253,8 +261,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     private void showCityList(final String province) {
         Observable.from(mCityList)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .filter(new Func1<CityInfoEntity, Boolean>() {
                     @Override
                     public Boolean call(CityInfoEntity cityInfoEntity) {
@@ -268,6 +276,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
                 })
                 .toSortedList()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
@@ -276,6 +285,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "showCityList", e);
+                        finish();
                     }
 
                     @Override
@@ -291,8 +301,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     private void showAreaList(final String city) {
         Observable.from(mCityList)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .filter(new Func1<CityInfoEntity, Boolean>() {
                     @Override
                     public Boolean call(CityInfoEntity cityInfoEntity) {
@@ -300,6 +310,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
                 })
                 .toSortedList()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<CityInfoEntity>>() {
                     @Override
                     public void onCompleted() {
@@ -308,6 +319,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "showAreaList", e);
+                        finish();
                     }
 
                     @Override
