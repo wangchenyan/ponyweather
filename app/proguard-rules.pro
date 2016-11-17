@@ -23,8 +23,8 @@
 -keep class android.support.** { *; }
 
 # app
--keep class me.wcy.weather.proguard.ExProGuard { *; }
--keep class * extends me.wcy.weather.proguard.ExProGuard { *; }
+-keep class me.wcy.weather.utils.proguard.ExProGuard { *; }
+-keep class * extends me.wcy.weather.utils.proguard.ExProGuard { *; }
 
 # amap
 -keep class com.amap.api.location.** { *; }

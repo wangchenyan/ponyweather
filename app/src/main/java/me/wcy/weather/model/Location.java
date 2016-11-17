@@ -2,7 +2,7 @@ package me.wcy.weather.model;
 
 import java.io.Serializable;
 
-import me.wcy.weather.proguard.ExProGuard;
+import me.wcy.weather.utils.proguard.ExProGuard;
 
 public class Location implements Serializable, ExProGuard {
     private String address;
