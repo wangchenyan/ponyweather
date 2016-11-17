@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected Toolbar mToolbar;
@@ -46,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        ButterKnife.bind(this);
+        ViewBinder.bind(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar == null) {

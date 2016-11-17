@@ -1,4 +1,4 @@
-package me.wcy.weather.model;
+package me.wcy.weather.model.bmob;
 
 import java.io.Serializable;
 

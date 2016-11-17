@@ -11,22 +11,22 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ManageCityAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.adapter.OnItemLongClickListener;
+import me.wcy.weather.constants.Extras;
+import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.utils.ACache;
-import me.wcy.weather.utils.Extras;
-import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
+import me.wcy.weather.utils.binding.Bind;
 
 public class ManageCityActivity extends BaseActivity implements View.OnClickListener, OnItemClickListener, OnItemLongClickListener {
     @Bind(R.id.rv_city)
-    RecyclerView rvCity;
+    private RecyclerView rvCity;
     @Bind(R.id.fab_add)
-    FloatingActionButton fabAdd;
+    private FloatingActionButton fabAdd;
     private ACache mACache;
     private ArrayList<CityEntity> mCityList;
     private ManageCityAdapter mAdapter;

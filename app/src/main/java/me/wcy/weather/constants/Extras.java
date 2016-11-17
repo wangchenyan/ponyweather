@@ -1,4 +1,4 @@
-package me.wcy.weather.utils;
+package me.wcy.weather.constants;
 
 public interface Extras {
     String CITY = "city";

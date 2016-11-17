@@ -17,31 +17,31 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import butterknife.Bind;
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
-import me.wcy.weather.model.ImageWeather;
-import me.wcy.weather.utils.Extras;
-import me.wcy.weather.utils.RequestCode;
+import me.wcy.weather.constants.Extras;
+import me.wcy.weather.constants.RequestCode;
+import me.wcy.weather.model.bmob.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.binding.Bind;
 
 public class ViewImageActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "ViewImageActivity";
     @Bind(R.id.iv_weather_image)
-    ImageView ivWeatherImage;
+    private ImageView ivWeatherImage;
     @Bind(R.id.tv_location)
-    TextView tvLocation;
+    private TextView tvLocation;
     @Bind(R.id.tv_user_name)
-    TextView tvUserName;
+    private TextView tvUserName;
     @Bind(R.id.tv_say)
-    TextView tvSay;
+    private TextView tvSay;
     @Bind(R.id.tv_time)
-    TextView tvTime;
+    private TextView tvTime;
     @Bind(R.id.tv_tag)
-    TextView tvTag;
+    private TextView tvTag;
     @Bind(R.id.tv_praise)
-    TextView tvPraise;
+    private TextView tvPraise;
     private ImageWeather mImageWeather;
     private ProgressDialog mProgressDialog;
 

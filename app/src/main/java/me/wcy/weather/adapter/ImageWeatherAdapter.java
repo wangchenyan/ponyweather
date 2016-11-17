@@ -15,13 +15,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
-import me.wcy.weather.model.ImageWeather;
+import me.wcy.weather.model.bmob.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapter.ViewHolder> implements View.OnClickListener {
     private static final String TAG = "ImageWeatherAdapter";
@@ -105,7 +105,7 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            ViewBinder.bind(this, itemView);
             int minHeight = ScreenUtils.getScreenWidth() / 2 - ScreenUtils.dp2px(4) * 2;
             ivImage.setMinimumHeight(minHeight);
         }

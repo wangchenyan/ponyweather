@@ -11,11 +11,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
+import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public class HourlyForecastAdapter extends BaseAdapter {
     private List<Weather.HourlyForecastEntity> mData;
@@ -68,13 +69,13 @@ public class HourlyForecastAdapter extends BaseAdapter {
         public TextView tvWind;
 
         public ViewHolder(View itemView) {
-            ButterKnife.bind(this, itemView);
+            ViewBinder.bind(this, itemView);
         }
     }
 
     private String timeFormat(String time) {
-        SimpleDateFormat fromSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        SimpleDateFormat toSdf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat fromSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        SimpleDateFormat toSdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         try {
             return toSdf.format(fromSdf.parse(time));
         } catch (ParseException e) {

@@ -8,21 +8,21 @@ import com.baidu.speechsynthesizer.SpeechSynthesizer;
 import com.baidu.speechsynthesizer.SpeechSynthesizerListener;
 import com.baidu.speechsynthesizer.publicutility.SpeechError;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public class SpeechListener implements SpeechSynthesizerListener {
     private static final String TAG = "SpeechListener";
     private Activity activity;
     @Bind(R.id.fab_speech)
-    FloatingActionButton fabSpeech;
+    private FloatingActionButton fabSpeech;
 
     public SpeechListener(Activity activity) {
         this.activity = activity;
-        ButterKnife.bind(this, this.activity);
+        ViewBinder.bind(this, this.activity.getWindow().getDecorView());
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import me.wcy.weather.R;
+import me.wcy.weather.constants.RequestCode;
 
 public class ImageUtils {
 

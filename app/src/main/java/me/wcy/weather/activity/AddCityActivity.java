@@ -28,16 +28,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.AddCityAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
+import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfoEntity;
 import me.wcy.weather.utils.ACache;
-import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.binding.Bind;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -51,11 +51,11 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         , AMapLocationListener, OnItemClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = "AddCityActivity";
     @Bind(R.id.rv_city)
-    RecyclerView rvCity;
+    private RecyclerView rvCity;
     @Bind(R.id.fab_location)
-    FloatingActionButton fabLocation;
+    private FloatingActionButton fabLocation;
     @Bind(R.id.tv_search_tips)
-    TextView tvSearchTips;
+    private TextView tvSearchTips;
     private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
     private List<CityInfoEntity> mCityList;

@@ -23,21 +23,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.application.LoadMoreListener;
-import me.wcy.weather.model.ImageWeather;
-import me.wcy.weather.model.Location;
-import me.wcy.weather.utils.Extras;
+import me.wcy.weather.constants.Extras;
+import me.wcy.weather.constants.RequestCode;
+import me.wcy.weather.model.bmob.ImageWeather;
+import me.wcy.weather.model.bmob.Location;
 import me.wcy.weather.utils.FileUtils;
 import me.wcy.weather.utils.ImageUtils;
-import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.binding.Bind;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
         , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
@@ -45,17 +45,17 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     private static final String TAG = "ImageWeatherActivity";
     private static final int QUERY_LIMIT = 20;
     @Bind(R.id.appbar)
-    AppBarLayout mAppBar;
+    private AppBarLayout mAppBar;
     @Bind(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.rv_image)
-    RecyclerView rvImage;
+    private RecyclerView rvImage;
     @Bind(R.id.fam_add_photo)
-    FloatingActionsMenu famAddPhoto;
+    private FloatingActionsMenu famAddPhoto;
     @Bind(R.id.fab_camera)
-    com.getbase.floatingactionbutton.FloatingActionButton fabCamera;
+    private com.getbase.floatingactionbutton.FloatingActionButton fabCamera;
     @Bind(R.id.fab_album)
-    com.getbase.floatingactionbutton.FloatingActionButton fabAlbum;
+    private com.getbase.floatingactionbutton.FloatingActionButton fabAlbum;
     private ImageWeatherAdapter mAdapter;
     private LoadMoreListener mLoadMoreListener;
     private List<ImageWeather> mImageList = new ArrayList<>();

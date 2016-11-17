@@ -6,9 +6,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
+import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public class CityViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.view_holder_city)
@@ -22,6 +22,6 @@ public class CityViewHolder extends RecyclerView.ViewHolder {
 
     public CityViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
+        ViewBinder.bind(this, itemView);
     }
 }

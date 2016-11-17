@@ -10,7 +10,7 @@ import java.util.List;
 import me.wcy.weather.R;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.utils.ACache;
-import me.wcy.weather.utils.Extras;
+import me.wcy.weather.constants.Extras;
 
 public class ManageCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener, View.OnLongClickListener {
     private List<CityEntity> mCityList;

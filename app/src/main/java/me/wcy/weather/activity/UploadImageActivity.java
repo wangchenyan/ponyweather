@@ -19,32 +19,32 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import butterknife.Bind;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import me.wcy.weather.R;
-import me.wcy.weather.model.ImageWeather;
-import me.wcy.weather.model.Location;
-import me.wcy.weather.utils.Extras;
-import me.wcy.weather.utils.RequestCode;
+import me.wcy.weather.constants.Extras;
+import me.wcy.weather.constants.RequestCode;
+import me.wcy.weather.model.bmob.ImageWeather;
+import me.wcy.weather.model.bmob.Location;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.widget.TagLayout;
 
 public class UploadImageActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "UploadImageActivity";
     @Bind(R.id.iv_weather_image)
-    ImageView ivWeatherImage;
+    private ImageView ivWeatherImage;
     @Bind(R.id.tv_location)
-    TextView tvLocation;
+    private TextView tvLocation;
     @Bind(R.id.tag)
-    TagLayout tagLayout;
+    private TagLayout tagLayout;
     @Bind(R.id.et_say)
-    EditText etSay;
+    private EditText etSay;
     @Bind(R.id.btn_upload)
-    Button btnUpload;
+    private Button btnUpload;
     private ImageWeather imageWeather = new ImageWeather();
     private ProgressDialog mProgressDialog;
     private String path;

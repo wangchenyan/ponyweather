@@ -15,11 +15,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.utils.ImageUtils;
+import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public class DailyForecastAdapter extends BaseAdapter {
     private List<Weather.DailyForecastEntity> mData;
@@ -96,7 +96,7 @@ public class DailyForecastAdapter extends BaseAdapter {
         public TextView tvDetail;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
         }
     }
 

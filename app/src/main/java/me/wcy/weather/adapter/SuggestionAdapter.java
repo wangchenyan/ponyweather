@@ -11,10 +11,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
+import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 
 public class SuggestionAdapter extends BaseAdapter {
     private List<Integer> mIcon = new ArrayList<>();
@@ -89,7 +89,7 @@ public class SuggestionAdapter extends BaseAdapter {
         public TextView tvDesc;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
         }
     }
 }

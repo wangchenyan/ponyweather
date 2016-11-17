@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import me.wcy.weather.R;
+import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.Weather;
 
 @SuppressLint("SimpleDateFormat")

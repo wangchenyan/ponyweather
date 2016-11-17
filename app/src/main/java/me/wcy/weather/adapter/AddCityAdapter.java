@@ -13,7 +13,7 @@ import me.wcy.weather.R;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfoEntity;
 import me.wcy.weather.utils.ACache;
-import me.wcy.weather.utils.Extras;
+import me.wcy.weather.constants.Extras;
 
 public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
     private List<CityInfoEntity> mCityList = new ArrayList<>();

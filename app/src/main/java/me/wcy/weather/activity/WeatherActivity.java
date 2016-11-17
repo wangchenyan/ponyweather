@@ -27,7 +27,6 @@ import com.baidu.speechsynthesizer.SpeechSynthesizer;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.DailyForecastAdapter;
 import me.wcy.weather.adapter.HourlyForecastAdapter;
@@ -35,17 +34,18 @@ import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.api.Api;
 import me.wcy.weather.api.Key;
 import me.wcy.weather.application.SpeechListener;
+import me.wcy.weather.constants.Extras;
+import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherData;
 import me.wcy.weather.utils.ACache;
-import me.wcy.weather.utils.Extras;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
-import me.wcy.weather.utils.RequestCode;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.UpdateUtils;
+import me.wcy.weather.utils.binding.Bind;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
@@ -58,39 +58,39 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         , View.OnClickListener {
     private static final String TAG = "WeatherActivity";
     @Bind(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
+    private DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
-    NavigationView mNavigationView;
+    private NavigationView mNavigationView;
     @Bind(R.id.appbar)
-    AppBarLayout mAppBar;
+    private AppBarLayout mAppBar;
     @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
+    private CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.iv_weather_image)
-    ImageView ivWeatherImage;
+    private ImageView ivWeatherImage;
     @Bind(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.nested_scroll_view)
-    NestedScrollView mScrollView;
+    private NestedScrollView mScrollView;
     @Bind(R.id.ll_weather_container)
-    LinearLayout llWeatherContainer;
+    private LinearLayout llWeatherContainer;
     @Bind(R.id.iv_icon)
-    ImageView ivWeatherIcon;
+    private ImageView ivWeatherIcon;
     @Bind(R.id.tv_temp)
-    TextView tvTemp;
+    private TextView tvTemp;
     @Bind(R.id.tv_max_temp)
-    TextView tvMaxTemp;
+    private TextView tvMaxTemp;
     @Bind(R.id.tv_min_temp)
-    TextView tvMinTemp;
+    private TextView tvMinTemp;
     @Bind(R.id.tv_more_info)
-    TextView tvMoreInfo;
+    private TextView tvMoreInfo;
     @Bind(R.id.lv_hourly_forecast)
-    ListView lvHourlyForecast;
+    private ListView lvHourlyForecast;
     @Bind(R.id.lv_daily_forecast)
-    ListView lvDailyForecast;
+    private ListView lvDailyForecast;
     @Bind(R.id.lv_suggestion)
-    ListView lvSuggestion;
+    private ListView lvSuggestion;
     @Bind(R.id.fab_speech)
-    FloatingActionButton fabSpeech;
+    private FloatingActionButton fabSpeech;
     private ACache mACache;
     private AMapLocationClient mLocationClient;
     private SpeechSynthesizer mSpeechSynthesizer;
