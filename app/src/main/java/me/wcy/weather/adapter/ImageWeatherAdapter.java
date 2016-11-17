@@ -17,7 +17,7 @@ import java.util.List;
 
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
-import me.wcy.weather.model.bmob.ImageWeather;
+import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.binding.Bind;

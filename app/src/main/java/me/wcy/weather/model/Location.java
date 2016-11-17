@@ -1,8 +1,10 @@
-package me.wcy.weather.model.bmob;
+package me.wcy.weather.model;
 
 import java.io.Serializable;
 
-public class Location implements Serializable {
+import me.wcy.weather.proguard.ExProGuard;
+
+public class Location implements Serializable, ExProGuard {
     private String address;
     private String country;
     private String province;

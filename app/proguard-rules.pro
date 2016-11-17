@@ -22,11 +22,9 @@
 -dontwarn android.support.**
 -keep class android.support.** { *; }
 
-# key
--keep class me.wcy.weather.api.KeyStore { *; }
-
-# bmob-model
--keep class me.wcy.weather.model.bmob.** { *; }
+# app
+-keep class me.wcy.weather.proguard.ExProGuard { *; }
+-keep class * extends me.wcy.weather.proguard.ExProGuard { *; }
 
 # amap
 -keep class com.amap.api.location.** { *; }
