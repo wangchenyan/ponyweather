@@ -20,7 +20,7 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
     }
 
     public void onLoadComplete() {
-        Log.d(TAG, "onLoadComplete");
+        Log.i(TAG, "onLoadComplete");
         isLoading = false;
     }
 
@@ -46,7 +46,7 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
         }
 
         if (lastVisibleItem + 1 == adapter.getItemCount()) {
-            Log.d(TAG, "onLoadMore");
+            Log.i(TAG, "onLoadMore");
             isLoading = true;
             mListener.onLoadMore();
         }
@@ -55,9 +55,7 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
     private int max(int[] lastPositions) {
         int max = lastPositions[0];
         for (int i : lastPositions) {
-            if (i > max) {
-                max = i;
-            }
+            max = Math.max(i, max);
         }
         return max;
     }

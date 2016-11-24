@@ -27,7 +27,7 @@ public class SpeechListener implements SpeechSynthesizerListener {
 
     @Override
     public void onStartWorking(SpeechSynthesizer speechSynthesizer) {
-        Log.d(TAG, "onStartWorking");
+        Log.i(TAG, "onStartWorking");
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -39,7 +39,7 @@ public class SpeechListener implements SpeechSynthesizerListener {
 
     @Override
     public void onSpeechStart(SpeechSynthesizer speechSynthesizer) {
-        Log.d(TAG, "onSpeechStart");
+        Log.i(TAG, "onSpeechStart");
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SpeechListener implements SpeechSynthesizerListener {
 
     @Override
     public void onSynthesizeFinish(SpeechSynthesizer speechSynthesizer) {
-        Log.d(TAG, "onSynthesizeFinish");
+        Log.i(TAG, "onSynthesizeFinish");
     }
 
     @Override
@@ -84,7 +84,7 @@ public class SpeechListener implements SpeechSynthesizerListener {
 
     @Override
     public void onSpeechFinish(SpeechSynthesizer speechSynthesizer) {
-        Log.d(TAG, "onSpeechFinish");
+        Log.i(TAG, "onSpeechFinish");
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
