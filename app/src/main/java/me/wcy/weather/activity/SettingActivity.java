@@ -15,10 +15,6 @@ public class SettingActivity extends BaseActivity {
         getFragmentManager().beginTransaction().replace(R.id.ll_fragment_container, new SettingFragment()).commit();
     }
 
-    @Override
-    protected void setListener() {
-    }
-
     public static class SettingFragment extends PreferenceFragment {
 
         @Override

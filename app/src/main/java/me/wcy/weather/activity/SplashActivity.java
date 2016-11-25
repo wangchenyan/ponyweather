@@ -24,10 +24,6 @@ public class SplashActivity extends BaseActivity {
         }, 1000);
     }
 
-    @Override
-    protected void setListener() {
-    }
-
     private void initNightMode() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         WeatherApplication.updateNightMode(hour >= 19 || hour < 7);

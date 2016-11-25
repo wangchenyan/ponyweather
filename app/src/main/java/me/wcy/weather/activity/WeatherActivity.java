@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -46,6 +47,8 @@ import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.permission.PermissionReq;
+import me.wcy.weather.utils.permission.PermissionResult;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
@@ -141,6 +144,98 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }
     }
 
+    private void updateView(Weather weather) {
+        ivWeatherImage.setImageResource(ImageUtils.getWeatherImage(weather.now.cond.txt));
+        ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(this, weather.now.cond.code));
+        tvTemp.setText(getString(R.string.tempC, weather.now.tmp));
+        tvMaxTemp.setText(getString(R.string.now_max_temp, weather.daily_forecast.get(0).tmp.max));
+        tvMinTemp.setText(getString(R.string.now_min_temp, weather.daily_forecast.get(0).tmp.min));
+        StringBuilder sb = new StringBuilder();
+        sb.append("体感")
+                .append(weather.now.fl)
+                .append("°");
+        if (weather.aqi != null && !TextUtils.isEmpty(weather.aqi.city.qlty)) {
+            sb.append("  ")
+                    .append(weather.aqi.city.qlty.contains("污染") ? "" : "空气")
+                    .append(weather.aqi.city.qlty);
+        }
+        sb.append("  ")
+                .append(weather.now.wind.dir)
+                .append(weather.now.wind.sc)
+                .append(weather.now.wind.sc.contains("风") ? "" : "级");
+        tvMoreInfo.setText(sb.toString());
+        lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
+        lvDailyForecast.setAdapter(new DailyForecastAdapter(weather.daily_forecast));
+        lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_speech:
+                speech();
+                break;
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mCity.isAutoLocate) {
+            locate();
+        } else {
+            fetchDataFromNetWork(mCity);
+        }
+    }
+
+    private void locate() {
+        PermissionReq.with(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .result(new PermissionResult() {
+                    @Override
+                    public void onGranted() {
+                        if (mLocationClient == null) {
+                            mLocationClient = SystemUtils.initAMapLocation(WeatherActivity.this, WeatherActivity.this);
+                        }
+                        mLocationClient.startLocation();
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        onLocated(null);
+                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, "定位", "获取当前位置"));
+                    }
+                })
+                .request();
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            mLocationClient.stopLocation();
+            if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
+                // 定位成功回调信息，设置相关消息
+                onLocated(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
+            } else {
+                // 定位失败
+                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+                onLocated(null);
+                SnackbarUtils.show(fabSpeech, R.string.locate_fail);
+            }
+        }
+    }
+
+    private void onLocated(String city) {
+        mCity.name = TextUtils.isEmpty(city) ? (TextUtils.equals(mCity.name, "正在定位") ? "北京" : mCity.name) : city;
+        cache(mCity);
+
+        collapsingToolbar.setTitle(mCity.name);
+        fetchDataFromNetWork(mCity);
+    }
+
     private void fetchDataFromNetWork(final CityEntity city) {
         // HE_KEY是更新天气需要的key，需要从和风天气官网申请后方能更新天气
         Api.getIApi().getWeather(city.name, Key.get(this, Key.HE_KEY))
@@ -194,81 +289,6 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                         mRefreshLayout.setRefreshing(false);
                     }
                 });
-    }
-
-    private void updateView(Weather weather) {
-        ivWeatherImage.setImageResource(ImageUtils.getWeatherImage(weather.now.cond.txt));
-        ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(this, weather.now.cond.code));
-        tvTemp.setText(getString(R.string.tempC, weather.now.tmp));
-        tvMaxTemp.setText(getString(R.string.now_max_temp, weather.daily_forecast.get(0).tmp.max));
-        tvMinTemp.setText(getString(R.string.now_min_temp, weather.daily_forecast.get(0).tmp.min));
-        StringBuilder sb = new StringBuilder();
-        sb.append("体感")
-                .append(weather.now.fl)
-                .append("°");
-        if (weather.aqi != null && !TextUtils.isEmpty(weather.aqi.city.qlty)) {
-            sb.append("  ")
-                    .append(weather.aqi.city.qlty.contains("污染") ? "" : "空气")
-                    .append(weather.aqi.city.qlty);
-        }
-        sb.append("  ")
-                .append(weather.now.wind.dir)
-                .append(weather.now.wind.sc)
-                .append(weather.now.wind.sc.contains("风") ? "" : "级");
-        tvMoreInfo.setText(sb.toString());
-        lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
-        lvDailyForecast.setAdapter(new DailyForecastAdapter(weather.daily_forecast));
-        lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));
-    }
-
-    private void locate() {
-        mLocationClient = SystemUtils.initAMapLocation(this, this);
-        mLocationClient.startLocation();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_speech:
-                speech();
-                break;
-        }
-    }
-
-    @Override
-    public void onRefresh() {
-        if (mCity.isAutoLocate) {
-            locate();
-        } else {
-            fetchDataFromNetWork(mCity);
-        }
-    }
-
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            mLocationClient.stopLocation();
-            if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
-                // 定位成功回调信息，设置相关消息
-                onLocated(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
-            } else {
-                // 定位失败
-                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError", "location Error, ErrCode:"
-                        + aMapLocation.getErrorCode() + ", errInfo:"
-                        + aMapLocation.getErrorInfo());
-                onLocated(null);
-                SnackbarUtils.show(fabSpeech, R.string.locate_fail);
-            }
-        }
-    }
-
-    private void onLocated(String city) {
-        mCity.name = TextUtils.isEmpty(city) ? (TextUtils.equals(mCity.name, "正在定位") ? "北京" : mCity.name) : city;
-        cache(mCity);
-
-        collapsingToolbar.setTitle(mCity.name);
-        fetchDataFromNetWork(mCity);
     }
 
     private void cache(CityEntity city) {
@@ -327,7 +347,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }, 500);
         switch (item.getItemId()) {
             case R.id.action_image_weather:
-                startActivity(new Intent(this, ImageWeatherActivity.class));
+                startImageWeather();
                 return true;
             case R.id.action_location:
                 startActivityForResult(new Intent(this, ManageCityActivity.class), RequestCode.REQUEST_CODE);
@@ -343,6 +363,24 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                 return true;
         }
         return false;
+    }
+
+    private void startImageWeather() {
+        PermissionReq.with(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .result(new PermissionResult() {
+                    @Override
+                    public void onGranted() {
+                        startActivity(new Intent(WeatherActivity.this, ImageWeatherActivity.class));
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, "定位", "打开实景天气"));
+                    }
+                })
+                .request();
     }
 
     private void share() {
