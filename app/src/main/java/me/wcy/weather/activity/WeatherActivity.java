@@ -1,6 +1,5 @@
 package me.wcy.weather.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -49,6 +48,7 @@ import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
+import me.wcy.weather.utils.permission.Permissions;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
@@ -189,8 +189,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
     private void locate() {
         PermissionReq.with(this)
-                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .permissions(Permissions.LOCATION)
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
@@ -203,7 +202,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     @Override
                     public void onDenied() {
                         onLocated(null);
-                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, "定位", "获取当前位置"));
+                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, Permissions.LOCATION_DESC, "获取当前位置"));
                     }
                 })
                 .request();
@@ -367,8 +366,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
     private void startImageWeather() {
         PermissionReq.with(this)
-                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .permissions(Permissions.LOCATION)
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
@@ -377,7 +375,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
                     @Override
                     public void onDenied() {
-                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, "定位", "打开实景天气"));
+                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, Permissions.LOCATION_DESC, "打开实景天气"));
                     }
                 })
                 .request();

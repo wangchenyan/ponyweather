@@ -1,6 +1,5 @@
 package me.wcy.weather.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,6 +40,7 @@ import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
+import me.wcy.weather.utils.permission.Permissions;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
         , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
@@ -196,7 +196,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         }
 
         PermissionReq.with(this)
-                .permissions(Manifest.permission.READ_PHONE_STATE)
+                .permissions(Permissions.PHONE)
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
