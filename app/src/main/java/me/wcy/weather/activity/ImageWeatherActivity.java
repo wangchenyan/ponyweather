@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +39,8 @@ import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.permission.PermissionReq;
+import me.wcy.weather.utils.permission.PermissionResult;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
         , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
@@ -178,12 +181,34 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_camera:
-                ImageUtils.pickImage(this, ImageUtils.ImageType.CAMERA);
+                pickImage(ImageUtils.ImageType.CAMERA);
                 break;
             case R.id.fab_album:
-                ImageUtils.pickImage(this, ImageUtils.ImageType.ALBUM);
+                pickImage(ImageUtils.ImageType.ALBUM);
                 break;
         }
+    }
+
+    private void pickImage(final ImageUtils.ImageType type) {
+        if (!FileUtils.hasSDCard()) {
+            SnackbarUtils.show(this, R.string.no_sdcard);
+            return;
+        }
+
+        PermissionReq.with(this)
+                .permissions(Manifest.permission.READ_PHONE_STATE)
+                .result(new PermissionResult() {
+                    @Override
+                    public void onGranted() {
+                        ImageUtils.pickImage(ImageWeatherActivity.this, type);
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        SnackbarUtils.show(ImageWeatherActivity.this, getString(R.string.no_permission, "获取手机信息", "上传实景"));
+                    }
+                })
+                .request();
     }
 
     @Override

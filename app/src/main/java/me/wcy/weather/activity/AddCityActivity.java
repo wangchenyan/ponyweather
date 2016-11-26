@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -38,6 +39,8 @@ import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.SystemUtils;
 import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.permission.PermissionReq;
+import me.wcy.weather.utils.permission.PermissionResult;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,7 +78,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
 
-        mLocationClient = SystemUtils.initAMapLocation(this, this);
         fetchCityList();
     }
 
@@ -334,6 +336,43 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_location:
+                if (!hasAutoLocate()) {
+                    locate();
+                } else {
+                    SnackbarUtils.show(this, "已添加自动定位");
+                }
+                break;
+        }
+    }
+
+    private void locate() {
+        mProgressDialog.setMessage(getString(R.string.locating));
+        mProgressDialog.show();
+        PermissionReq.with(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .result(new PermissionResult() {
+                    @Override
+                    public void onGranted() {
+                        if (mLocationClient == null) {
+                            mLocationClient = SystemUtils.initAMapLocation(AddCityActivity.this, AddCityActivity.this);
+                        }
+                        mLocationClient.startLocation();
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        mProgressDialog.cancel();
+                        SnackbarUtils.show(AddCityActivity.this, getString(R.string.no_permission, "定位", "获取当前位置"));
+                    }
+                })
+                .request();
+    }
+
+    @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             mProgressDialog.cancel();
@@ -349,21 +388,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         + aMapLocation.getErrorInfo());
                 SnackbarUtils.show(this, R.string.locate_fail);
             }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_location:
-                if (!hasAutoLocate()) {
-                    mProgressDialog.setMessage(getString(R.string.locating));
-                    mProgressDialog.show();
-                    mLocationClient.startLocation();
-                } else {
-                    SnackbarUtils.show(this, "已添加自动定位");
-                }
-                break;
         }
     }
 
@@ -448,7 +472,9 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onDestroy() {
-        mLocationClient.onDestroy();
+        if (mLocationClient != null) {
+            mLocationClient.onDestroy();
+        }
         super.onDestroy();
     }
 }

@@ -1,6 +1,7 @@
 package me.wcy.weather.utils;
 
 import android.content.Context;
+import android.os.Environment;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -21,5 +22,9 @@ public class FileUtils {
     public static String getCompressImagePath(Context context) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         return getCachePath(context) + context.getString(R.string.compress_file_name, sdf.format(new Date()));
+    }
+
+    public static boolean hasSDCard() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }

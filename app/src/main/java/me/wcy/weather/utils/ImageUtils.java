@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.io.File;
@@ -68,10 +67,6 @@ public class ImageUtils {
     }
 
     public static void pickImage(Activity activity, ImageType type) {
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            SnackbarUtils.show(activity, R.string.no_sdcard);
-            return;
-        }
         if (type == ImageType.CAMERA) {
             startCamera(activity);
         } else if (type == ImageType.ALBUM) {
