@@ -5,11 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,13 +21,15 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.Locale;
+
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 
 public class ViewImageActivity extends BaseActivity implements View.OnClickListener {
@@ -45,10 +51,10 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
     private ImageWeather mImageWeather;
     private ProgressDialog mProgressDialog;
 
-    public static void start(Activity context, ImageWeather imageWeather) {
-        Intent intent = new Intent(context, ViewImageActivity.class);
+    public static void start(Activity activity, ImageWeather imageWeather, ActivityOptionsCompat activityOptions) {
+        Intent intent = new Intent(activity, ViewImageActivity.class);
         intent.putExtra(Extras.IMAGE_WEATHER, imageWeather);
-        context.startActivityForResult(intent, RequestCode.REQUEST_VIEW_IMAGE);
+        ActivityCompat.startActivityForResult(activity, intent, RequestCode.REQUEST_VIEW_IMAGE, activityOptions.toBundle());
     }
 
     @Override
@@ -61,17 +67,8 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.setCancelable(false);
 
-        ImageLoader.getInstance().loadImage(mImageWeather.getImageUrl(), SystemUtils.getDefaultDisplayOption()
-                , new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        super.onLoadingComplete(imageUri, view, loadedImage);
-                        int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
-                        int imageHeight = (int) ((float) loadedImage.getHeight() / (float) loadedImage.getWidth() * (float) imageWidth);
-                        ivWeatherImage.setMinimumHeight(imageHeight);
-                        ivWeatherImage.setImageBitmap(loadedImage);
-                    }
-                });
+        ViewCompat.setTransitionName(ivWeatherImage, Extras.VIEW_NAME_WEATHER_IMAGE);
+        ViewCompat.setTransitionName(tvLocation, Extras.VIEW_NAME_WEATHER_LOCATION);
 
         tvLocation.setText(mImageWeather.getLocation().getAddress());
         tvUserName.setText(mImageWeather.getUserName());
@@ -79,7 +76,16 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvSay.setVisibility(TextUtils.isEmpty(mImageWeather.getSay()) ? View.GONE : View.VISIBLE);
         tvTag.setText(getTagText(mImageWeather.getTag()));
         tvTag.setMovementMethod(LinkMovementMethod.getInstance());
-        initTimeAndPraise();
+        setTimeAndPraise();
+        ImageLoader.getInstance().displayImage(mImageWeather.getImageUrl(), ivWeatherImage,
+                Utils.getDefaultDisplayOption(), new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
+                        int imageHeight = (int) ((float) loadedImage.getHeight() / loadedImage.getWidth() * imageWidth);
+                        ivWeatherImage.setMinimumHeight(imageHeight);
+                    }
+                });
     }
 
     @Override
@@ -87,9 +93,16 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvPraise.setOnClickListener(this);
     }
 
-    private void initTimeAndPraise() {
-        String time = SystemUtils.timeFormat(mImageWeather.getCreatedAt());
-        tvTime.setText(getString(R.string.image_time_praise, time, mImageWeather.getPraise()));
+    private void setTimeAndPraise() {
+        String time = Utils.timeFormat(mImageWeather.getCreatedAt());
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
+        String strColor = Utils.colorToString(getResources().getColor(typedValue.resourceId));
+        String praise = "<font color='%1$s'>%2$d</font>";
+        praise = String.format(Locale.getDefault(), praise, strColor, mImageWeather.getPraise());
+        String text = getString(R.string.image_time_praise, time, praise);
+        tvTime.setText(Html.fromHtml(text));
+        tvTime.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -109,7 +122,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
             public void onSuccess() {
                 mProgressDialog.cancel();
                 mImageWeather.setPraise(mImageWeather.getPraise() + 1);
-                initTimeAndPraise();
+                setTimeAndPraise();
 
                 Intent data = new Intent();
                 data.putExtra(Extras.IMAGE_WEATHER, mImageWeather);
@@ -143,7 +156,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
                 intColor = R.color.pink_300;
                 break;
         }
-        String strColor = String.format("#%06X", 0xFFFFFF & getResources().getColor(intColor));
+        String strColor = Utils.colorToString(getResources().getColor(intColor));
         String html = "<font color='%1$s'>%2$s</font>";
         return Html.fromHtml(getString(R.string.image_tag, String.format(html, strColor, tag)));
     }

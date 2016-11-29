@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.io.File;
@@ -36,7 +39,7 @@ import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.FileUtils;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
@@ -56,9 +59,9 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Bind(R.id.fam_add_photo)
     private FloatingActionsMenu famAddPhoto;
     @Bind(R.id.fab_camera)
-    private com.getbase.floatingactionbutton.FloatingActionButton fabCamera;
+    private FloatingActionButton fabCamera;
     @Bind(R.id.fab_album)
-    private com.getbase.floatingactionbutton.FloatingActionButton fabAlbum;
+    private FloatingActionButton fabAlbum;
     private ImageWeatherAdapter mAdapter;
     private LoadMoreListener mLoadMoreListener;
     private List<ImageWeather> mImageList = new ArrayList<>();
@@ -79,10 +82,10 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         mQuery.setLimit(QUERY_LIMIT);
         mQuery.order("-createdAt");
 
-        mLocationClient = SystemUtils.initAMapLocation(this, this);
+        mLocationClient = Utils.initAMapLocation(this, this);
         mLocationClient.startLocation();
 
-        SystemUtils.setRefreshingOnCreate(mRefreshLayout);
+        Utils.setRefreshingOnCreate(mRefreshLayout);
     }
 
     @Override
@@ -114,7 +117,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                 mLocation.setStreet(aMapLocation.getStreet());
                 mLocation.setStreetNum(aMapLocation.getStreetNum());
 
-                String city = SystemUtils.formatCity(mLocation.getCity());
+                String city = Utils.formatCity(mLocation.getCity());
                 mQuery.addWhereEqualTo("city", city);
                 onRefresh();
             } else {
@@ -214,7 +217,10 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onItemClick(View view, Object data) {
         ImageWeather imageWeather = (ImageWeather) data;
-        ViewImageActivity.start(this, imageWeather);
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                new Pair<>(view.findViewById(R.id.iv_image), Extras.VIEW_NAME_WEATHER_IMAGE),
+                new Pair<>(view.findViewById(R.id.tv_location), Extras.VIEW_NAME_WEATHER_LOCATION));
+        ViewImageActivity.start(this, imageWeather, activityOptions);
     }
 
     @Override

@@ -19,7 +19,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.binding.ViewBinder;
 
@@ -51,9 +51,9 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.item.setTag(mImageList.get(position));
         holder.llPraiseContainer.setTag(mImageList.get(position));
-        ImageLoader.getInstance().displayImage(mImageList.get(position).getImageUrl(), holder.ivImage, SystemUtils.getDefaultDisplayOption());
         holder.tvLocation.setText(mImageList.get(position).getLocation().getDistrict() + mImageList.get(position).getLocation().getStreet());
         holder.tvPraiseNum.setText(mImageList.get(position).getPraise() == 0L ? "" : String.valueOf(mImageList.get(position).getPraise()));
+        ImageLoader.getInstance().displayImage(mImageList.get(position).getImageUrl(), holder.ivImage, Utils.getDefaultDisplayOption());
     }
 
     @Override

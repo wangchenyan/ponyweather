@@ -29,7 +29,7 @@ import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.widget.TagLayout;
 
@@ -64,7 +64,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         path = getIntent().getStringExtra(Extras.IMAGE_PATH);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
-        int imageHeight = (int) ((float) bitmap.getHeight() / (float) bitmap.getWidth() * (float) imageWidth);
+        int imageHeight = (int) ((float) bitmap.getHeight() / bitmap.getWidth() * imageWidth);
         ivWeatherImage.setMinimumHeight(imageHeight);
         ivWeatherImage.setImageBitmap(bitmap);
 
@@ -78,7 +78,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
             userName = "马儿";
         }
         imageWeather.setLocation(location);
-        imageWeather.setCity(SystemUtils.formatCity(location.getCity()));
+        imageWeather.setCity(Utils.formatCity(location.getCity()));
         imageWeather.setUserName(userName);
         imageWeather.setPraise(0L);
         tvLocation.setText(location.getAddress());

@@ -8,4 +8,6 @@ public interface Extras {
     String IMAGE_WEATHER = "image_weather";
     String KEY_REFRESH_INTERVAL = "refresh_interval";
     String KEY_LAST_REFRESH_TIME = "last_refresh_time";
+    String VIEW_NAME_WEATHER_IMAGE = "weather_image";
+    String VIEW_NAME_WEATHER_LOCATION = "weather_location";
 }

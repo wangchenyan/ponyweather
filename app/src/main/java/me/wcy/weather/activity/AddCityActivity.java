@@ -36,7 +36,7 @@ import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfoEntity;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
@@ -357,7 +357,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onGranted() {
                         if (mLocationClient == null) {
-                            mLocationClient = SystemUtils.initAMapLocation(AddCityActivity.this, AddCityActivity.this);
+                            mLocationClient = Utils.initAMapLocation(AddCityActivity.this, AddCityActivity.this);
                         }
                         mLocationClient.startLocation();
                     }
@@ -378,7 +378,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
-                backToWeather(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()), true);
+                backToWeather(Utils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()), true);
             } else {
                 // 定位失败
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

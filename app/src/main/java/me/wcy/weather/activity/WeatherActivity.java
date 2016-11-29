@@ -43,7 +43,7 @@ import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
@@ -112,7 +112,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         mACache = ACache.get(getApplicationContext());
         mCity = (CityEntity) mACache.getAsObject(Extras.CITY);
 
-        SystemUtils.voiceAnimation(fabSpeech, false);
+        Utils.voiceAnimation(fabSpeech, false);
 
         // 首次进入
         if (mCity == null) {
@@ -138,8 +138,8 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         } else {
             llWeatherContainer.setVisibility(View.GONE);
         }
-        if (weather == null || SystemUtils.shouldRefresh(this)) {
-            SystemUtils.setRefreshingOnCreate(mRefreshLayout);
+        if (weather == null || Utils.shouldRefresh(this)) {
+            Utils.setRefreshingOnCreate(mRefreshLayout);
             onRefresh();
         }
     }
@@ -194,7 +194,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     @Override
                     public void onGranted() {
                         if (mLocationClient == null) {
-                            mLocationClient = SystemUtils.initAMapLocation(WeatherActivity.this, WeatherActivity.this);
+                            mLocationClient = Utils.initAMapLocation(WeatherActivity.this, WeatherActivity.this);
                         }
                         mLocationClient.startLocation();
                     }
@@ -214,7 +214,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mLocationClient.stopLocation();
             if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 // 定位成功回调信息，设置相关消息
-                onLocated(SystemUtils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
+                onLocated(Utils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()));
             } else {
                 // 定位失败
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
@@ -259,7 +259,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     @Override
                     public void call(Weather weather) {
                         mACache.put(city.name, weather);
-                        SystemUtils.saveRefreshTime(WeatherActivity.this);
+                        Utils.saveRefreshTime(WeatherActivity.this);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -322,7 +322,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mSpeechSynthesizer.setApiKey(Key.get(this, Key.BD_TTS_API_KEY), Key.get(this, Key.BD_TTS_SECRET_KEY));
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
-        String text = SystemUtils.voiceText(this, weather);
+        String text = Utils.voiceText(this, weather);
         mSpeechSynthesizer.speak(text);
     }
 

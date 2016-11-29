@@ -33,7 +33,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/ll_praise_container"
                 android:ellipsize="end"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="滨江区网商路" />
 
             <LinearLayout

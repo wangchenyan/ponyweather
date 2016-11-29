@@ -1,6 +1,5 @@
 package me.wcy.weather.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,13 +21,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import me.wcy.weather.R;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.Weather;
 
-@SuppressLint("SimpleDateFormat")
-public class SystemUtils {
+public class Utils {
 
     public static void setRefreshingOnCreate(final SwipeRefreshLayout refreshLayout) {
         Handler handler = new Handler(Looper.getMainLooper());
@@ -116,27 +115,27 @@ public class SystemUtils {
     }
 
     public static String timeFormat(String source) {
-        SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date now = new Date();
         try {
             Date date = sourceSdf.parse(source);
             if (date.getYear() != now.getYear()) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                 return sdf.format(date);
             } else if (date.getMonth() != now.getMonth()) {
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
                 return sdf.format(date);
             } else if (date.getDay() != now.getDay()) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 if (sdf.parse(sdf.format(now)).getTime() - sdf.parse(sdf.format(date)).getTime() == DateUtils.DAY_IN_MILLIS) {
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     return "昨天 " + sdf2.format(date);
                 } else {
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("MM-dd HH:mm");
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
                     return sdf2.format(date);
                 }
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 return sdf.format(date);
             }
         } catch (ParseException e) {
@@ -179,5 +178,9 @@ public class SystemUtils {
     public static void saveRefreshTime(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         sp.edit().putLong(Extras.KEY_LAST_REFRESH_TIME, System.currentTimeMillis()).apply();
+    }
+
+    public static String colorToString(int color) {
+        return String.format("#%06X", 0xFFFFFF & color);
     }
 }

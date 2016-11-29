@@ -10,7 +10,7 @@ import com.baidu.speechsynthesizer.publicutility.SpeechError;
 
 import me.wcy.weather.R;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.SystemUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.binding.ViewBinder;
 
@@ -32,7 +32,7 @@ public class SpeechListener implements SpeechSynthesizerListener {
             @Override
             public void run() {
                 fabSpeech.setEnabled(false);
-                SystemUtils.voiceAnimation(fabSpeech, true);
+                Utils.voiceAnimation(fabSpeech, true);
             }
         });
     }
@@ -89,7 +89,7 @@ public class SpeechListener implements SpeechSynthesizerListener {
             @Override
             public void run() {
                 fabSpeech.setEnabled(true);
-                SystemUtils.voiceAnimation(fabSpeech, false);
+                Utils.voiceAnimation(fabSpeech, false);
             }
         });
     }
