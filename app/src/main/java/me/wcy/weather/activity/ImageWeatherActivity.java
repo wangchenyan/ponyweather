@@ -218,8 +218,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     public void onItemClick(View view, Object data) {
         ImageWeather imageWeather = (ImageWeather) data;
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                new Pair<>(view.findViewById(R.id.iv_image), Extras.VIEW_NAME_WEATHER_IMAGE),
-                new Pair<>(view.findViewById(R.id.tv_location), Extras.VIEW_NAME_WEATHER_LOCATION));
+                new Pair<>(view.findViewById(R.id.iv_image), Extras.VIEW_NAME_WEATHER_IMAGE));
         ViewImageActivity.start(this, imageWeather, activityOptions);
     }
 

@@ -68,7 +68,6 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         mProgressDialog.setCancelable(false);
 
         ViewCompat.setTransitionName(ivWeatherImage, Extras.VIEW_NAME_WEATHER_IMAGE);
-        ViewCompat.setTransitionName(tvLocation, Extras.VIEW_NAME_WEATHER_LOCATION);
 
         tvLocation.setText(mImageWeather.getLocation().getAddress());
         tvUserName.setText(mImageWeather.getUserName());
@@ -77,6 +76,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvTag.setText(getTagText(mImageWeather.getTag()));
         tvTag.setMovementMethod(LinkMovementMethod.getInstance());
         setTimeAndPraise();
+
         ImageLoader.getInstance().displayImage(mImageWeather.getImageUrl(), ivWeatherImage,
                 Utils.getDefaultDisplayOption(), new SimpleImageLoadingListener() {
                     @Override
