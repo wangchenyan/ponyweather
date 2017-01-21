@@ -2,9 +2,6 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url 'http://maven.oschina.net/content/groups/public/'
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
@@ -21,14 +18,4 @@ allprojects {
             url "https://raw.github.com/bmob/bmob-android-sdk/master"
         }
     }
-}
-
-ext {
-    compileSdkVersion = 23
-    buildToolsVersion = "23.0.3"
-    minSdkVersion = 14
-    targetSdkVersion = 23
-    versionCode = 210
-    versionName = "2.1.0"
-    supportVersion = "23.3.0"
 }
