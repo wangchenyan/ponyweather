@@ -5,23 +5,24 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.webkit.MimeTypeMap;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.text.DecimalFormat;
+import java.util.Locale;
 
 import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
 import me.wcy.weather.BuildConfig;
+import me.wcy.weather.R;
 import me.wcy.weather.activity.AboutActivity;
 import me.wcy.weather.api.Key;
 import me.wcy.weather.model.UpdateInfo;
 
 public class UpdateUtils {
-    public static long sDownloadId = 0;
 
     public static void checkUpdate(final Activity activity) {
         FIR.checkForUpdateInFIR(Key.get(activity, Key.FIR_KEY), new VersionCheckCallback() {
@@ -82,22 +83,23 @@ public class UpdateUtils {
     }
 
     private static void download(Activity activity, UpdateInfo updateInfo) {
+        String fileName = String.format("PonyWeather_%s.apk", updateInfo.versionShort);
         DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(updateInfo.installUrl);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        String fileName = String.format("PonyWeather_%s.apk", updateInfo.versionShort);
-        request.setDestinationInExternalPublicDir("Download", fileName);
+        request.setTitle(activity.getString(R.string.app_name));
+        request.setDescription("正在更新…");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
         request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(updateInfo.installUrl));
         request.allowScanningByMediaScanner();
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
         request.setAllowedOverRoaming(false);// 不允许漫游
-        sDownloadId = downloadManager.enqueue(request);
+        downloadManager.enqueue(request);
         SnackbarUtils.show(activity, "正在后台下载");
     }
 
     private static float b2mb(int b) {
-        DecimalFormat decimalFormat = new DecimalFormat(".00");
-        String MB = decimalFormat.format((float) b / 1024 / 1024);
-        return Float.valueOf(MB);
+        String mb = String.format(Locale.getDefault(), "%.2f", (float) b / 1024 / 1024);
+        return Float.valueOf(mb);
     }
 }
