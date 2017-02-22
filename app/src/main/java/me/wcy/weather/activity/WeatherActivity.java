@@ -32,7 +32,7 @@ import me.wcy.weather.adapter.DailyForecastAdapter;
 import me.wcy.weather.adapter.HourlyForecastAdapter;
 import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.api.Api;
-import me.wcy.weather.api.Key;
+import me.wcy.weather.api.KeyStore;
 import me.wcy.weather.application.SpeechListener;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
@@ -43,8 +43,8 @@ import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.SnackbarUtils;
-import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.UpdateUtils;
+import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
@@ -237,7 +237,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
     private void fetchDataFromNetWork(final CityEntity city) {
         // HE_KEY是更新天气需要的key，需要从和风天气官网申请后方能更新天气
-        Api.getIApi().getWeather(city.name, Key.get(this, Key.HE_KEY))
+        Api.getIApi().getWeather(city.name, KeyStore.getKey(KeyStore.HE_KEY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .doOnNext(new Action1<WeatherData>() {
@@ -319,7 +319,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         if (mSpeechSynthesizer == null) {
             mSpeechListener = new SpeechListener(this);
             mSpeechSynthesizer = new SpeechSynthesizer(this, "holder", mSpeechListener);
-            mSpeechSynthesizer.setApiKey(Key.get(this, Key.BD_TTS_API_KEY), Key.get(this, Key.BD_TTS_SECRET_KEY));
+            mSpeechSynthesizer.setApiKey(KeyStore.getKey(KeyStore.BD_TTS_API_KEY), KeyStore.getKey(KeyStore.BD_TTS_SECRET_KEY));
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
         String text = Utils.voiceText(this, weather);
