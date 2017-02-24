@@ -141,7 +141,7 @@ public class Weather implements Serializable {
          * 天气状况
          */
         @SerializedName("cond")
-        public CondEntity cond;
+        public NowCondEntity cond;
         /**
          * 体感温度
          */
@@ -177,19 +177,6 @@ public class Weather implements Serializable {
          */
         @SerializedName("wind")
         public WindEntity wind;
-
-        public static class CondEntity implements Serializable {
-            /**
-             * 天气代码
-             */
-            @SerializedName("code")
-            public String code;
-            /**
-             * 天气描述
-             */
-            @SerializedName("txt")
-            public String txt;
-        }
     }
 
     public static class SuggestionEntity implements Serializable {
@@ -253,7 +240,7 @@ public class Weather implements Serializable {
          * 天气状况
          */
         @SerializedName("cond")
-        public CondEntity cond;
+        public ForecastCondEntity cond;
         /**
          * 当地日期
          */
@@ -285,6 +272,11 @@ public class Weather implements Serializable {
         @SerializedName("tmp")
         public TmpEntity tmp;
         /**
+         * 紫外线指数
+         */
+        @SerializedName("uv")
+        public String uv;
+        /**
          * 能见度(km)
          */
         @SerializedName("vis")
@@ -297,6 +289,16 @@ public class Weather implements Serializable {
 
         public static class AstroEntity implements Serializable {
             /**
+             * 月升时间
+             */
+            @SerializedName("mr")
+            public String mr;
+            /**
+             * 月落时间
+             */
+            @SerializedName("ms")
+            public String ms;
+            /**
              * 日出时间
              */
             @SerializedName("sr")
@@ -308,7 +310,7 @@ public class Weather implements Serializable {
             public String ss;
         }
 
-        public static class CondEntity implements Serializable {
+        public static class ForecastCondEntity implements Serializable {
             /**
              * 白天天气代码
              */
@@ -347,6 +349,11 @@ public class Weather implements Serializable {
 
     public static class HourlyForecastEntity implements Serializable {
         /**
+         * 天气状况
+         */
+        @SerializedName("cond")
+        public NowCondEntity cond;
+        /**
          * 当地日期和时间
          */
         @SerializedName("date")
@@ -376,6 +383,19 @@ public class Weather implements Serializable {
          */
         @SerializedName("wind")
         public WindEntity wind;
+    }
+
+    public static class NowCondEntity implements Serializable {
+        /**
+         * 天气代码
+         */
+        @SerializedName("code")
+        public String code;
+        /**
+         * 天气描述
+         */
+        @SerializedName("txt")
+        public String txt;
     }
 
     public static class WindEntity implements Serializable {

@@ -52,19 +52,19 @@ public class HourlyForecastAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.tvTime.setText(timeFormat(mData.get(position).date));
+        holder.tvWeather.setText(mData.get(position).cond.txt);
         holder.tvTemp.setText(context.getString(R.string.temp, mData.get(position).tmp));
-        holder.tvHum.setText(context.getString(R.string.hourly_forecast_hum, mData.get(position).hum));
         holder.tvWind.setText(windFormat(context, mData.get(position).wind.sc));
         return convertView;
     }
 
-    public static class ViewHolder {
+    private static class ViewHolder {
         @Bind(R.id.tv_time)
         public TextView tvTime;
+        @Bind(R.id.tv_weather)
+        public TextView tvWeather;
         @Bind(R.id.tv_temp)
         public TextView tvTemp;
-        @Bind(R.id.tv_hum)
-        public TextView tvHum;
         @Bind(R.id.tv_wind)
         public TextView tvWind;
 

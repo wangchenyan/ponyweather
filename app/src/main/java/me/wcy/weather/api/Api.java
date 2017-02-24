@@ -5,7 +5,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Api {
-    private static final String BASE_URL = "https://api.heweather.com/x3/";
+    private static final String BASE_URL = "https://free-api.heweather.com/v5/";
 
     private Api() {
     }

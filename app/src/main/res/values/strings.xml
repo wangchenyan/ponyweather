@@ -12,7 +12,6 @@
     <string name="tempC">%s℃</string>
     <string name="now_max_temp">↑&#160;%s°</string>
     <string name="now_min_temp">↓&#160;%s°</string>
-    <string name="hourly_forecast_hum">%s%%</string>
     <string name="hourly_forecast_wind">%s级</string>
     <string name="daily_forecast_temp">%1$s~%2$s°</string>
     <string name="manage_city">城市管理</string>

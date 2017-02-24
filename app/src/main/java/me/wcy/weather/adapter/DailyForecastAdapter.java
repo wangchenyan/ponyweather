@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import me.wcy.weather.R;
 import me.wcy.weather.model.Weather;
@@ -68,13 +69,12 @@ public class DailyForecastAdapter extends BaseAdapter {
                 .append(mData.get(position).wind.sc)
                 .append(mData.get(position).wind.sc.contains("风") ? "" : "级")
                 .append("，")
+                .append("紫外线指数")
+                .append(getUV(mData.get(position).uv))
+                .append("，")
                 .append("湿度")
                 .append(mData.get(position).hum)
                 .append("%，")
-                .append("降水几率")
-                .append(mData.get(position).pop)
-                .append("%")
-                .append("，")
                 .append("日出")
                 .append(mData.get(position).astro.sr)
                 .append("，")
@@ -85,7 +85,7 @@ public class DailyForecastAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public static class ViewHolder {
+    private static class ViewHolder {
         @Bind(R.id.iv_icon)
         public ImageView ivIcon;
         @Bind(R.id.tv_date)
@@ -102,7 +102,7 @@ public class DailyForecastAdapter extends BaseAdapter {
 
     private String dateFormat(String date) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Date today = sdf.parse(sdf.format(new Date()));
             Date source = sdf.parse(date);
             if (today.equals(source)) {
@@ -139,5 +139,14 @@ public class DailyForecastAdapter extends BaseAdapter {
             default:
                 return "";
         }
+    }
+
+    private int getUV(String str) {
+        int uv = 0;
+        try {
+            uv = Integer.valueOf(str);
+        } catch (NumberFormatException ignored) {
+        }
+        return (uv < 0) ? 0 : uv;
     }
 }
