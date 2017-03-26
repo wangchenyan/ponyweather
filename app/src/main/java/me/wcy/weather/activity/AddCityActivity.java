@@ -2,7 +2,6 @@ package me.wcy.weather.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,22 +17,17 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.AddCityAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
+import me.wcy.weather.api.Api;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
-import me.wcy.weather.model.CityInfoEntity;
+import me.wcy.weather.model.CityInfo;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
@@ -61,7 +55,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     private TextView tvSearchTips;
     private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
-    private List<CityInfoEntity> mCityList;
+    private List<CityEntity> mCityList;
     private AddCityAdapter mAddCityAdapter;
     private AMapLocationClient mLocationClient;
     private AddCityAdapter.Type currentType = AddCityAdapter.Type.PROVINCE;
@@ -130,15 +124,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
                 })
                 .observeOn(Schedulers.io())
-                .filter(new Func1<CityInfoEntity, Boolean>() {
+                .filter(new Func1<CityEntity, Boolean>() {
                     @Override
-                    public Boolean call(CityInfoEntity cityInfoEntity) {
-                        return cityInfoEntity.area.contains(text);
+                    public Boolean call(CityEntity cityInfoEntity) {
+                        return cityInfoEntity.getAreaZh().contains(text);
                     }
                 })
                 .toSortedList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CityInfoEntity>>() {
+                .subscribe(new Subscriber<List<CityEntity>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -146,22 +140,27 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "search city error", e);
-                        tvSearchTips.setText("无匹配城市");
-                    }
 
-                    @Override
-                    public void onNext(List<CityInfoEntity> cityInfoEntities) {
                         if (!mSearchView.getTag().equals(text)) {
                             return;
                         }
 
-                        if (cityInfoEntities.isEmpty()) {
+                        tvSearchTips.setText("无匹配城市");
+                    }
+
+                    @Override
+                    public void onNext(List<CityEntity> cityEntityList) {
+                        if (!mSearchView.getTag().equals(text)) {
+                            return;
+                        }
+
+                        if (cityEntityList.isEmpty()) {
                             tvSearchTips.setText("无匹配城市");
                         } else {
                             tvSearchTips.setVisibility(View.GONE);
                             rvCity.setVisibility(View.VISIBLE);
                             rvCity.scrollToPosition(0);
-                            mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.SEARCH);
+                            mAddCityAdapter.setDataAndType(cityEntityList, AddCityAdapter.Type.SEARCH);
                             mAddCityAdapter.notifyDataSetChanged();
                         }
                     }
@@ -169,8 +168,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void fetchCityList() {
-        AssetManager assetManager = getAssets();
-        Observable.just(assetManager)
+        Api.getIApi().getCityList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Action0() {
@@ -180,29 +178,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         mProgressDialog.show();
                     }
                 })
-                .observeOn(Schedulers.io())
-                .map(new Func1<AssetManager, String>() {
+                .doOnNext(new Action1<List<CityEntity>>() {
                     @Override
-                    public String call(AssetManager assetManager) {
-                        return readJsonFromAssets(assetManager);
-                    }
-                })
-                .doOnNext(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        if (TextUtils.isEmpty(s)) {
-                            throw Exceptions.propagate(new Throwable("read city list failed"));
+                    public void call(List<CityEntity> cityEntities) {
+                        if (cityEntities == null || cityEntities.isEmpty()) {
+                            throw Exceptions.propagate(new Throwable("request city list failed"));
                         }
                     }
                 })
-                .map(new Func1<String, List<CityInfoEntity>>() {
-                    @Override
-                    public List<CityInfoEntity> call(String s) {
-                        return parseCityList(s);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CityInfoEntity>>() {
+                .subscribe(new Subscriber<List<CityEntity>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -214,8 +198,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onNext(List<CityInfoEntity> cityInfoEntities) {
-                        mCityList = cityInfoEntities;
+                    public void onNext(List<CityEntity> cityEntities) {
+                        mCityList = cityEntities;
                         showProvinceList();
                     }
                 });
@@ -225,15 +209,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         Observable.from(mCityList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .distinct(new Func1<CityInfoEntity, String>() {
+                .distinct(new Func1<CityEntity, String>() {
                     @Override
-                    public String call(CityInfoEntity cityInfoEntity) {
-                        return cityInfoEntity.province;
+                    public String call(CityEntity cityEntity) {
+                        return cityEntity.getProvinceZh();
                     }
                 })
                 .toSortedList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CityInfoEntity>>() {
+                .subscribe(new Subscriber<List<CityEntity>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -248,13 +232,13 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onNext(List<CityInfoEntity> cityInfoEntities) {
+                    public void onNext(List<CityEntity> cityEntityList) {
                         if (mProgressDialog.isShowing()) {
                             mProgressDialog.cancel();
                         }
                         rvCity.scrollToPosition(0);
                         mToolbar.setTitle(getString(R.string.add_city));
-                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.PROVINCE);
+                        mAddCityAdapter.setDataAndType(cityEntityList, AddCityAdapter.Type.PROVINCE);
                         mAddCityAdapter.notifyDataSetChanged();
                         currentType = AddCityAdapter.Type.PROVINCE;
                     }
@@ -265,21 +249,21 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         Observable.from(mCityList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .filter(new Func1<CityInfoEntity, Boolean>() {
+                .filter(new Func1<CityEntity, Boolean>() {
                     @Override
-                    public Boolean call(CityInfoEntity cityInfoEntity) {
-                        return cityInfoEntity.province.equals(province);
+                    public Boolean call(CityEntity cityEntity) {
+                        return cityEntity.getProvinceZh().equals(province);
                     }
                 })
-                .distinct(new Func1<CityInfoEntity, String>() {
+                .distinct(new Func1<CityEntity, String>() {
                     @Override
-                    public String call(CityInfoEntity cityInfoEntity) {
-                        return cityInfoEntity.city;
+                    public String call(CityEntity cityEntity) {
+                        return cityEntity.getCityZh();
                     }
                 })
                 .toSortedList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CityInfoEntity>>() {
+                .subscribe(new Subscriber<List<CityEntity>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -291,10 +275,10 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onNext(List<CityInfoEntity> cityInfoEntities) {
+                    public void onNext(List<CityEntity> cityEntityList) {
                         rvCity.scrollToPosition(0);
                         mToolbar.setTitle(province);
-                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.CITY);
+                        mAddCityAdapter.setDataAndType(cityEntityList, AddCityAdapter.Type.CITY);
                         mAddCityAdapter.notifyDataSetChanged();
                         currentType = AddCityAdapter.Type.CITY;
                     }
@@ -305,15 +289,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         Observable.from(mCityList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .filter(new Func1<CityInfoEntity, Boolean>() {
+                .filter(new Func1<CityEntity, Boolean>() {
                     @Override
-                    public Boolean call(CityInfoEntity cityInfoEntity) {
-                        return cityInfoEntity.city.equals(city);
+                    public Boolean call(CityEntity cityEntity) {
+                        return cityEntity.getCityZh().equals(city);
                     }
                 })
                 .toSortedList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CityInfoEntity>>() {
+                .subscribe(new Subscriber<List<CityEntity>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -325,10 +309,10 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onNext(List<CityInfoEntity> cityInfoEntities) {
+                    public void onNext(List<CityEntity> cityEntityList) {
                         rvCity.scrollToPosition(0);
                         mToolbar.setTitle(city);
-                        mAddCityAdapter.setDataAndType(cityInfoEntities, AddCityAdapter.Type.AREA);
+                        mAddCityAdapter.setDataAndType(cityEntityList, AddCityAdapter.Type.AREA);
                         mAddCityAdapter.notifyDataSetChanged();
                         currentType = AddCityAdapter.Type.AREA;
                     }
@@ -392,21 +376,21 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onItemClick(View view, Object data) {
-        CityInfoEntity cityInfo = (CityInfoEntity) data;
+        CityEntity cityInfo = (CityEntity) data;
         if (currentType == AddCityAdapter.Type.PROVINCE) {
-            currentProvince = cityInfo.province;
+            currentProvince = cityInfo.getProvinceZh();
             showCityList(currentProvince);
         } else if (currentType == AddCityAdapter.Type.CITY) {
-            showAreaList(cityInfo.city);
+            showAreaList(cityInfo.getCityZh());
         } else if (currentType == AddCityAdapter.Type.AREA || currentType == AddCityAdapter.Type.SEARCH) {
-            backToWeather(cityInfo.area, false);
+            backToWeather(cityInfo.getAreaZh(), false);
         }
     }
 
     private boolean hasAutoLocate() {
         ACache aCache = ACache.get(getApplicationContext());
-        ArrayList<CityEntity> cityList = (ArrayList<CityEntity>) aCache.getAsObject(Extras.CITY_LIST);
-        for (CityEntity entity : cityList) {
+        ArrayList<CityInfo> cityList = (ArrayList<CityInfo>) aCache.getAsObject(Extras.CITY_LIST);
+        for (CityInfo entity : cityList) {
             if (entity.isAutoLocate) {
                 return true;
             }
@@ -414,35 +398,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         return false;
     }
 
-    private String readJsonFromAssets(AssetManager assetManager) {
-        try {
-            InputStream is = assetManager.open("city.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-            return new String(buffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private List<CityInfoEntity> parseCityList(String json) {
-        Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
-        List<CityInfoEntity> cityList = new ArrayList<>();
-        JsonArray jArray = parser.parse(json).getAsJsonArray();
-        for (JsonElement obj : jArray) {
-            CityInfoEntity cityInfoEntity = gson.fromJson(obj, CityInfoEntity.class);
-            cityList.add(cityInfoEntity);
-        }
-        return cityList;
-    }
-
     private void backToWeather(String name, boolean isAutoLocate) {
-        CityEntity city = new CityEntity(name, isAutoLocate);
+        CityInfo city = new CityInfo(name, isAutoLocate);
         Intent data = new Intent();
         data.putExtra(Extras.CITY, city);
         setResult(RESULT_OK, data);

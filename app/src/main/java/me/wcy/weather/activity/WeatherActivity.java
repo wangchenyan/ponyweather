@@ -36,7 +36,7 @@ import me.wcy.weather.api.KeyStore;
 import me.wcy.weather.application.SpeechListener;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
-import me.wcy.weather.model.CityEntity;
+import me.wcy.weather.model.CityInfo;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.model.WeatherData;
 import me.wcy.weather.utils.ACache;
@@ -98,7 +98,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
     private AMapLocationClient mLocationClient;
     private SpeechSynthesizer mSpeechSynthesizer;
     private SpeechListener mSpeechListener;
-    private CityEntity mCity;
+    private CityInfo mCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,13 +110,13 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         }
 
         mACache = ACache.get(getApplicationContext());
-        mCity = (CityEntity) mACache.getAsObject(Extras.CITY);
+        mCity = (CityInfo) mACache.getAsObject(Extras.CITY);
 
         Utils.voiceAnimation(fabSpeech, false);
 
         // 首次进入
         if (mCity == null) {
-            mCity = new CityEntity("正在定位", true);
+            mCity = new CityInfo("正在定位", true);
         }
 
         collapsingToolbar.setTitle(mCity.name);
@@ -131,7 +131,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         mRefreshLayout.setOnRefreshListener(this);
     }
 
-    private void checkIfRefresh(CityEntity city) {
+    private void checkIfRefresh(CityInfo city) {
         Weather weather = (Weather) mACache.getAsObject(city.name);
         if (weather != null) {
             updateView(weather);
@@ -235,7 +235,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         fetchDataFromNetWork(mCity);
     }
 
-    private void fetchDataFromNetWork(final CityEntity city) {
+    private void fetchDataFromNetWork(final CityInfo city) {
         // HE_KEY是更新天气需要的key，需要从和风天气官网申请后方能更新天气
         Api.getIApi().getWeather(city.name, KeyStore.getKey(KeyStore.HE_KEY))
                 .subscribeOn(Schedulers.io())
@@ -290,15 +290,15 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                 });
     }
 
-    private void cache(CityEntity city) {
-        ArrayList<CityEntity> cityList = (ArrayList<CityEntity>) mACache.getAsObject(Extras.CITY_LIST);
+    private void cache(CityInfo city) {
+        ArrayList<CityInfo> cityList = (ArrayList<CityInfo>) mACache.getAsObject(Extras.CITY_LIST);
         if (cityList == null) {
             cityList = new ArrayList<>();
         }
-        CityEntity oldAutoLocate = null;
-        for (CityEntity cityEntity : cityList) {
-            if (cityEntity.isAutoLocate) {
-                oldAutoLocate = cityEntity;
+        CityInfo oldAutoLocate = null;
+        for (CityInfo cityInfo : cityList) {
+            if (cityInfo.isAutoLocate) {
+                oldAutoLocate = cityInfo;
                 break;
             }
         }
@@ -395,10 +395,12 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
-        CityEntity city = (CityEntity) data.getSerializableExtra(Extras.CITY);
+
+        CityInfo city = (CityInfo) data.getSerializableExtra(Extras.CITY);
         if (mCity.equals(city)) {
             return;
         }
+
         mCity = city;
         collapsingToolbar.setTitle(mCity.name);
         mScrollView.scrollTo(0, 0);

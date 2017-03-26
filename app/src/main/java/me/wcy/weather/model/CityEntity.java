@@ -1,31 +1,52 @@
 package me.wcy.weather.model;
 
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by wcy on 2016/5/27.
+ * Created by wcy on 2017/3/26.
  */
-public class CityEntity implements Serializable {
-    public String name;
-    public boolean isAutoLocate;
+public class CityEntity implements Comparable {
+    @SerializedName("id")
+    private String id;
+    @SerializedName("cityEn")
+    private String areaEn;
+    @SerializedName("cityZh")
+    private String areaZh;
+    @SerializedName("countryCode")
+    private String countryCode;
+    @SerializedName("countryEn")
+    private String countryEn;
+    @SerializedName("countryZh")
+    private String countryZh;
+    @SerializedName("provinceEn")
+    private String provinceEn;
+    @SerializedName("provinceZh")
+    private String provinceZh;
+    @SerializedName("leaderEn")
+    private String cityEn;
+    @SerializedName("leaderZh")
+    private String cityZh;
+    @SerializedName("lat")
+    private String lat;
+    @SerializedName("lon")
+    private String lon;
 
-    public CityEntity(String name, boolean isAutoLocate) {
-        this.name = name;
-        this.isAutoLocate = isAutoLocate;
+    public String getAreaZh() {
+        return areaZh;
+    }
+
+    public String getProvinceZh() {
+        return provinceZh;
+    }
+
+    public String getCityZh() {
+        return cityZh;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o instanceof CityEntity) {
-            CityEntity c = (CityEntity) o;
-            return TextUtils.equals(c.name, this.name) && c.isAutoLocate == this.isAutoLocate;
-        } else {
-            return false;
-        }
+    public int compareTo(@NonNull Object o) {
+        return this.id.compareTo(((CityEntity) o).id);
     }
 }

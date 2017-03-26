@@ -17,7 +17,7 @@ import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.adapter.OnItemLongClickListener;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
-import me.wcy.weather.model.CityEntity;
+import me.wcy.weather.model.CityInfo;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.binding.Bind;
@@ -28,7 +28,7 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
     @Bind(R.id.fab_add)
     private FloatingActionButton fabAdd;
     private ACache mACache;
-    private ArrayList<CityEntity> mCityList;
+    private ArrayList<CityInfo> mCityList;
     private ManageCityAdapter mAdapter;
 
     @Override
@@ -37,7 +37,7 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_manage_city);
 
         mACache = ACache.get(getApplicationContext());
-        mCityList = (ArrayList<CityEntity>) mACache.getAsObject(Extras.CITY_LIST);
+        mCityList = (ArrayList<CityInfo>) mACache.getAsObject(Extras.CITY_LIST);
 
         mAdapter = new ManageCityAdapter(mCityList);
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
@@ -62,8 +62,8 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onItemClick(View view, Object data) {
-        CityEntity city = (CityEntity) data;
-        CityEntity currentCity = (CityEntity) mACache.getAsObject(Extras.CITY);
+        CityInfo city = (CityInfo) data;
+        CityInfo currentCity = (CityInfo) mACache.getAsObject(Extras.CITY);
         if (!currentCity.equals(city)) {
             mACache.put(Extras.CITY, city);
         }
@@ -78,7 +78,7 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
         if (mCityList.size() <= 1) {
             return;
         }
-        final CityEntity city = (CityEntity) data;
+        final CityInfo city = (CityInfo) data;
         new AlertDialog.Builder(this)
                 .setTitle(city.name)
                 .setMessage(R.string.whether_delete)
@@ -92,10 +92,10 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
                 .show();
     }
 
-    private void deleteCity(CityEntity city) {
+    private void deleteCity(CityInfo city) {
         mCityList.remove(city);
         mACache.put(Extras.CITY_LIST, mCityList);
-        CityEntity currentCity = (CityEntity) mACache.getAsObject(Extras.CITY);
+        CityInfo currentCity = (CityInfo) mACache.getAsObject(Extras.CITY);
         if (!mCityList.contains(currentCity)) {
             currentCity = mCityList.get(0);
             mACache.put(Extras.CITY, currentCity);
@@ -113,8 +113,8 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
-        CityEntity city = (CityEntity) data.getSerializableExtra(Extras.CITY);
-        CityEntity currentCity = (CityEntity) mACache.getAsObject(Extras.CITY);
+        CityInfo city = (CityInfo) data.getSerializableExtra(Extras.CITY);
+        CityInfo currentCity = (CityInfo) mACache.getAsObject(Extras.CITY);
         if (!currentCity.equals(city)) {
             mACache.put(Extras.CITY, city);
         }
