@@ -162,7 +162,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         sb.append("  ")
                 .append(weather.now.wind.dir)
                 .append(weather.now.wind.sc)
-                .append(weather.now.wind.sc.contains("风") ? "" : "级");
+                .append(weather.now.wind.sc.endsWith("风") ? "" : "级");
         tvMoreInfo.setText(sb.toString());
         lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
         lvDailyForecast.setAdapter(new DailyForecastAdapter(weather.daily_forecast));
@@ -322,7 +322,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
             mSpeechSynthesizer.setApiKey(KeyStore.getKey(KeyStore.BD_TTS_API_KEY), KeyStore.getKey(KeyStore.BD_TTS_SECRET_KEY));
             mSpeechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
-        String text = Utils.voiceText(this, weather);
+        String text = Utils.voiceText(this, weather.daily_forecast.get(0));
         mSpeechSynthesizer.speak(text);
     }
 

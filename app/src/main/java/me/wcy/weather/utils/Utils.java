@@ -82,34 +82,44 @@ public class Utils {
         }
     }
 
-    public static String voiceText(Context context, Weather weather) {
-        StringBuilder sb = new StringBuilder();
+    public static String voiceText(Context context, Weather.DailyForecastEntity forecast) {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String time;
         if (hour >= 7 && hour < 12) {
-            sb.append("上午好");
-        } else if (hour < 19) {
-            sb.append("下午好");
+            time = "上午";
+        } else if (hour >= 12 && hour < 19) {
+            time = "下午";
         } else {
-            sb.append("晚上好");
+            time = "晚上";
         }
-        sb.append("，");
-        sb.append(context.getString(R.string.app_name))
+
+        String weather = forecast.cond.txt_d;
+        if (!TextUtils.equals(forecast.cond.txt_d, forecast.cond.txt_n)) {
+            weather += "转" + forecast.cond.txt_n;
+        }
+
+        String temperature = forecast.tmp.min;
+        if (!TextUtils.equals(forecast.tmp.min, forecast.tmp.max)) {
+            temperature += "~" + forecast.tmp.max;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(time)
+                .append("好")
+                .append("，")
+                .append(context.getString(R.string.app_name))
                 .append("为您播报")
-                .append("，");
-        sb.append("今天白天到夜间")
-                .append(weather.daily_forecast.get(0).cond.txt_d)
-                .append("转")
-                .append(weather.daily_forecast.get(0).cond.txt_n)
-                .append("，");
-        sb.append("温度")
-                .append(weather.daily_forecast.get(0).tmp.min)
-                .append("~")
-                .append(weather.daily_forecast.get(0).tmp.max)
+                .append("，")
+                .append("今天白天到夜间")
+                .append(weather)
+                .append("，")
+                .append("温度")
+                .append(temperature)
                 .append("℃")
-                .append("，");
-        sb.append(weather.daily_forecast.get(0).wind.dir)
-                .append(weather.daily_forecast.get(0).wind.sc)
-                .append(weather.daily_forecast.get(0).wind.sc.contains("风") ? "" : "级")
+                .append("，")
+                .append(forecast.wind.dir)
+                .append(forecast.wind.sc)
+                .append(forecast.wind.sc.endsWith("风") ? "" : "级")
                 .append("。");
         return sb.toString();
     }
@@ -151,16 +161,11 @@ public class Utils {
     public static String formatCity(String city, String area) {
         if (!TextUtils.isEmpty(area) && (area.endsWith("市") || area.endsWith("县"))) {
             if (area.length() > 2) {
-                if (area.endsWith("市")) {
-                    area = area.substring(0, area.lastIndexOf('市'));
-                } else if (area.endsWith("县")) {
-                    area = area.substring(0, area.lastIndexOf('县'));
-                }
+                area = area.substring(0, area.length() - 1);
             }
             return area;
         } else {
-            return city.replace("市", "")
-                    .replace("盟", "");
+            return city.replace("市", "").replace("盟", "");
         }
     }
 

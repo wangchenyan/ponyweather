@@ -11,6 +11,10 @@ android {
         targetSdkVersion 23
         versionCode 210
         versionName "2.1.0"
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a"
+        }
     }
 
     signingConfigs {

@@ -31,7 +31,12 @@ public class SplashActivity extends BaseActivity {
 
     private void startWeather() {
         Intent intent = new Intent(this, WeatherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

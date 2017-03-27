@@ -1,6 +1,7 @@
 package me.wcy.weather.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,9 +61,8 @@ public class DailyForecastAdapter extends BaseAdapter {
         holder.tvTemp.setText(context.getString(R.string.daily_forecast_temp, mData.get(position).tmp.min, mData.get(position).tmp.max));
         StringBuilder sb = new StringBuilder();
         sb.append(mData.get(position).cond.txt_d);
-        if (!mData.get(position).cond.txt_d.equals(mData.get(position).cond.txt_n)) {
-            sb.append("转")
-                    .append(mData.get(position).cond.txt_n);
+        if (!TextUtils.equals(mData.get(position).cond.txt_d, mData.get(position).cond.txt_n)) {
+            sb.append("转").append(mData.get(position).cond.txt_n);
         }
         sb.append("，")
                 .append(mData.get(position).wind.dir)
