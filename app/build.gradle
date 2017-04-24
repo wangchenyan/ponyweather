@@ -22,9 +22,9 @@ android {
             Properties properties = new Properties()
             properties.load(project.rootProject.file('local.properties').newDataInputStream())
             storeFile file("wangchenyan.keystore")
-            storePassword properties.get("storePassword")
-            keyAlias properties.get("keyAlias")
-            keyPassword properties.get("keyPassword")
+            storePassword properties.get("STORE_PASSWORD")
+            keyAlias properties.get("KEY_ALIAS")
+            keyPassword properties.get("KEY_PASSWORD")
         }
         debug {
             storeFile file("debug.keystore")
@@ -45,7 +45,7 @@ android {
 }
 
 ext {
-    supportVersion = "25.3.0"
+    supportVersion = "25.3.1"
 }
 
 dependencies {
@@ -60,7 +60,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'im.fir:fir-sdk:latest.integration@aar'
     compile 'cn.bmob.android:bmob-sdk:3.4.6'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.4.0'

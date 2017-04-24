@@ -16,15 +16,15 @@
 #   public *;
 #}
 
--keepattributes Signature,InnerClasses,SourceFile,LineNumberTable
+-keepattributes Signature, InnerClasses, LineNumberTable
 
 # android-support
 -dontwarn android.support.**
 -keep class android.support.** { *; }
 
 # app
--keep class me.wcy.weather.utils.proguard.ExProGuard { *; }
--keep class * extends me.wcy.weather.utils.proguard.ExProGuard { *; }
+-keep class me.wcy.weather.utils.proguard.NoProGuard { *; }
+-keep class * extends me.wcy.weather.utils.proguard.NoProGuard { *; }
 
 # amap
 -keep class com.amap.api.location.** { *; }

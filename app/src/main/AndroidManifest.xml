@@ -26,16 +26,6 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2f96bd99854c25bad867af9676c7ea63" />
-        <meta-data
-            android:name="BUG_HD_SDK_GENERAL_KEY"
-            android:value="82da7c1af25a3d6b045077813ef2032c" />
-
-        <receiver android:name=".receiver.DownloadReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".activity.SplashActivity"

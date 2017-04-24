@@ -2,9 +2,9 @@ package me.wcy.weather.model;
 
 import java.io.Serializable;
 
-import me.wcy.weather.utils.proguard.ExProGuard;
+import me.wcy.weather.utils.proguard.NoProGuard;
 
-public class Location implements Serializable, ExProGuard {
+public class Location implements Serializable, NoProGuard {
     private String address;
     private String country;
     private String province;
