@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import cn.bmob.v3.Bmob;
+import im.fir.sdk.FIR;
 import me.wcy.weather.api.KeyStore;
 import me.wcy.weather.utils.ScreenUtils;
 
@@ -22,6 +23,7 @@ public class WeatherApplication extends Application {
         sRes = getResources();
         ScreenUtils.init(this);
         Bmob.initialize(this, KeyStore.getKey(KeyStore.BMOB_KEY));
+        FIR.init(this);
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheSize(2 * 1024 * 1024)
                 .diskCacheSize(50 * 1024 * 1024)

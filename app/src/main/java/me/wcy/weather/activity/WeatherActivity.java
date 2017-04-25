@@ -43,6 +43,7 @@ import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
 import me.wcy.weather.utils.SnackbarUtils;
+import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
@@ -120,6 +121,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
         collapsingToolbar.setTitle(mCity.name);
         checkIfRefresh(mCity);
+        UpdateUtils.checkUpdate(this);
     }
 
     @Override

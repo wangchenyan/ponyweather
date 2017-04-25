@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
  * Created by hzwangchenyan on 2016/11/12.
  */
 public class KeyStore {
+    public static final String FIR_KEY = "FIR_KEY";
     public static final String BMOB_KEY = "BMOB_KEY";
     public static final String HE_KEY = "HE_KEY";
     public static final String BD_TTS_API_KEY = "BD_TTS_API_KEY";

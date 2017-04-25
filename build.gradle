@@ -12,6 +12,9 @@ allprojects {
     repositories {
         jcenter()
         maven {
+            url "http://maven.bughd.com/public"
+        }
+        maven {
             url "https://raw.github.com/bmob/bmob-android-sdk/master"
         }
     }
