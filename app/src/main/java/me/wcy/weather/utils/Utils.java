@@ -2,7 +2,6 @@ package me.wcy.weather.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,7 +14,6 @@ import android.text.format.DateUtils;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,17 +57,6 @@ public class Utils {
         // 给定位客户端对象设置定位参数
         aMapLocationClient.setLocationOption(mLocationOption);
         return aMapLocationClient;
-    }
-
-    public static DisplayImageOptions getDefaultDisplayOption() {
-        return new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .showImageForEmptyUri(R.drawable.image_weather_placeholder_small)
-                .showImageOnFail(R.drawable.image_weather_placeholder_small)
-                .showImageOnLoading(R.drawable.image_weather_placeholder_small)
-                .build();
     }
 
     public static void voiceAnimation(FloatingActionButton fab, boolean start) {
@@ -183,9 +170,5 @@ public class Utils {
     public static void saveRefreshTime(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         sp.edit().putLong(Extras.KEY_LAST_REFRESH_TIME, System.currentTimeMillis()).apply();
-    }
-
-    public static String colorToString(int color) {
-        return String.format("#%06X", 0xFFFFFF & color);
     }
 }

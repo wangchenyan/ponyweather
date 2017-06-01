@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,7 +44,6 @@ import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
-import me.wcy.weather.utils.permission.Permissions;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
         , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
@@ -199,7 +199,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         }
 
         PermissionReq.with(this)
-                .permissions(Permissions.PHONE)
+                .permissions(Manifest.permission.READ_PHONE_STATE)
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
@@ -234,7 +234,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
                 break;
             case RequestCode.REQUEST_ALBUM:
                 Uri uri = data.getData();
-                compressImage(uri.getPath());
+                compressImage(FileUtils.uriToPath(this, uri));
                 break;
             case RequestCode.REQUEST_UPLOAD:
                 rvImage.scrollToPosition(0);
@@ -261,6 +261,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
             SnackbarUtils.show(this, R.string.image_open_fail);
             return;
         }
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);

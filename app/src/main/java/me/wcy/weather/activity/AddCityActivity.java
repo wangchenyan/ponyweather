@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +35,6 @@ import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.permission.PermissionReq;
 import me.wcy.weather.utils.permission.PermissionResult;
-import me.wcy.weather.utils.permission.Permissions;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -336,7 +336,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         mProgressDialog.setMessage(getString(R.string.locating));
         mProgressDialog.show();
         PermissionReq.with(this)
-                .permissions(Permissions.LOCATION)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
@@ -349,7 +350,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onDenied() {
                         mProgressDialog.cancel();
-                        SnackbarUtils.show(AddCityActivity.this, getString(R.string.no_permission, Permissions.LOCATION_DESC, "获取当前位置"));
+                        SnackbarUtils.show(AddCityActivity.this, getString(R.string.no_permission, "位置信息", "获取当前位置"));
                     }
                 })
                 .request();

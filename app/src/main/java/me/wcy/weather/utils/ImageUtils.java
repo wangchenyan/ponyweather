@@ -105,10 +105,12 @@ public class ImageUtils {
         if (exif == null) {
             return source;
         }
+
         int ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         if (ori == ExifInterface.ORIENTATION_NORMAL) {
             return source;
         }
+
         int degree = 0;
         switch (ori) {
             case ExifInterface.ORIENTATION_ROTATE_90:

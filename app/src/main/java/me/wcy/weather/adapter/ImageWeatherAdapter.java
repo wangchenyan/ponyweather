@@ -1,8 +1,10 @@
 package me.wcy.weather.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.util.List;
 
@@ -19,7 +23,6 @@ import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.utils.ScreenUtils;
-import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.binding.ViewBinder;
 
@@ -48,12 +51,25 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.item.setTag(mImageList.get(position));
         holder.llPraiseContainer.setTag(mImageList.get(position));
         holder.tvLocation.setText(mImageList.get(position).getLocation().getDistrict() + mImageList.get(position).getLocation().getStreet());
         holder.tvPraiseNum.setText(mImageList.get(position).getPraise() == 0L ? "" : String.valueOf(mImageList.get(position).getPraise()));
-        ImageLoader.getInstance().displayImage(mImageList.get(position).getImageUrl(), holder.ivImage, Utils.getDefaultDisplayOption());
+        holder.ivImage.setImageResource(R.drawable.image_weather_placeholder);
+        final String url = mImageList.get(position).getImageUrl();
+        holder.tvLocation.setTag(url);
+        Glide.with(mContext)
+                .asBitmap()
+                .load(url)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        if (!TextUtils.isEmpty(url) && url.equals(holder.tvLocation.getTag())) {
+                            holder.ivImage.setImageBitmap(resource);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -91,7 +107,7 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
         });
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.item)
         public CardView item;
         @Bind(R.id.iv_image)

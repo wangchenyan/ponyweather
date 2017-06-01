@@ -7,21 +7,22 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
-import java.util.Locale;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
@@ -77,13 +78,17 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvTag.setMovementMethod(LinkMovementMethod.getInstance());
         setTimeAndPraise();
 
-        ImageLoader.getInstance().displayImage(mImageWeather.getImageUrl(), ivWeatherImage,
-                Utils.getDefaultDisplayOption(), new SimpleImageLoadingListener() {
+        final int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
+        ivWeatherImage.setMinimumHeight(imageWidth);
+        Glide.with(this)
+                .asBitmap()
+                .load(mImageWeather.getImageUrl())
+                .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
-                        int imageHeight = (int) ((float) loadedImage.getHeight() / loadedImage.getWidth() * imageWidth);
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        int imageHeight = (int) ((float) resource.getHeight() / resource.getWidth() * imageWidth);
                         ivWeatherImage.setMinimumHeight(imageHeight);
+                        ivWeatherImage.setImageBitmap(resource);
                     }
                 });
     }
@@ -97,11 +102,15 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         String time = Utils.timeFormat(mImageWeather.getCreatedAt());
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        String strColor = Utils.colorToString(getResources().getColor(typedValue.resourceId));
-        String praise = "<font color='%1$s'>%2$d</font>";
-        praise = String.format(Locale.getDefault(), praise, strColor, mImageWeather.getPraise());
-        String text = getString(R.string.image_time_praise, time, praise);
-        tvTime.setText(Html.fromHtml(text));
+        int color = ContextCompat.getColor(this, typedValue.resourceId);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(color);
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        ssb.append(time).append("拍摄").append("  ");
+        int start = ssb.length();
+        ssb.append(String.valueOf(mImageWeather.getPraise()));
+        ssb.setSpan(colorSpan, start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.append("个赞");
+        tvTime.setText(ssb);
         tvTime.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
@@ -137,27 +146,31 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
-    private Spanned getTagText(String tag) {
-        int intColor = R.color.blue_300;
+    private CharSequence getTagText(String tag) {
+        int color = R.color.blue_300;
         switch (tag) {
             case "植物":
-                intColor = R.color.green_300;
+                color = R.color.green_300;
                 break;
             case "人物":
-                intColor = R.color.orange_300;
+                color = R.color.orange_300;
                 break;
             case "天气":
-                intColor = R.color.blue_300;
+                color = R.color.blue_300;
                 break;
             case "建筑":
-                intColor = R.color.cyan_300;
+                color = R.color.cyan_300;
                 break;
             case "动物":
-                intColor = R.color.pink_300;
+                color = R.color.pink_300;
                 break;
         }
-        String strColor = Utils.colorToString(getResources().getColor(intColor));
-        String html = "<font color='%1$s'>%2$s</font>";
-        return Html.fromHtml(getString(R.string.image_tag, String.format(html, strColor, tag)));
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, color));
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        ssb.append("标签  ");
+        int start = ssb.length();
+        ssb.append(tag);
+        ssb.setSpan(colorSpan, start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ssb;
     }
 }

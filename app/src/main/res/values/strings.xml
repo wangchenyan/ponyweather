@@ -36,8 +36,6 @@
     <string name="publishing">正在发布…</string>
     <string name="publish_success">成功发布到%s</string>
     <string name="publish_fail">发布失败：%s</string>
-    <string name="image_time_praise">%1$s拍摄&#160;&#160;%2$s个赞</string>
-    <string name="image_tag">标签&#160;&#160;%s</string>
     <string name="delete">删除</string>
     <string name="whether_delete">是否删除该城市？</string>
     <string name="delete_success">删除成功</string>
