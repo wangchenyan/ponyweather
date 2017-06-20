@@ -1,8 +1,5 @@
 package me.wcy.weather.api;
 
-import java.util.List;
-
-import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.WeatherData;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -14,15 +11,12 @@ import rx.Observable;
 public class Api {
     private static final String BASE_URL = "https://free-api.heweather.com/v5/";
 
-    private Api() {
-    }
-
     public interface IApi {
         @GET("weather")
         Observable<WeatherData> getWeather(@Query("city") String city, @Query("key") String key);
+    }
 
-        @GET("https://cdn.heweather.com/china-city-list.json")
-        Observable<List<CityEntity>> getCityList();
+    private Api() {
     }
 
     private static Retrofit sRetrofit = new Retrofit.Builder()

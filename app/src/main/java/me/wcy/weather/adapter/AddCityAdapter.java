@@ -48,18 +48,19 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
         holder.item.setTag(mCityList.get(position));
         switch (mType) {
             case PROVINCE:
-                holder.tvCity.setText(mCityList.get(position).getProvinceZh());
+                holder.tvCity.setText(mCityList.get(position).getProvince());
                 break;
             case CITY:
-                holder.tvCity.setText(mCityList.get(position).getCityZh());
+                holder.tvCity.setText(mCityList.get(position).getCity());
                 break;
             case AREA:
-                holder.tvCity.setText(mCityList.get(position).getAreaZh());
-                holder.tvRemark.setText(mAddedCityList.contains(mCityList.get(position).getAreaZh()) ? "已添加" : "");
+                holder.tvCity.setText(mCityList.get(position).getArea());
+                holder.tvRemark.setText(mAddedCityList.contains(mCityList.get(position).getArea()) ? "已添加" : "");
                 break;
             case SEARCH:
-                String result = mCityList.get(position).getAreaZh() + " - " + mCityList.get(position).getCityZh() +
-                        ", " + mCityList.get(position).getProvinceZh();
+                String result = mCityList.get(position).getArea()
+                        + " - " + mCityList.get(position).getCity()
+                        + ", " + mCityList.get(position).getProvince();
                 holder.tvCity.setText(result);
                 break;
         }

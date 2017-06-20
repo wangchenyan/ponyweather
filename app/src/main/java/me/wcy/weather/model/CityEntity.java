@@ -9,44 +9,30 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CityEntity implements Comparable {
     @SerializedName("id")
-    private String id;
-    @SerializedName("cityEn")
-    private String areaEn;
-    @SerializedName("cityZh")
-    private String areaZh;
-    @SerializedName("countryCode")
-    private String countryCode;
-    @SerializedName("countryEn")
-    private String countryEn;
-    @SerializedName("countryZh")
-    private String countryZh;
-    @SerializedName("provinceEn")
-    private String provinceEn;
-    @SerializedName("provinceZh")
-    private String provinceZh;
-    @SerializedName("leaderEn")
-    private String cityEn;
-    @SerializedName("leaderZh")
-    private String cityZh;
-    @SerializedName("lat")
-    private String lat;
-    @SerializedName("lon")
-    private String lon;
-
-    public String getAreaZh() {
-        return areaZh;
-    }
-
-    public String getProvinceZh() {
-        return provinceZh;
-    }
-
-    public String getCityZh() {
-        return cityZh;
-    }
+    public String id;
+    @SerializedName("area_en")
+    public String area_en;
+    @SerializedName("area")
+    public String area;
+    @SerializedName("city")
+    public String city;
+    @SerializedName("province")
+    public String province;
 
     @Override
-    public int compareTo(@NonNull Object o) {
-        return this.id.compareTo(((CityEntity) o).id);
+    public int compareTo(@NonNull Object another) {
+        return this.id.compareTo(((CityEntity) another).id);
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getProvince() {
+        return province;
     }
 }

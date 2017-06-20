@@ -3,6 +3,7 @@ package me.wcy.weather.activity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,14 +19,19 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.AddCityAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
-import me.wcy.weather.api.Api;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfo;
@@ -126,8 +132,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 .observeOn(Schedulers.io())
                 .filter(new Func1<CityEntity, Boolean>() {
                     @Override
-                    public Boolean call(CityEntity cityInfoEntity) {
-                        return cityInfoEntity.getAreaZh().contains(text);
+                    public Boolean call(CityEntity cityEntity) {
+                        return cityEntity.getArea().contains(text);
                     }
                 })
                 .toSortedList()
@@ -168,7 +174,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void fetchCityList() {
-        Api.getIApi().getCityList()
+        AssetManager assetManager = getAssets();
+        Observable.just(assetManager)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Action0() {
@@ -178,14 +185,28 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                         mProgressDialog.show();
                     }
                 })
-                .doOnNext(new Action1<List<CityEntity>>() {
+                .observeOn(Schedulers.io())
+                .map(new Func1<AssetManager, String>() {
                     @Override
-                    public void call(List<CityEntity> cityEntities) {
-                        if (cityEntities == null || cityEntities.isEmpty()) {
-                            throw Exceptions.propagate(new Throwable("request city list failed"));
+                    public String call(AssetManager assetManager) {
+                        return readJsonFromAssets(assetManager);
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            throw Exceptions.propagate(new Throwable("read city list failed"));
                         }
                     }
                 })
+                .map(new Func1<String, List<CityEntity>>() {
+                    @Override
+                    public List<CityEntity> call(String s) {
+                        return parseCityList(s);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<CityEntity>>() {
                     @Override
                     public void onCompleted() {
@@ -212,7 +233,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 .distinct(new Func1<CityEntity, String>() {
                     @Override
                     public String call(CityEntity cityEntity) {
-                        return cityEntity.getProvinceZh();
+                        return cityEntity.getProvince();
                     }
                 })
                 .toSortedList()
@@ -252,13 +273,13 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 .filter(new Func1<CityEntity, Boolean>() {
                     @Override
                     public Boolean call(CityEntity cityEntity) {
-                        return cityEntity.getProvinceZh().equals(province);
+                        return cityEntity.getProvince().equals(province);
                     }
                 })
                 .distinct(new Func1<CityEntity, String>() {
                     @Override
                     public String call(CityEntity cityEntity) {
-                        return cityEntity.getCityZh();
+                        return cityEntity.getCity();
                     }
                 })
                 .toSortedList()
@@ -292,7 +313,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 .filter(new Func1<CityEntity, Boolean>() {
                     @Override
                     public Boolean call(CityEntity cityEntity) {
-                        return cityEntity.getCityZh().equals(city);
+                        return cityEntity.getCity().equals(city);
                     }
                 })
                 .toSortedList()
@@ -379,12 +400,12 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     public void onItemClick(View view, Object data) {
         CityEntity cityInfo = (CityEntity) data;
         if (currentType == AddCityAdapter.Type.PROVINCE) {
-            currentProvince = cityInfo.getProvinceZh();
+            currentProvince = cityInfo.getProvince();
             showCityList(currentProvince);
         } else if (currentType == AddCityAdapter.Type.CITY) {
-            showAreaList(cityInfo.getCityZh());
+            showAreaList(cityInfo.getCity());
         } else if (currentType == AddCityAdapter.Type.AREA || currentType == AddCityAdapter.Type.SEARCH) {
-            backToWeather(cityInfo.getAreaZh(), false);
+            backToWeather(cityInfo.getArea(), false);
         }
     }
 
@@ -397,6 +418,33 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
             }
         }
         return false;
+    }
+
+    private String readJsonFromAssets(AssetManager assetManager) {
+        try {
+            InputStream is = assetManager.open("city.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+
+            return new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<CityEntity> parseCityList(String json) {
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        List<CityEntity> cityList = new ArrayList<>();
+        JsonArray jArray = parser.parse(json).getAsJsonArray();
+        for (JsonElement obj : jArray) {
+            CityEntity cityEntity = gson.fromJson(obj, CityEntity.class);
+            cityList.add(cityEntity);
+        }
+        return cityList;
     }
 
     private void backToWeather(String name, boolean isAutoLocate) {
