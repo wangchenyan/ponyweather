@@ -5,9 +5,9 @@
 部分设计参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
-- 如果喜欢，欢迎Star！
 - 项目地址：https://github.com/wangchenyan/PonyWeather
 - 有问题请提Issues
+- 如果喜欢，欢迎Star！
 
 ## 简介
 小马天气是一款开源Android天气信息查询软件。
