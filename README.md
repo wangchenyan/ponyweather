@@ -5,7 +5,7 @@
 部分设计参考[xcc3641](https://github.com/xcc3641)的开源项目[SeeWeather](https://github.com/xcc3641/SeeWeather)，在此表示感谢！<br>
 第一次开始这个项目是2014年4月份，我还在大二的时候，当时有一个程序设计实践课，想着简单点就选了天气预报这个题目，时隔两年又重新拾起，给它脱胎换骨，就是想拿他作为一个学习新知识的实战项目，期间也做过改动，比如曾经把网络请求模块从[android-async-http](https://github.com/loopj/android-async-http)改为[Volley](https://android.googlesource.com/platform/frameworks/volley)。
 
-- **开源不易，希望能给个Star鼓励**
+- 如果喜欢，欢迎Star！
 - 项目地址：https://github.com/wangchenyan/PonyWeather
 - 有问题请提Issues
 
@@ -16,6 +16,25 @@
 - 语音播报，一键听天气
 - Material Design 设计风格，从未如此简约
 - 自动夜间模式，更加贴心
+
+## 使用
+1. clone 项目
+1. 到[和风天气](https://www.heweather.com/)申请 API Key
+2. 在 `me.wcy.weather.api` 包下新建 `Keys.java` 文件，格式如下
+```
+public interface Keys extends NoProGuard {
+    // 和风天气，影响天气数据
+    String HE_KEY = "xxxxxx";
+    // fir，非必需
+    String FIR_KEY = "xxxxxx";
+    // bmob，影响实景天气
+    String BMOB_KEY = "xxxxxx";
+    // 百度语音合成，影响语音播报
+    String BD_TTS_API_KEY = "xxxxxx";
+    String BD_TTS_SECRET_KEY = "xxxxxx";
+}
+```
+其他 Key 同和风天气，不再赘述。
 
 ## 更新说明
 `v 2.1`
@@ -36,7 +55,7 @@
 - 支持Android 6.0
 
 ## 下载地址
-fir.im：http://fir.im/ponyweather<br>
+fir.im：http://fir.im/ponyweather
 
 ## TODO
 - ~~实景天气~~
