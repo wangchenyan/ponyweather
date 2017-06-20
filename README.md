@@ -19,7 +19,6 @@
 
 ## 使用
 1. clone 项目
-1. 到[和风天气](https://www.heweather.com/)申请 API Key
 2. 在 `me.wcy.weather.api` 包下新建 `Keys.java` 文件，格式如下
 ```
 public interface Keys extends NoProGuard {
@@ -34,7 +33,7 @@ public interface Keys extends NoProGuard {
     String BD_TTS_SECRET_KEY = "xxxxxx";
 }
 ```
-其他 Key 同和风天气，不再赘述。
+3. 到相应的网站申请需要的 key （如[和风天气](https://www.heweather.com/)），填入对应的位置。
 
 ## 更新说明
 `v 2.1`
