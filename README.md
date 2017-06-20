@@ -74,7 +74,7 @@ fir.im：http://fir.im/ponyweather
 - [Rxjava](https://github.com/ReactiveX/RxJava)
 - [Retrofit](https://github.com/square/retrofit)
 - [ASimpleCache](https://github.com/yangfuhai/ASimpleCache)
-- [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
+- [Glide](https://github.com/bumptech/glide)
 - [android-floating-action-button](https://github.com/futuresimple/android-floating-action-button)
 
 ### 关键代码
