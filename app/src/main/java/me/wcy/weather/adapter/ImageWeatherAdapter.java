@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 
 import java.util.List;
 
@@ -60,11 +60,11 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
         final String url = mImageList.get(position).getImageUrl();
         holder.tvLocation.setTag(url);
         Glide.with(mContext)
-                .asBitmap()
                 .load(url)
+                .asBitmap()
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         if (!TextUtils.isEmpty(url) && url.equals(holder.tvLocation.getTag())) {
                             holder.ivImage.setImageBitmap(resource);
                         }

@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
@@ -81,11 +81,11 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         final int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
         ivWeatherImage.setMinimumHeight(imageWidth);
         Glide.with(this)
-                .asBitmap()
                 .load(mImageWeather.getImageUrl())
+                .asBitmap()
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         int imageHeight = (int) ((float) resource.getHeight() / resource.getWidth() * imageWidth);
                         ivWeatherImage.setMinimumHeight(imageHeight);
                         ivWeatherImage.setImageBitmap(resource);
