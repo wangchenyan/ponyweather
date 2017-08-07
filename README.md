@@ -36,6 +36,9 @@ public interface Keys extends NoProGuard {
 3. 到相应的网站申请需要的 key （如[和风天气](https://www.heweather.com/)），填入对应的位置。
 
 ## 更新说明
+`v 2.2`
+- 升级和风天气API为V5
+
 `v 2.1`
 - 新增搜索城市
 - 新增设置自动更新时间间隔
@@ -79,7 +82,7 @@ fir.im：http://fir.im/ponyweather
 
 ### 关键代码
 网络请求`RxJava+Retrofit`
-```java
+```
 private void fetchDataFromNetWork(final CityEntity city) {
     Api.getIApi().getWeather(city.name, ApiKey.HE_KEY)
             .subscribeOn(Schedulers.io())
@@ -124,7 +127,7 @@ private void fetchDataFromNetWork(final CityEntity city) {
 
 ## License
 
-    Copyright 2016 wangchenyan
+    Copyright 2017 wangchenyan
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
