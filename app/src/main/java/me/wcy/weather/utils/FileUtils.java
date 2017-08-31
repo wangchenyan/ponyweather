@@ -3,12 +3,15 @@ package me.wcy.weather.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import me.wcy.weather.R;
 
@@ -23,7 +26,7 @@ public class FileUtils {
     }
 
     public static String getCompressImagePath(Context context) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         return getCachePath(context) + context.getString(R.string.compress_file_name, sdf.format(new Date()));
     }
 
@@ -43,5 +46,14 @@ public class FileUtils {
             cursor.close();
         }
         return path;
+    }
+
+    public static Uri getUriForFile(Context context, File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            String authority = context.getPackageName() + ".fileprovider";
+            return FileProvider.getUriForFile(context, authority, file);
+        } else {
+            return Uri.fromFile(file);
+        }
     }
 }
