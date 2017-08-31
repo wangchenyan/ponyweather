@@ -12,6 +12,15 @@ android {
         versionCode 220
         versionName "2.2.0"
 
+        buildConfigField 'String', 'FIR_KEY', getLocalValue("FIR_KEY")
+        buildConfigField 'String', 'BMOB_KEY', getLocalValue("BMOB_KEY")
+        buildConfigField 'String', 'HE_KEY', getLocalValue("HE_KEY")
+        buildConfigField 'String', 'BD_TTS_API_KEY', getLocalValue("BD_TTS_API_KEY")
+        buildConfigField 'String', 'BD_TTS_SECRET_KEY', getLocalValue("BD_TTS_SECRET_KEY")
+
+        manifestPlaceholders = [AMAP_KEY  : getLocalValue("AMAP_KEY"),
+                                BUG_HD_KEY: getLocalValue("BUG_HD_KEY")]
+
         ndk {
             abiFilters "armeabi", "armeabi-v7a"
         }
@@ -19,12 +28,10 @@ android {
 
     signingConfigs {
         release {
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('local.properties').newDataInputStream())
             storeFile file("wangchenyan.keystore")
-            storePassword properties.get("STORE_PASSWORD")
-            keyAlias properties.get("KEY_ALIAS")
-            keyPassword properties.get("KEY_PASSWORD")
+            storePassword getLocalValue("STORE_PASSWORD")
+            keyAlias getLocalValue("KEY_ALIAS")
+            keyPassword getLocalValue("KEY_PASSWORD")
         }
         debug {
             storeFile file("debug.keystore")
@@ -42,6 +49,12 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+}
+
+def getLocalValue(String key) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.get(key)
 }
 
 ext {

@@ -19,13 +19,12 @@ import im.fir.sdk.VersionCheckCallback;
 import me.wcy.weather.BuildConfig;
 import me.wcy.weather.R;
 import me.wcy.weather.activity.AboutActivity;
-import me.wcy.weather.api.KeyStore;
 import me.wcy.weather.model.UpdateInfo;
 
 public class UpdateUtils {
 
     public static void checkUpdate(final Activity activity) {
-        FIR.checkForUpdateInFIR(KeyStore.getKey(KeyStore.FIR_KEY), new VersionCheckCallback() {
+        FIR.checkForUpdateInFIR(BuildConfig.FIR_KEY, new VersionCheckCallback() {
             @Override
             public void onStart() {
                 if (activity instanceof AboutActivity) {

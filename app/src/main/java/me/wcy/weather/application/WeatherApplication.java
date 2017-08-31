@@ -7,7 +7,7 @@ import android.util.DisplayMetrics;
 
 import cn.bmob.v3.Bmob;
 import im.fir.sdk.FIR;
-import me.wcy.weather.api.KeyStore;
+import me.wcy.weather.BuildConfig;
 import me.wcy.weather.utils.ScreenUtils;
 
 public class WeatherApplication extends Application {
@@ -19,7 +19,7 @@ public class WeatherApplication extends Application {
 
         sRes = getResources();
         ScreenUtils.init(this);
-        Bmob.initialize(this, KeyStore.getKey(KeyStore.BMOB_KEY));
+        Bmob.initialize(this, BuildConfig.BMOB_KEY);
         FIR.init(this);
     }
 

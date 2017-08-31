@@ -19,19 +19,21 @@
 
 ## 使用
 1. clone 项目
-2. 在 `me.wcy.weather.api` 包下新建 `Keys.java` 文件，格式如下
+2. 在项目根目录下新建 `local.properties` 文件，内容如下
 ```
-public interface Keys extends NoProGuard {
-    // 和风天气，影响天气数据
-    String HE_KEY = "xxxxxx";
-    // fir，非必需
-    String FIR_KEY = "xxxxxx";
-    // bmob，影响实景天气
-    String BMOB_KEY = "xxxxxx";
-    // 百度语音合成，影响语音播报
-    String BD_TTS_API_KEY = "xxxxxx";
-    String BD_TTS_SECRET_KEY = "xxxxxx";
-}
+# 和风天气，影响天气数据
+HE_KEY="xxxxxx"
+# bmob，影响实景天气
+BMOB_KEY="xxxxxx"
+# 百度语音合成，影响语音播报
+BD_TTS_API_KEY="xxxxxx"
+BD_TTS_SECRET_KEY="xxxxxx"
+# fir，非必需
+FIR_KEY="xxxxxx"
+# 高德地图，影响定位
+AMAP_KEY="xxxxxx"
+# bughd，非必需
+BUG_HD_KEY="xxxxxx"
 ```
 3. 到相应的网站申请需要的 key （如[和风天气](https://www.heweather.com/)），填入对应的位置。
 
