@@ -39,11 +39,10 @@ import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.FileUtils;
 import me.wcy.weather.utils.ImageUtils;
+import me.wcy.weather.utils.PermissionReq;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
-import me.wcy.weather.utils.permission.PermissionReq;
-import me.wcy.weather.utils.permission.PermissionResult;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
         , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
@@ -200,7 +199,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
         PermissionReq.with(this)
                 .permissions(Manifest.permission.READ_PHONE_STATE)
-                .result(new PermissionResult() {
+                .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
                         ImageUtils.pickImage(ImageWeatherActivity.this, type);

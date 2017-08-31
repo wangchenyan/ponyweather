@@ -27,6 +27,7 @@ import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
+import me.wcy.weather.utils.KeyboardUtils;
 import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
@@ -86,7 +87,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
 
-        showSoftKeyboard(etSay);
+        KeyboardUtils.showKeyboard(etSay);
     }
 
     @Override

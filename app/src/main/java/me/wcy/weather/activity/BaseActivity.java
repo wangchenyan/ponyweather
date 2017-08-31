@@ -1,6 +1,5 @@
 package me.wcy.weather.activity;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,12 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import me.wcy.weather.R;
+import me.wcy.weather.utils.PermissionReq;
 import me.wcy.weather.utils.binding.ViewBinder;
-import me.wcy.weather.utils.permission.PermissionReq;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected Toolbar mToolbar;
@@ -73,18 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionReq.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public void showSoftKeyboard(final EditText editText) {
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-        editText.requestFocus();
-        mHandler.postDelayed(new Runnable() {
-            public void run() {
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.showSoftInput(editText, 0);
-            }
-        }, 200L);
     }
 
     @Override

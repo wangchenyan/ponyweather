@@ -43,12 +43,11 @@ import me.wcy.weather.model.WeatherData;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.NetworkUtils;
+import me.wcy.weather.utils.PermissionReq;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
-import me.wcy.weather.utils.permission.PermissionReq;
-import me.wcy.weather.utils.permission.PermissionResult;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
@@ -191,7 +190,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         PermissionReq.with(this)
                 .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION)
-                .result(new PermissionResult() {
+                .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
                         if (mLocationClient == null) {
@@ -369,7 +368,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         PermissionReq.with(this)
                 .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION)
-                .result(new PermissionResult() {
+                .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
                         startActivity(new Intent(WeatherActivity.this, ImageWeatherActivity.class));

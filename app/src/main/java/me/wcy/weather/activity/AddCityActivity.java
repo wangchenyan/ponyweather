@@ -36,11 +36,10 @@ import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfo;
 import me.wcy.weather.utils.ACache;
+import me.wcy.weather.utils.PermissionReq;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
-import me.wcy.weather.utils.permission.PermissionReq;
-import me.wcy.weather.utils.permission.PermissionResult;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -359,7 +358,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         PermissionReq.with(this)
                 .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION)
-                .result(new PermissionResult() {
+                .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
                         if (mLocationClient == null) {
