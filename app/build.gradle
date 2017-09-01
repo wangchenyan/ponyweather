@@ -12,11 +12,11 @@ android {
         versionCode 220
         versionName "2.2.0"
 
-        buildConfigField 'String', 'FIR_KEY', getLocalValue("FIR_KEY")
-        buildConfigField 'String', 'BMOB_KEY', getLocalValue("BMOB_KEY")
-        buildConfigField 'String', 'HE_KEY', getLocalValue("HE_KEY")
-        buildConfigField 'String', 'BD_TTS_API_KEY', getLocalValue("BD_TTS_API_KEY")
-        buildConfigField 'String', 'BD_TTS_SECRET_KEY', getLocalValue("BD_TTS_SECRET_KEY")
+        buildConfigField 'String', 'FIR_KEY', getLocalValue("FIR_KEY", true)
+        buildConfigField 'String', 'BMOB_KEY', getLocalValue("BMOB_KEY", true)
+        buildConfigField 'String', 'HE_KEY', getLocalValue("HE_KEY", true)
+        buildConfigField 'String', 'BD_TTS_API_KEY', getLocalValue("BD_TTS_API_KEY", true)
+        buildConfigField 'String', 'BD_TTS_SECRET_KEY', getLocalValue("BD_TTS_SECRET_KEY", true)
 
         manifestPlaceholders = [AMAP_KEY  : getLocalValue("AMAP_KEY"),
                                 BUG_HD_KEY: getLocalValue("BUG_HD_KEY")]
@@ -52,10 +52,16 @@ android {
 }
 
 def getLocalValue(String key) {
+    return getLocalValue(key, false)
+}
+
+def getLocalValue(String key, boolean quot) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def value = properties.get(key)
-    value = (value == null) ? "\"\"" : value
+    def value = properties.containsKey(key) ? properties.get(key) : ""
+    if (quot) {
+        value = "\"" + value + "\"";
+    }
     return value
 }
 
