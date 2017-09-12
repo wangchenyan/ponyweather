@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
@@ -92,17 +93,16 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
 
     private void praise(final View v, final ImageWeather imageWeather) {
         imageWeather.increment("praise");
-        imageWeather.update(mContext, new UpdateListener() {
+        imageWeather.update(new UpdateListener() {
             @Override
-            public void onSuccess() {
-                imageWeather.setPraise(imageWeather.getPraise() + 1);
-                TextView tvPraiseNum = (TextView) v.findViewById(R.id.tv_praise_num);
-                tvPraiseNum.setText(String.valueOf(imageWeather.getPraise()));
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                Log.e(TAG, "praise fail. code:" + i + ",msg:" + s);
+            public void done(BmobException e) {
+                if (e == null) {
+                    imageWeather.setPraise(imageWeather.getPraise() + 1);
+                    TextView tvPraiseNum = (TextView) v.findViewById(R.id.tv_praise_num);
+                    tvPraiseNum.setText(String.valueOf(imageWeather.getPraise()));
+                } else {
+                    Log.e(TAG, "praise fail", e);
+                }
             }
         });
     }

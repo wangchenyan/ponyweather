@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import me.wcy.weather.R;
@@ -108,37 +109,35 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         mProgressDialog.setMessage(getString(R.string.uploading_image));
         mProgressDialog.show();
         final BmobFile file = new BmobFile(new File(path));
-        file.upload(this, new UploadFileListener() {
+        file.uploadblock(new UploadFileListener() {
             @Override
-            public void onSuccess() {
-                mProgressDialog.setMessage(getString(R.string.publishing));
-                imageWeather.setImageUrl(file.getFileUrl(UploadImageActivity.this));
-                imageWeather.setSay(etSay.getText().toString());
-                imageWeather.setTag(tagLayout.getTag());
-                imageWeather.save(UploadImageActivity.this, new SaveListener() {
-                    @Override
-                    public void onSuccess() {
-                        mProgressDialog.cancel();
-                        Toast.makeText(UploadImageActivity.this, getString(R.string.publish_success,
-                                imageWeather.getLocation().getCity()), Toast.LENGTH_SHORT).show();
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(int i, String s) {
-                        Log.e(TAG, "upload object fail. code:" + i + ",msg:" + s);
-                        mProgressDialog.cancel();
-                        SnackbarUtils.show(UploadImageActivity.this, getString(R.string.publish_fail, s));
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                Log.e(TAG, "upload image fail. code:" + i + ",msg:" + s);
-                mProgressDialog.cancel();
-                SnackbarUtils.show(UploadImageActivity.this, getString(R.string.upload_image_fail, s));
+            public void done(BmobException e) {
+                if (e == null) {
+                    mProgressDialog.setMessage(getString(R.string.publishing));
+                    imageWeather.setImageUrl(file.getFileUrl());
+                    imageWeather.setSay(etSay.getText().toString());
+                    imageWeather.setTag(tagLayout.getTag());
+                    imageWeather.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String objectId, BmobException e) {
+                            if (e == null) {
+                                mProgressDialog.cancel();
+                                Toast.makeText(UploadImageActivity.this, getString(R.string.publish_success,
+                                        imageWeather.getLocation().getCity()), Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_OK);
+                                finish();
+                            } else {
+                                Log.e(TAG, "upload object fail", e);
+                                mProgressDialog.cancel();
+                                SnackbarUtils.show(UploadImageActivity.this, getString(R.string.publish_fail, e.getMessage()));
+                            }
+                        }
+                    });
+                } else {
+                    Log.e(TAG, "upload image fail", e);
+                    mProgressDialog.cancel();
+                    SnackbarUtils.show(UploadImageActivity.this, getString(R.string.upload_image_fail, e.getMessage()));
+                }
             }
         });
     }

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
@@ -134,22 +135,21 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onRefresh() {
         mQuery.setSkip(0);
-        mQuery.findObjects(this, new FindListener<ImageWeather>() {
+        mQuery.findObjects(new FindListener<ImageWeather>() {
             @Override
-            public void onSuccess(List<ImageWeather> list) {
-                mImageList.clear();
-                mImageList.addAll(list);
-                mAdapter.notifyDataSetChanged();
-                mRefreshLayout.setRefreshing(false);
-                mLoadMoreListener.setEnableLoadMore(true);
-                famAddPhoto.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
-                mRefreshLayout.setRefreshing(false);
-                SnackbarUtils.show(ImageWeatherActivity.this, R.string.refresh_fail);
+            public void done(List<ImageWeather> list, BmobException e) {
+                if (e == null) {
+                    mImageList.clear();
+                    mImageList.addAll(list);
+                    mAdapter.notifyDataSetChanged();
+                    mRefreshLayout.setRefreshing(false);
+                    mLoadMoreListener.setEnableLoadMore(true);
+                    famAddPhoto.setVisibility(View.VISIBLE);
+                } else {
+                    Log.e(TAG, "query image fail", e);
+                    mRefreshLayout.setRefreshing(false);
+                    SnackbarUtils.show(ImageWeatherActivity.this, R.string.refresh_fail);
+                }
             }
         });
     }
@@ -157,24 +157,23 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onLoadMore() {
         mQuery.setSkip(mImageList.size());
-        mQuery.findObjects(this, new FindListener<ImageWeather>() {
+        mQuery.findObjects(new FindListener<ImageWeather>() {
             @Override
-            public void onSuccess(List<ImageWeather> list) {
-                mLoadMoreListener.onLoadComplete();
-                if (!list.isEmpty()) {
-                    mImageList.addAll(list);
-                    mAdapter.notifyDataSetChanged();
+            public void done(List<ImageWeather> list, BmobException e) {
+                if (e == null) {
+                    mLoadMoreListener.onLoadComplete();
+                    if (!list.isEmpty()) {
+                        mImageList.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        mLoadMoreListener.setEnableLoadMore(false);
+                        SnackbarUtils.show(ImageWeatherActivity.this, R.string.no_more);
+                    }
                 } else {
-                    mLoadMoreListener.setEnableLoadMore(false);
-                    SnackbarUtils.show(ImageWeatherActivity.this, R.string.no_more);
+                    Log.e(TAG, "query image fail", e);
+                    mLoadMoreListener.onLoadComplete();
+                    SnackbarUtils.show(ImageWeatherActivity.this, R.string.load_fail);
                 }
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.e(TAG, "query image fail. code:" + i + ",msg:" + s);
-                mLoadMoreListener.onLoadComplete();
-                SnackbarUtils.show(ImageWeatherActivity.this, R.string.load_fail);
             }
         });
     }
@@ -198,7 +197,8 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         }
 
         PermissionReq.with(this)
-                .permissions(Manifest.permission.READ_PHONE_STATE)
+                .permissions(Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
                 .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {

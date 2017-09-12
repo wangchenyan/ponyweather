@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
 import me.wcy.weather.constants.Extras;
@@ -126,22 +127,21 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
     private void praise() {
         mProgressDialog.show();
         mImageWeather.increment("praise");
-        mImageWeather.update(this, new UpdateListener() {
+        mImageWeather.update(new UpdateListener() {
             @Override
-            public void onSuccess() {
-                mProgressDialog.cancel();
-                mImageWeather.setPraise(mImageWeather.getPraise() + 1);
-                setTimeAndPraise();
+            public void done(BmobException e) {
+                if (e == null) {
+                    mProgressDialog.cancel();
+                    mImageWeather.setPraise(mImageWeather.getPraise() + 1);
+                    setTimeAndPraise();
 
-                Intent data = new Intent();
-                data.putExtra(Extras.IMAGE_WEATHER, mImageWeather);
-                setResult(RESULT_OK, data);
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                Log.e(TAG, "praise fail. code:" + i + ",msg:" + s);
-                mProgressDialog.cancel();
+                    Intent data = new Intent();
+                    data.putExtra(Extras.IMAGE_WEATHER, mImageWeather);
+                    setResult(RESULT_OK, data);
+                } else {
+                    Log.e(TAG, "praise fail", e);
+                    mProgressDialog.cancel();
+                }
             }
         });
     }
