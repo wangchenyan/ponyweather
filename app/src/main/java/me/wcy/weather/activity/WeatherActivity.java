@@ -120,7 +120,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
         collapsingToolbar.setTitle(mCity.name);
         checkIfRefresh(mCity);
-        UpdateUtils.checkUpdate(this);
+        UpdateUtils.checkUpdate(this, true);
     }
 
     @Override

@@ -55,7 +55,7 @@ public class AboutActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == mUpdate) {
-                UpdateUtils.checkUpdate(getActivity());
+                UpdateUtils.checkUpdate(getActivity(), false);
                 return true;
             } else if (preference == mStar) {
                 openUrl(getString(R.string.about_project_url));

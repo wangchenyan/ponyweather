@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.google.gson.Gson;
@@ -18,22 +19,23 @@ import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
 import me.wcy.weather.BuildConfig;
 import me.wcy.weather.R;
-import me.wcy.weather.activity.AboutActivity;
 import me.wcy.weather.model.UpdateInfo;
 
 public class UpdateUtils {
+    private static final String TAG = "UpdateUtils";
 
-    public static void checkUpdate(final Activity activity) {
+    public static void checkUpdate(final Activity activity, final boolean silent) {
         FIR.checkForUpdateInFIR(BuildConfig.FIR_KEY, new VersionCheckCallback() {
             @Override
             public void onStart() {
-                if (activity instanceof AboutActivity) {
+                if (!silent) {
                     SnackbarUtils.show(activity, "正在检查更新");
                 }
             }
 
             @Override
             public void onSuccess(String versionJson) {
+                Log.i(TAG, versionJson);
                 if (activity.isFinishing()) {
                     return;
                 }
@@ -48,15 +50,14 @@ public class UpdateUtils {
                 int version = Integer.valueOf(updateInfo.version);
                 if (version > BuildConfig.VERSION_CODE) {
                     updateDialog(activity, updateInfo);
-                } else {
-                    if (activity instanceof AboutActivity) {
-                        SnackbarUtils.show(activity, "已是最新版本");
-                    }
+                } else if (!silent) {
+                    SnackbarUtils.show(activity, "已是最新版本");
                 }
             }
 
             @Override
             public void onFail(Exception exception) {
+                Log.e(TAG, "check update fail", exception);
             }
 
             @Override
