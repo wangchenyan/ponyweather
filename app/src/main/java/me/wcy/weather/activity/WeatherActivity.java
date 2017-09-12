@@ -28,6 +28,14 @@ import com.baidu.speechsynthesizer.SpeechSynthesizer;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.exceptions.Exceptions;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import me.wcy.weather.BuildConfig;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.DailyForecastAdapter;
@@ -48,12 +56,6 @@ import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.UpdateUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.exceptions.Exceptions;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class WeatherActivity extends BaseActivity implements AMapLocationListener
         , NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener
@@ -240,52 +242,55 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
         Api.getIApi().getWeather(city.name, BuildConfig.HE_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .doOnNext(new Action1<WeatherData>() {
+                .doOnNext(new Consumer<WeatherData>() {
                     @Override
-                    public void call(WeatherData weatherData) {
+                    public void accept(WeatherData weatherData) throws Exception {
                         boolean success = weatherData.weathers.get(0).status.equals("ok");
                         if (!success) {
                             throw Exceptions.propagate(new Throwable(weatherData.weathers.get(0).status));
                         }
                     }
                 })
-                .map(new Func1<WeatherData, Weather>() {
+                .map(new Function<WeatherData, Weather>() {
                     @Override
-                    public Weather call(WeatherData weatherData) {
+                    public Weather apply(@NonNull WeatherData weatherData) throws Exception {
                         return weatherData.weathers.get(0);
                     }
                 })
-                .doOnNext(new Action1<Weather>() {
+                .doOnNext(new Consumer<Weather>() {
                     @Override
-                    public void call(Weather weather) {
+                    public void accept(Weather weather) throws Exception {
                         mACache.put(city.name, weather);
                         Utils.saveRefreshTime(WeatherActivity.this);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Weather>() {
+                .subscribe(new Observer<Weather>() {
                     @Override
-                    public void onCompleted() {
+                    public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onNext(@NonNull Weather weather) {
+                        updateView(weather);
+                        llWeatherContainer.setVisibility(View.VISIBLE);
+                        SnackbarUtils.show(fabSpeech, R.string.update_tips);
+                        mRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
                         Log.e(TAG, "update weather fail", e);
                         if (NetworkUtils.errorByNetwork(e)) {
                             SnackbarUtils.show(fabSpeech, R.string.network_error);
                         } else {
-                            SnackbarUtils.show(fabSpeech, TextUtils.isEmpty(e.getMessage()) ?
-                                    "加载失败" : e.getMessage());
+                            SnackbarUtils.show(fabSpeech, "update weather error: " + e.getMessage());
                         }
                         mRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
-                    public void onNext(Weather weather) {
-                        updateView(weather);
-                        llWeatherContainer.setVisibility(View.VISIBLE);
-                        SnackbarUtils.show(fabSpeech, R.string.update_tips);
-                        mRefreshLayout.setRefreshing(false);
+                    public void onComplete() {
                     }
                 });
     }
