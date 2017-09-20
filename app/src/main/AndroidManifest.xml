@@ -28,10 +28,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="${AMAP_KEY}" />
 
-        <meta-data
-            android:name="BUG_HD_SDK_GENERAL_KEY"
-            android:value="${BUG_HD_KEY}" />
-
         <receiver android:name=".receiver.DownloadReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />

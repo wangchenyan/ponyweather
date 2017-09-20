@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import cn.bmob.v3.Bmob;
-import im.fir.sdk.FIR;
 import me.wcy.weather.BuildConfig;
 import me.wcy.weather.utils.ScreenUtils;
 
@@ -20,7 +19,6 @@ public class WeatherApplication extends Application {
         sRes = getResources();
         ScreenUtils.init(this);
         Bmob.initialize(this, BuildConfig.BMOB_KEY);
-        FIR.init(this);
     }
 
     public static void updateNightMode(boolean on) {
