@@ -66,17 +66,17 @@ public class ImageUtils {
         }
     }
 
-    public static void pickImage(Activity activity, ImageType type) {
-        if (type == ImageType.CAMERA) {
-            startCamera(activity);
-        } else if (type == ImageType.ALBUM) {
-            startAlbum(activity);
-        }
-    }
-
-    public enum ImageType {
+    public enum PickType {
         CAMERA,
         ALBUM
+    }
+
+    public static void pickImage(Activity activity, PickType type) {
+        if (type == PickType.CAMERA) {
+            startCamera(activity);
+        } else if (type == PickType.ALBUM) {
+            startAlbum(activity);
+        }
     }
 
     private static void startCamera(Activity activity) {

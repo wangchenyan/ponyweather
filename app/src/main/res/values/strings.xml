@@ -28,8 +28,8 @@
     <string name="image_open_fail">打开失败，请重试</string>
     <string name="image_save_fail">图片保存失败</string>
     <string name="no_sdcard">请确认已插入SD卡</string>
-    <string name="camera_file_name">temp.jpg</string>
-    <string name="compress_file_name">IMG_%s.jpg</string>
+    <string name="camera_file_name">/camera.jpg</string>
+    <string name="compress_file_name">/IMG_%s.jpg</string>
     <string name="user_name">马儿%s</string>
     <string name="uploading_image">正在上传图片…</string>
     <string name="upload_image_fail">图片上传失败：%s</string>

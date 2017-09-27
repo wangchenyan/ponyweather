@@ -18,7 +18,7 @@ import me.wcy.weather.R;
 public class FileUtils {
 
     private static String getCachePath(Context context) {
-        return context.getExternalCacheDir().getPath() + File.separator;
+        return context.getExternalCacheDir().getPath();
     }
 
     public static String getCameraImagePath(Context context) {

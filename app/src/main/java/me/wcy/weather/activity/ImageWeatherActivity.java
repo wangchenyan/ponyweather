@@ -182,15 +182,15 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_camera:
-                pickImage(ImageUtils.ImageType.CAMERA);
+                pickImage(ImageUtils.PickType.CAMERA);
                 break;
             case R.id.fab_album:
-                pickImage(ImageUtils.ImageType.ALBUM);
+                pickImage(ImageUtils.PickType.ALBUM);
                 break;
         }
     }
 
-    private void pickImage(final ImageUtils.ImageType type) {
+    private void pickImage(final ImageUtils.PickType type) {
         if (!FileUtils.hasSDCard()) {
             SnackbarUtils.show(this, R.string.no_sdcard);
             return;
@@ -198,7 +198,8 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
         PermissionReq.with(this)
                 .permissions(Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
@@ -264,10 +265,8 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
-        int width = options.outWidth;
-        int height = options.outHeight;
         int inSampleSize;
-        int max = width > height ? width : height;
+        int max = Math.max(options.outWidth, options.outHeight);
         inSampleSize = max / 800;
         options.inJustDecodeBounds = false;
         options.inSampleSize = inSampleSize;
