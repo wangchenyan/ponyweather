@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -23,19 +24,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if (supportNightMode() && Preferences.isNightMode()) {
-            setTheme(R.style.AppThemeDark);
+        if (Preferences.isNightMode()) {
+            setTheme(getDarkTheme());
         }
 
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
-    /**
-     * 是否支持切换夜间模式
-     */
-    protected boolean supportNightMode() {
-        return true;
+    @StyleRes
+    protected int getDarkTheme() {
+        return R.style.AppThemeDark;
     }
 
     @Override

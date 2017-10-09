@@ -25,13 +25,13 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected boolean supportNightMode() {
-        return false;
+    protected int getDarkTheme() {
+        return R.style.AppTheme_Splash;
     }
 
     private void checkNightMode() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        Preferences.setNightMode(hour < 7 || hour >= 19);
+        Preferences.saveNightMode(hour < 7 || hour >= 19);
     }
 
     private void startWeather() {

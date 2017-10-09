@@ -20,7 +20,7 @@ public class Preferences {
         return getSharedPreferences().getBoolean(KEY_NIGHT_MODE, false);
     }
 
-    public static void setNightMode(boolean nightMode) {
+    public static void saveNightMode(boolean nightMode) {
         getSharedPreferences().edit().putBoolean(KEY_NIGHT_MODE, nightMode).apply();
     }
 
