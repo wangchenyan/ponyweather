@@ -1,10 +1,8 @@
 package me.wcy.weather.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.List;
 
@@ -23,7 +19,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import me.wcy.weather.R;
 import me.wcy.weather.model.ImageWeather;
-import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.binding.Bind;
 import me.wcy.weather.utils.binding.ViewBinder;
 
@@ -55,22 +50,14 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.item.setTag(mImageList.get(position));
         holder.llPraiseContainer.setTag(mImageList.get(position));
-        holder.tvLocation.setText(mImageList.get(position).getLocation().getDistrict() + mImageList.get(position).getLocation().getStreet());
-        holder.tvPraiseNum.setText(mImageList.get(position).getPraise() == 0L ? "" : String.valueOf(mImageList.get(position).getPraise()));
-        holder.ivImage.setImageResource(R.drawable.image_weather_placeholder);
+        holder.tvLocation.setText(mImageList.get(position).getLocation().getDistrict().concat(mImageList.get(position).getLocation().getStreet()));
+        holder.tvPraiseNum.setText((mImageList.get(position).getPraise() == 0L) ? "" : String.valueOf(mImageList.get(position).getPraise()));
         final String url = mImageList.get(position).getImageUrl();
-        holder.tvLocation.setTag(url);
         Glide.with(mContext)
                 .load(url)
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (!TextUtils.isEmpty(url) && url.equals(holder.tvLocation.getTag())) {
-                            holder.ivImage.setImageBitmap(resource);
-                        }
-                    }
-                });
+                .placeholder(R.drawable.image_weather_placeholder)
+                .error(R.drawable.image_weather_placeholder)
+                .into(holder.ivImage);
     }
 
     @Override
@@ -122,8 +109,6 @@ public class ImageWeatherAdapter extends RecyclerView.Adapter<ImageWeatherAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             ViewBinder.bind(this, itemView);
-            int minHeight = ScreenUtils.getScreenWidth() / 2 - ScreenUtils.dp2px(4) * 2;
-            ivImage.setMinimumHeight(minHeight);
         }
     }
 }

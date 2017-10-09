@@ -16,8 +16,8 @@
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:scaleType="centerCrop"
             android:src="@drawable/image_weather_placeholder" />
 
         <RelativeLayout

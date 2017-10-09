@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -16,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 
@@ -29,7 +29,6 @@ import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.ImageWeather;
 import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.KeyboardUtils;
-import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
@@ -64,11 +63,11 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_upload_image);
 
         path = getIntent().getStringExtra(Extras.IMAGE_PATH);
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
-        int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
-        int imageHeight = (int) ((float) bitmap.getHeight() / bitmap.getWidth() * imageWidth);
-        ivWeatherImage.setMinimumHeight(imageHeight);
-        ivWeatherImage.setImageBitmap(bitmap);
+        Glide.with(this)
+                .load(new File(path))
+                .placeholder(R.drawable.image_weather_placeholder)
+                .error(R.drawable.image_weather_placeholder)
+                .into(ivWeatherImage);
 
         Location location = (Location) getIntent().getSerializableExtra(Extras.LOCATION);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);

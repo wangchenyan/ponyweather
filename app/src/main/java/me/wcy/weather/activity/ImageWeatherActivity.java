@@ -33,6 +33,7 @@ import cn.bmob.v3.listener.FindListener;
 import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
+import me.wcy.weather.adapter.StaggeredGridSpacingItemDecoration;
 import me.wcy.weather.application.LoadMoreListener;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
@@ -41,6 +42,7 @@ import me.wcy.weather.model.Location;
 import me.wcy.weather.utils.FileUtils;
 import me.wcy.weather.utils.ImageUtils;
 import me.wcy.weather.utils.PermissionReq;
+import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
@@ -77,6 +79,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         mAdapter = new ImageWeatherAdapter(mImageList);
         mLoadMoreListener = new LoadMoreListener(this);
         rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        rvImage.addItemDecoration(new StaggeredGridSpacingItemDecoration(ScreenUtils.dp2px(8)));
         rvImage.setAdapter(mAdapter);
 
         mQuery.setLimit(QUERY_LIMIT);
@@ -91,7 +94,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void setListener() {
         mRefreshLayout.setOnRefreshListener(this);
-        rvImage.setOnScrollListener(mLoadMoreListener);
+        rvImage.addOnScrollListener(mLoadMoreListener);
         mAdapter.setOnItemClickListener(this);
         fabCamera.setOnClickListener(this);
         fabAlbum.setOnClickListener(this);

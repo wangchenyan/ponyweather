@@ -3,7 +3,6 @@ package me.wcy.weather.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -21,8 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -30,7 +27,6 @@ import me.wcy.weather.R;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.ImageWeather;
-import me.wcy.weather.utils.ScreenUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 
@@ -79,19 +75,11 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         tvTag.setMovementMethod(LinkMovementMethod.getInstance());
         setTimeAndPraise();
 
-        final int imageWidth = ScreenUtils.getScreenWidth() - ScreenUtils.dp2px(12) * 2;
-        ivWeatherImage.setMinimumHeight(imageWidth);
         Glide.with(this)
                 .load(mImageWeather.getImageUrl())
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        int imageHeight = (int) ((float) resource.getHeight() / resource.getWidth() * imageWidth);
-                        ivWeatherImage.setMinimumHeight(imageHeight);
-                        ivWeatherImage.setImageBitmap(resource);
-                    }
-                });
+                .placeholder(R.drawable.image_weather_placeholder)
+                .error(R.drawable.image_weather_placeholder)
+                .into(ivWeatherImage);
     }
 
     @Override
