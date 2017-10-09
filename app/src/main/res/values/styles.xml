@@ -4,15 +4,25 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="cardStyle">@style/CardView.Light</item>
     </style>
 
+    <style name="AppBaseThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="cardStyle">@style/CardView.Dark</item>
+    </style>
+
+    <attr name="cardStyle" format="reference" />
+
     <style name="AppTheme" parent="AppBaseTheme" />
+
+    <style name="AppThemeDark" parent="AppBaseThemeDark" />
 
     <style name="AppTheme.Splash" parent="AppBaseTheme">
         <item name="android:windowIsTranslucent">true</item>
     </style>
-
-    <style name="AppTheme.CardView" parent="CardView" />
 
     <style name="AppTheme.FabLabel">
         <item name="android:background">@drawable/fab_label_background</item>

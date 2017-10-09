@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import me.wcy.weather.R;
 import me.wcy.weather.utils.PermissionReq;
+import me.wcy.weather.utils.Preferences;
 import me.wcy.weather.utils.binding.ViewBinder;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -22,8 +23,19 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (supportNightMode() && Preferences.isNightMode()) {
+            setTheme(R.style.AppThemeDark);
+        }
+
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    }
+
+    /**
+     * 是否支持切换夜间模式
+     */
+    protected boolean supportNightMode() {
+        return true;
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import java.util.Calendar;
 
 import me.wcy.weather.R;
-import me.wcy.weather.application.WeatherApplication;
+import me.wcy.weather.utils.Preferences;
 
 public class SplashActivity extends BaseActivity {
 
@@ -15,7 +15,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        initNightMode();
+        checkNightMode();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -24,9 +24,14 @@ public class SplashActivity extends BaseActivity {
         }, 1000);
     }
 
-    private void initNightMode() {
+    @Override
+    protected boolean supportNightMode() {
+        return false;
+    }
+
+    private void checkNightMode() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        WeatherApplication.updateNightMode(hour >= 19 || hour < 7);
+        Preferences.setNightMode(hour < 7 || hour >= 19);
     }
 
     private void startWeather() {
