@@ -1,6 +1,7 @@
 package me.wcy.weather.activity;
 
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -58,7 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initView() {
         ViewBinder.bind(this);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         if (mToolbar == null) {
             throw new IllegalStateException("Layout is required to include a Toolbar with id 'toolbar'");
         }
@@ -90,5 +91,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isDestroyedCompat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return super.isDestroyed();
+        } else {
+            return getSupportFragmentManager().isDestroyed();
+        }
     }
 }

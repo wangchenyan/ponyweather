@@ -1,9 +1,11 @@
 package me.wcy.weather.addcity;
 
-import android.database.Observable;
+import android.app.Activity;
+import android.content.Context;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import me.wcy.weather.BaseModel;
 import me.wcy.weather.BasePresenter;
 import me.wcy.weather.BaseView;
@@ -15,19 +17,25 @@ import me.wcy.weather.model.CityEntity;
 public interface AddCityContract {
 
     interface Model extends BaseModel {
-        Observable<List<CityEntity>> getProvince();
+        Observable<CityEntity> getAllCity(Context context);
 
-        Observable<List<CityEntity>> getCity(String province);
+        Observable<List<CityEntity>> getProvince(Context context);
 
-        Observable<List<CityEntity>> getArea(String city);
+        Observable<List<CityEntity>> getCity(Context context, String province);
 
-        Observable<List<CityEntity>> search(String keyword);
+        Observable<List<CityEntity>> getArea(Context context, String city);
+
+        Observable<List<CityEntity>> search(Context context, String keyword);
     }
 
-    interface View extends BaseView<Presenter> {
-        void showProgress();
+    interface View extends BaseView {
+        Activity getActivity();
+
+        void showProgress(String message);
 
         void cancelProgress();
+
+        void showSnack(CharSequence message);
 
         void showProvince(List<CityEntity> provinceList);
 
@@ -37,22 +45,30 @@ public interface AddCityContract {
 
         void showSearching();
 
-        void showSearchEmpty();
+        void cancelSearch();
 
-        void showSearchResult(List<CityEntity> searchList);
+        void showSearchSuccess(List<CityEntity> searchList);
+
+        void showSearchError();
+
+        void setTitle(CharSequence title);
+
+        void finish();
     }
 
     interface Presenter extends BasePresenter {
-        void search(String keyword);
-
-        void itemClick();
-
         void showProvince();
 
         void showCity(String province);
 
         void showArea(String city);
 
+        void search(String keyword);
+
         void locate();
+
+        void onItemClick(CityEntity cityEntity);
+
+        void onBackPressed();
     }
 }

@@ -204,7 +204,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
                     @Override
                     public void onDenied() {
                         onLocated(null);
-                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, "位置信息", "获取当前位置"));
+                        SnackbarUtils.show(WeatherActivity.this, "没有位置信息权限，无法获取当前位置！");
                     }
                 })
                 .request();
@@ -381,7 +381,7 @@ public class WeatherActivity extends BaseActivity implements AMapLocationListene
 
                     @Override
                     public void onDenied() {
-                        SnackbarUtils.show(WeatherActivity.this, getString(R.string.no_permission, "位置信息", "打开实景天气"));
+                        SnackbarUtils.show(WeatherActivity.this, "没有位置信息权限，无法打开实景天气！");
                     }
                 })
                 .request();

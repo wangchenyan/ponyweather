@@ -211,7 +211,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onDenied() {
-                        SnackbarUtils.show(ImageWeatherActivity.this, getString(R.string.no_permission, "获取手机信息", "上传实景"));
+                        SnackbarUtils.show(ImageWeatherActivity.this, "没有获取手机信息权限，无法上传实景！");
                     }
                 })
                 .request();
