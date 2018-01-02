@@ -1,4 +1,4 @@
-package me.wcy.weather.activity;
+package me.wcy.weather.addcity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -16,17 +16,13 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.wcy.weather.R;
+import me.wcy.weather.activity.BaseActivity;
 import me.wcy.weather.adapter.AddCityAdapter;
-import me.wcy.weather.adapter.OnItemClickListener;
-import me.wcy.weather.addcity.AddCityContract;
-import me.wcy.weather.addcity.AddCityPresenter;
-import me.wcy.weather.addcity.AddCityRepository;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.binding.Bind;
 
-public class AddCityActivity extends BaseActivity implements AddCityContract.View, View.OnClickListener
-        , OnItemClickListener, SearchView.OnQueryTextListener {
+public class AddCityActivity extends BaseActivity implements AddCityContract.View, View.OnClickListener, SearchView.OnQueryTextListener {
     @Bind(R.id.rv_city)
     private RecyclerView rvCity;
     @Bind(R.id.fab_location)
@@ -43,14 +39,13 @@ public class AddCityActivity extends BaseActivity implements AddCityContract.Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_city);
 
-        mAddCityAdapter = new AddCityAdapter();
+        presenter = new AddCityPresenter(new AddCityRepository(), this);
+        mAddCityAdapter = new AddCityAdapter(presenter);
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
         rvCity.setAdapter(mAddCityAdapter);
 
         fabLocation.setOnClickListener(this);
-        mAddCityAdapter.setOnItemClickListener(this);
 
-        presenter = new AddCityPresenter(new AddCityRepository(), this);
         presenter.onCreate();
         presenter.showProvince();
     }
@@ -90,21 +85,21 @@ public class AddCityActivity extends BaseActivity implements AddCityContract.Vie
     @Override
     public void showProvince(List<CityEntity> provinceList) {
         rvCity.scrollToPosition(0);
-        mAddCityAdapter.setDataAndType(provinceList, AddCityAdapter.Type.PROVINCE);
+        mAddCityAdapter.setCityList(provinceList);
         mAddCityAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showCity(List<CityEntity> cityList) {
         rvCity.scrollToPosition(0);
-        mAddCityAdapter.setDataAndType(cityList, AddCityAdapter.Type.CITY);
+        mAddCityAdapter.setCityList(cityList);
         mAddCityAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showArea(List<CityEntity> areaList) {
         rvCity.scrollToPosition(0);
-        mAddCityAdapter.setDataAndType(areaList, AddCityAdapter.Type.AREA);
+        mAddCityAdapter.setCityList(areaList);
         mAddCityAdapter.notifyDataSetChanged();
     }
 
@@ -126,7 +121,7 @@ public class AddCityActivity extends BaseActivity implements AddCityContract.Vie
         tvSearchTips.setVisibility(View.GONE);
         rvCity.setVisibility(View.VISIBLE);
         rvCity.scrollToPosition(0);
-        mAddCityAdapter.setDataAndType(searchList, AddCityAdapter.Type.SEARCH);
+        mAddCityAdapter.setCityList(searchList);
         mAddCityAdapter.notifyDataSetChanged();
     }
 
@@ -168,12 +163,6 @@ public class AddCityActivity extends BaseActivity implements AddCityContract.Vie
                 presenter.locate();
                 break;
         }
-    }
-
-    @Override
-    public void onItemClick(View view, Object data) {
-        CityEntity cityInfo = (CityEntity) data;
-        presenter.onItemClick(cityInfo);
     }
 
     @Override

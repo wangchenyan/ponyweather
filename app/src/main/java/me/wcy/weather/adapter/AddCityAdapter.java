@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.weather.R;
+import me.wcy.weather.addcity.AddCityContract;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfo;
@@ -17,16 +18,14 @@ import me.wcy.weather.utils.ACache;
 public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> implements View.OnClickListener {
     private List<CityEntity> mCityList = new ArrayList<>();
     private List<String> mAddedCityList = new ArrayList<>();
-    private OnItemClickListener mListener;
-    private Type mType;
+    private AddCityContract.Presenter presenter;
 
-    public void setDataAndType(List<CityEntity> data, Type type) {
-        mCityList = data;
-        mType = type;
+    public AddCityAdapter(AddCityContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
+    public void setCityList(List<CityEntity> cityList) {
+        mCityList = cityList;
     }
 
     @Override
@@ -45,25 +44,27 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
 
     @Override
     public void onBindViewHolder(CityViewHolder holder, int position) {
-        holder.item.setTag(mCityList.get(position));
-        switch (mType) {
+        CityEntity cityEntity = mCityList.get(position);
+        holder.item.setTag(cityEntity);
+        String name = null;
+        String remark = null;
+        switch (presenter.getType()) {
             case PROVINCE:
-                holder.tvCity.setText(mCityList.get(position).getProvince());
+                name = cityEntity.getProvince();
                 break;
             case CITY:
-                holder.tvCity.setText(mCityList.get(position).getCity());
+                name = cityEntity.getCity();
                 break;
             case AREA:
-                holder.tvCity.setText(mCityList.get(position).getArea());
-                holder.tvRemark.setText(mAddedCityList.contains(mCityList.get(position).getArea()) ? "已添加" : "");
+                name = cityEntity.getArea();
+                remark = mAddedCityList.contains(cityEntity.getArea()) ? "已添加" : null;
                 break;
             case SEARCH:
-                String result = mCityList.get(position).getArea()
-                        + " - " + mCityList.get(position).getCity()
-                        + ", " + mCityList.get(position).getProvince();
-                holder.tvCity.setText(result);
+                name = cityEntity.getArea() + " - " + cityEntity.getCity() + ", " + cityEntity.getProvince();
                 break;
         }
+        holder.tvCity.setText(name);
+        holder.tvRemark.setText(remark);
     }
 
     @Override
@@ -73,13 +74,6 @@ public class AddCityAdapter extends RecyclerView.Adapter<CityViewHolder> impleme
 
     @Override
     public void onClick(View v) {
-        mListener.onItemClick(v, v.getTag());
-    }
-
-    public enum Type {
-        PROVINCE,
-        CITY,
-        AREA,
-        SEARCH
+        presenter.onItemClick((CityEntity) v.getTag());
     }
 }

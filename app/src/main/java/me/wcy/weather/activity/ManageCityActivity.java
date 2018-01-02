@@ -15,6 +15,7 @@ import me.wcy.weather.R;
 import me.wcy.weather.adapter.ManageCityAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.adapter.OnItemLongClickListener;
+import me.wcy.weather.addcity.AddCityActivity;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.CityInfo;

@@ -9,6 +9,7 @@ import io.reactivex.Observable;
 import me.wcy.weather.BaseModel;
 import me.wcy.weather.BasePresenter;
 import me.wcy.weather.BaseView;
+import me.wcy.weather.constants.CityType;
 import me.wcy.weather.model.CityEntity;
 
 /**
@@ -70,5 +71,7 @@ public interface AddCityContract {
         void onItemClick(CityEntity cityEntity);
 
         void onBackPressed();
+
+        CityType getType();
     }
 }

@@ -13,9 +13,9 @@ import java.util.List;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import me.wcy.weather.R;
-import me.wcy.weather.adapter.AddCityAdapter;
 import me.wcy.weather.application.Callback;
 import me.wcy.weather.application.LocationManager;
+import me.wcy.weather.constants.CityType;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.model.CityInfo;
@@ -29,7 +29,7 @@ import me.wcy.weather.utils.Utils;
 public class AddCityPresenter implements AddCityContract.Presenter {
     private AddCityContract.Model model;
     private AddCityContract.View view;
-    private AddCityAdapter.Type currentType;
+    private CityType currentType;
     private String currentProvince;
     private String keyword;
 
@@ -62,7 +62,7 @@ public class AddCityPresenter implements AddCityContract.Presenter {
                         view.cancelProgress();
                         view.setTitle(view.getContext().getString(R.string.add_city));
                         view.showProvince(cityEntities);
-                        currentType = AddCityAdapter.Type.PROVINCE;
+                        currentType = CityType.PROVINCE;
                     }
 
                     @Override
@@ -91,7 +91,7 @@ public class AddCityPresenter implements AddCityContract.Presenter {
                         view.cancelProgress();
                         view.setTitle(province);
                         view.showCity(cityEntities);
-                        currentType = AddCityAdapter.Type.CITY;
+                        currentType = CityType.CITY;
                     }
 
                     @Override
@@ -120,7 +120,7 @@ public class AddCityPresenter implements AddCityContract.Presenter {
                         view.cancelProgress();
                         view.setTitle(city);
                         view.showArea(cityEntities);
-                        currentType = AddCityAdapter.Type.AREA;
+                        currentType = CityType.AREA;
                     }
 
                     @Override
@@ -162,7 +162,7 @@ public class AddCityPresenter implements AddCityContract.Presenter {
                             view.showSearchError();
                         } else {
                             view.showSearchSuccess(cityEntities);
-                            currentType = AddCityAdapter.Type.SEARCH;
+                            currentType = CityType.SEARCH;
                         }
                     }
 
@@ -207,25 +207,30 @@ public class AddCityPresenter implements AddCityContract.Presenter {
 
     @Override
     public void onItemClick(CityEntity cityEntity) {
-        if (currentType == AddCityAdapter.Type.PROVINCE) {
+        if (currentType == CityType.PROVINCE) {
             currentProvince = cityEntity.getProvince();
             showCity(currentProvince);
-        } else if (currentType == AddCityAdapter.Type.CITY) {
+        } else if (currentType == CityType.CITY) {
             showArea(cityEntity.getCity());
-        } else if (currentType == AddCityAdapter.Type.AREA || currentType == AddCityAdapter.Type.SEARCH) {
+        } else if (currentType == CityType.AREA || currentType == CityType.SEARCH) {
             backToWeather(cityEntity.getArea(), false);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (currentType == AddCityAdapter.Type.PROVINCE || currentType == AddCityAdapter.Type.SEARCH) {
+        if (currentType == CityType.PROVINCE || currentType == CityType.SEARCH) {
             view.finish();
-        } else if (currentType == AddCityAdapter.Type.CITY) {
+        } else if (currentType == CityType.CITY) {
             showProvince();
-        } else if (currentType == AddCityAdapter.Type.AREA) {
+        } else if (currentType == CityType.AREA) {
             showCity(currentProvince);
         }
+    }
+
+    @Override
+    public CityType getType() {
+        return currentType;
     }
 
     private Callback<AMapLocation> mLocationObserver = new Callback<AMapLocation>() {
