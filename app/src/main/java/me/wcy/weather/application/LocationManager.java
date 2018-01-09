@@ -65,6 +65,14 @@ public class LocationManager {
     private AMapLocationListener mLocationListener = amapLocation -> {
         if (amapLocation == null) {
             Log.e("AmapError", "amapLocation is null");
+            return;
+        }
+
+        if (amapLocation.getErrorCode() != 0) {
+            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+            Log.e("AmapError", "location Error, ErrCode:"
+                    + amapLocation.getErrorCode() + ", errInfo:"
+                    + amapLocation.getErrorInfo());
         }
 
         for (Callback<AMapLocation> observer : mObserverList) {

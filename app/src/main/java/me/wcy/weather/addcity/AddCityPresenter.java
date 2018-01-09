@@ -237,7 +237,7 @@ public class AddCityPresenter implements AddCityContract.Presenter {
         @Override
         public void onEvent(AMapLocation aMapLocation) {
             view.cancelProgress();
-            if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
+            if (aMapLocation.getErrorCode() == 0) {
                 backToWeather(Utils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict()), true);
             } else {
                 view.showSnack(view.getContext().getString(R.string.locate_fail));

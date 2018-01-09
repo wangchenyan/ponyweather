@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -34,7 +32,9 @@ import me.wcy.weather.R;
 import me.wcy.weather.adapter.ImageWeatherAdapter;
 import me.wcy.weather.adapter.OnItemClickListener;
 import me.wcy.weather.adapter.StaggeredGridSpacingItemDecoration;
+import me.wcy.weather.application.Callback;
 import me.wcy.weather.application.LoadMoreListener;
+import me.wcy.weather.application.LocationManager;
 import me.wcy.weather.constants.Extras;
 import me.wcy.weather.constants.RequestCode;
 import me.wcy.weather.model.ImageWeather;
@@ -48,8 +48,7 @@ import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
 
 public class ImageWeatherActivity extends BaseActivity implements View.OnClickListener
-        , SwipeRefreshLayout.OnRefreshListener, AMapLocationListener, LoadMoreListener.Listener
-        , OnItemClickListener {
+        , SwipeRefreshLayout.OnRefreshListener, LoadMoreListener.Listener, OnItemClickListener {
     private static final String TAG = "ImageWeatherActivity";
     private static final int QUERY_LIMIT = 20;
     @Bind(R.id.appbar)
@@ -68,7 +67,6 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
     private LoadMoreListener mLoadMoreListener;
     private List<ImageWeather> mImageList = new ArrayList<>();
     private BmobQuery<ImageWeather> mQuery = new BmobQuery<>();
-    private AMapLocationClient mLocationClient;
     private Location mLocation = new Location();
 
     @Override
@@ -85,8 +83,8 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         mQuery.setLimit(QUERY_LIMIT);
         mQuery.order("-createdAt");
 
-        mLocationClient = Utils.initAMapLocation(this, this);
-        mLocationClient.startLocation();
+        LocationManager.get().addLocationObserver(mLocationObserver);
+        LocationManager.get().start();
 
         mRefreshLayout.post(() -> mRefreshLayout.setRefreshing(true));
     }
@@ -106,34 +104,24 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         famAddPhoto.collapse();
     }
 
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            mLocationClient.stopLocation();
-            if (aMapLocation.getErrorCode() == 0 && !TextUtils.isEmpty(aMapLocation.getCity())) {
-                // 定位成功回调信息，设置相关消息
-                mLocation.setAddress(aMapLocation.getAddress());
-                mLocation.setCountry(aMapLocation.getCountry());
-                mLocation.setProvince(aMapLocation.getProvince());
-                mLocation.setCity(aMapLocation.getCity());
-                mLocation.setDistrict(aMapLocation.getDistrict());
-                mLocation.setStreet(aMapLocation.getStreet());
-                mLocation.setStreetNum(aMapLocation.getStreetNum());
+    private Callback<AMapLocation> mLocationObserver = aMapLocation -> {
+        if (aMapLocation.getErrorCode() == 0) {
+            mLocation.setAddress(aMapLocation.getAddress());
+            mLocation.setCountry(aMapLocation.getCountry());
+            mLocation.setProvince(aMapLocation.getProvince());
+            mLocation.setCity(aMapLocation.getCity());
+            mLocation.setDistrict(aMapLocation.getDistrict());
+            mLocation.setStreet(aMapLocation.getStreet());
+            mLocation.setStreetNum(aMapLocation.getStreetNum());
 
-                String city = Utils.formatCity(mLocation.getCity());
-                mQuery.addWhereEqualTo("city", city);
-                onRefresh();
-            } else {
-                // 定位失败
-                // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError", "location Error, ErrCode:"
-                        + aMapLocation.getErrorCode() + ", errInfo:"
-                        + aMapLocation.getErrorInfo());
-                Toast.makeText(this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            String city = Utils.formatCity(mLocation.getCity());
+            mQuery.addWhereEqualTo("city", city);
+            onRefresh();
+        } else {
+            Toast.makeText(ImageWeatherActivity.this, R.string.locate_fail, Toast.LENGTH_SHORT).show();
+            finish();
         }
-    }
+    };
 
     @Override
     public void onRefresh() {
@@ -285,7 +273,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void onDestroy() {
-        mLocationClient.onDestroy();
+        LocationManager.get().removeLocationObserver(mLocationObserver);
         super.onDestroy();
     }
 }

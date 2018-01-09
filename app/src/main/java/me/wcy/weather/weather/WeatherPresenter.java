@@ -41,7 +41,6 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
     @Override
     public void onCreate() {
-        LocationManager.get().addLocationObserver(mLocationObserver);
         mCity = model.getCurrentCity();
         // 首次进入
         if (mCity == null) {
@@ -64,7 +63,6 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
     @Override
     public void onDestroy() {
-        LocationManager.get().removeLocationObserver(mLocationObserver);
     }
 
     @Override
@@ -149,6 +147,7 @@ public class WeatherPresenter implements WeatherContract.Presenter {
                 .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
+                        LocationManager.get().addLocationObserver(mLocationObserver);
                         LocationManager.get().start();
                     }
 
@@ -164,8 +163,9 @@ public class WeatherPresenter implements WeatherContract.Presenter {
     private Callback<AMapLocation> mLocationObserver = new Callback<AMapLocation>() {
         @Override
         public void onEvent(AMapLocation aMapLocation) {
+            LocationManager.get().removeLocationObserver(mLocationObserver);
             String city = null;
-            if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
+            if (aMapLocation.getErrorCode() == 0) {
                 city = Utils.formatCity(aMapLocation.getCity(), aMapLocation.getDistrict());
             } else {
                 view.showSnack(view.getContext().getString(R.string.locate_fail));
