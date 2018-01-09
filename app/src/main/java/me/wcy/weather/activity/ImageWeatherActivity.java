@@ -88,7 +88,7 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         mLocationClient = Utils.initAMapLocation(this, this);
         mLocationClient.startLocation();
 
-        Utils.setRefreshingOnCreate(mRefreshLayout);
+        mRefreshLayout.post(() -> mRefreshLayout.setRefreshing(true));
     }
 
     @Override

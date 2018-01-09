@@ -1,5 +1,6 @@
 package me.wcy.weather;
 
+import android.app.Activity;
 import android.content.Context;
 
 /**
@@ -9,4 +10,6 @@ public interface BaseView {
     boolean isDestroy();
 
     Context getContext();
+
+    Activity getActivity();
 }

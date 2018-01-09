@@ -3,11 +3,8 @@ package me.wcy.weather.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -26,16 +23,6 @@ import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.Weather;
 
 public class Utils {
-
-    public static void setRefreshingOnCreate(final SwipeRefreshLayout refreshLayout) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        }, 200);
-    }
 
     public static AMapLocationClient initAMapLocation(Context context, AMapLocationListener aMapLocationListener) {
         AMapLocationClient aMapLocationClient = new AMapLocationClient(context.getApplicationContext());

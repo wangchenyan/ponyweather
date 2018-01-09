@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import me.wcy.weather.R;
 import me.wcy.weather.utils.Preferences;
+import me.wcy.weather.weather.WeatherActivity;
 
 public class SplashActivity extends BaseActivity {
 

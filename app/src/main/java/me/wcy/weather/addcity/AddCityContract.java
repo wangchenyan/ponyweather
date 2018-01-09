@@ -1,6 +1,5 @@
 package me.wcy.weather.addcity;
 
-import android.app.Activity;
 import android.content.Context;
 
 import java.util.List;
@@ -30,8 +29,6 @@ public interface AddCityContract {
     }
 
     interface View extends BaseView {
-        Activity getActivity();
-
         void showProgress(String message);
 
         void cancelProgress();

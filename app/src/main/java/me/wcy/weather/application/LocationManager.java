@@ -65,7 +65,6 @@ public class LocationManager {
     private AMapLocationListener mLocationListener = amapLocation -> {
         if (amapLocation == null) {
             Log.e("AmapError", "amapLocation is null");
-            return;
         }
 
         for (Callback<AMapLocation> observer : mObserverList) {
