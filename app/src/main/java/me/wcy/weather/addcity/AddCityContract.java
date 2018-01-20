@@ -26,6 +26,8 @@ public interface AddCityContract {
         Observable<List<CityEntity>> getArea(Context context, String city);
 
         Observable<List<CityEntity>> search(Context context, String keyword);
+
+        List<String> getAddedCity(Context context);
     }
 
     interface View extends BaseView {
@@ -70,5 +72,7 @@ public interface AddCityContract {
         void onBackPressed();
 
         CityType getType();
+
+        List<String> getAddedCity();
     }
 }

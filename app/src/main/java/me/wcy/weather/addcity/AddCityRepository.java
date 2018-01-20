@@ -16,7 +16,10 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import me.wcy.weather.constants.Extras;
 import me.wcy.weather.model.CityEntity;
+import me.wcy.weather.model.CityInfo;
+import me.wcy.weather.utils.ACache;
 
 /**
  * Created by wcy on 2017/12/30.
@@ -74,6 +77,19 @@ public class AddCityRepository implements AddCityContract.Model {
                 .toSortedList()
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public List<String> getAddedCity(Context context) {
+        List<String> addedCityList = new ArrayList<>();
+        ACache cache = ACache.get(context);
+        List<CityInfo> cityList = (List<CityInfo>) cache.getAsObject(Extras.CITY_LIST);
+        for (CityInfo cityInfo : cityList) {
+            if (!cityInfo.isAutoLocate) {
+                addedCityList.add(cityInfo.name);
+            }
+        }
+        return addedCityList;
     }
 
     private String readJsonFromAssets(AssetManager assetManager) {

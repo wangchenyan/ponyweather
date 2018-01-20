@@ -32,6 +32,7 @@ public class AddCityPresenter implements AddCityContract.Presenter {
     private CityType currentType;
     private String currentProvince;
     private String keyword;
+    private List<String> addedCityList;
 
     public AddCityPresenter(AddCityContract.Model model, AddCityContract.View view) {
         this.model = model;
@@ -231,6 +232,14 @@ public class AddCityPresenter implements AddCityContract.Presenter {
     @Override
     public CityType getType() {
         return currentType;
+    }
+
+    @Override
+    public List<String> getAddedCity() {
+        if (addedCityList == null) {
+            addedCityList = model.getAddedCity(view.getContext());
+        }
+        return addedCityList;
     }
 
     private Callback<AMapLocation> mLocationObserver = new Callback<AMapLocation>() {
