@@ -1,9 +1,8 @@
 package me.wcy.weather.model;
 
 import cn.bmob.v3.BmobObject;
-import me.wcy.weather.utils.proguard.NoProGuard;
 
-public class ImageWeather extends BmobObject implements NoProGuard {
+public class ImageWeather extends BmobObject {
     /**
      * 用户名
      */

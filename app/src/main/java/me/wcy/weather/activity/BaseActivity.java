@@ -1,5 +1,6 @@
 package me.wcy.weather.activity;
 
+import android.app.ProgressDialog;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +21,9 @@ import me.wcy.weather.utils.Preferences;
 import me.wcy.weather.utils.binding.ViewBinder;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    protected Toolbar mToolbar;
-    protected Handler mHandler = new Handler(Looper.getMainLooper());
+    protected Toolbar toolbar;
+    protected Handler handler;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
+        handler = new Handler(Looper.getMainLooper());
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
@@ -59,23 +62,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initView() {
         ViewBinder.bind(this);
 
-        mToolbar = findViewById(R.id.toolbar);
-        if (mToolbar == null) {
+        toolbar = findViewById(R.id.toolbar);
+        if (toolbar == null) {
             throw new IllegalStateException("Layout is required to include a Toolbar with id 'toolbar'");
         }
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setListener();
-    }
-
-    protected void setListener() {
     }
 
     @Override
@@ -98,6 +92,27 @@ public abstract class BaseActivity extends AppCompatActivity {
             return super.isDestroyed();
         } else {
             return getSupportFragmentManager().isDestroyed();
+        }
+    }
+
+    public void showProgress() {
+        showProgress("请稍后…");
+    }
+
+    public void showProgress(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+        }
+        progressDialog.setMessage(message);
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+    }
+
+    public void cancelProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.cancel();
         }
     }
 }

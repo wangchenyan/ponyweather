@@ -3,7 +3,6 @@ package me.wcy.weather.utils;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -65,12 +64,7 @@ public class UpdateUtils {
         new AlertDialog.Builder(activity)
                 .setTitle("发现新版本")
                 .setMessage(message)
-                .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        download(activity, updateInfo);
-                    }
-                })
+                .setPositiveButton("立即更新", (dialog, which) -> download(activity, updateInfo))
                 .setNegativeButton("稍后提醒", null)
                 .show();
     }

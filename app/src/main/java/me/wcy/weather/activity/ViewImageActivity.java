@@ -1,7 +1,6 @@
 package me.wcy.weather.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -47,7 +46,6 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
     @Bind(R.id.tv_praise)
     private TextView tvPraise;
     private ImageWeather mImageWeather;
-    private ProgressDialog mProgressDialog;
 
     public static void start(Activity activity, ImageWeather imageWeather, ActivityOptionsCompat activityOptions) {
         Intent intent = new Intent(activity, ViewImageActivity.class);
@@ -61,12 +59,10 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_view_image);
 
         mImageWeather = (ImageWeather) getIntent().getSerializableExtra(Extras.IMAGE_WEATHER);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.setCancelable(false);
 
         ViewCompat.setTransitionName(ivWeatherImage, Extras.VIEW_NAME_WEATHER_IMAGE);
 
+        tvPraise.setOnClickListener(this);
         tvLocation.setText(mImageWeather.getLocation().getAddress());
         tvUserName.setText(mImageWeather.getUserName());
         tvSay.setText(mImageWeather.getSay());
@@ -80,11 +76,6 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
                 .placeholder(R.drawable.image_weather_placeholder)
                 .error(R.drawable.image_weather_placeholder)
                 .into(ivWeatherImage);
-    }
-
-    @Override
-    protected void setListener() {
-        tvPraise.setOnClickListener(this);
     }
 
     private void setTimeAndPraise() {
@@ -113,13 +104,13 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void praise() {
-        mProgressDialog.show();
+        showProgress();
         mImageWeather.increment("praise");
         mImageWeather.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    mProgressDialog.cancel();
+                    cancelProgress();
                     mImageWeather.setPraise(mImageWeather.getPraise() + 1);
                     setTimeAndPraise();
 
@@ -128,7 +119,7 @@ public class ViewImageActivity extends BaseActivity implements View.OnClickListe
                     setResult(RESULT_OK, data);
                 } else {
                     Log.e(TAG, "praise fail", e);
-                    mProgressDialog.cancel();
+                    cancelProgress();
                 }
             }
         });

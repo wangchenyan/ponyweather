@@ -50,7 +50,7 @@ public class AddCityViewHolder extends RViewHolder<CityEntity> implements View.O
                 remark = presenter.getAddedCity().contains(data.getArea()) ? "已添加" : null;
                 break;
             case SEARCH:
-                name = data.getArea() + " - " + data.getCity() + ", " + data.getProvince();
+                name = data.getArea().concat(" - ").concat(data.getCity()).concat(", ").concat(data.getProvince());
                 break;
         }
         tvCity.setText(name);

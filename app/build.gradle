@@ -68,7 +68,7 @@ def getLocalValue(String key, boolean quot) {
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     def value = properties.containsKey(key) ? properties.get(key) : ""
     if (quot) {
-        value = "\"" + value + "\"";
+        value = "\"" + value + "\""
     }
     return value
 }

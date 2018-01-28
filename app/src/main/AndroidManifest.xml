@@ -46,18 +46,14 @@
         </provider>
 
         <activity
-            android:name=".activity.SplashActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Splash">
+            android:name=".weather.WeatherActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".weather.WeatherActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ImageWeatherActivity"
             android:label="@string/moment"

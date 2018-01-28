@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Calendar;
+
 /**
  * Created by hzwangchenyan on 2017/10/9.
  */
@@ -20,7 +22,9 @@ public class Preferences {
         return getSharedPreferences().getBoolean(KEY_NIGHT_MODE, false);
     }
 
-    public static void saveNightMode(boolean nightMode) {
+    public static void updateNightMode() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        boolean nightMode = (hour < 7 || hour >= 19);
         getSharedPreferences().edit().putBoolean(KEY_NIGHT_MODE, nightMode).apply();
     }
 

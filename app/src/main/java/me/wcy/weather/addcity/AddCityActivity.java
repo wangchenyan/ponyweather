@@ -1,7 +1,6 @@
 package me.wcy.weather.addcity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,7 +32,6 @@ public class AddCityActivity extends BaseActivity implements AddCityContract.Vie
     @Bind(R.id.tv_search_tips)
     private TextView tvSearchTips;
 
-    private ProgressDialog mProgressDialog;
     private List<CityEntity> cityEntityList = new ArrayList<>();
     private RAdapter<CityEntity> adapter;
     private AddCityContract.Presenter presenter;
@@ -63,23 +61,6 @@ public class AddCityActivity extends BaseActivity implements AddCityContract.Vie
     @Override
     public Activity getActivity() {
         return this;
-    }
-
-    @Override
-    public void showProgress(String message) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setCancelable(false);
-        }
-        mProgressDialog.setMessage(message);
-        mProgressDialog.show();
-    }
-
-    @Override
-    public void cancelProgress() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.cancel();
-        }
     }
 
     @Override

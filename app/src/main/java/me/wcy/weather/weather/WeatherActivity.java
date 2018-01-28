@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import me.wcy.weather.adapter.HourlyForecastAdapter;
 import me.wcy.weather.adapter.SuggestionAdapter;
 import me.wcy.weather.model.Weather;
 import me.wcy.weather.utils.ImageUtils;
+import me.wcy.weather.utils.Preferences;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.Utils;
 import me.wcy.weather.utils.binding.Bind;
@@ -73,12 +75,17 @@ public class WeatherActivity extends BaseActivity implements WeatherContract.Vie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Preferences.updateNightMode();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         }
+
+        mNavigationView.setNavigationItemSelectedListener(this);
+        fabSpeech.setOnClickListener(this);
+        mRefreshLayout.setOnRefreshListener(this);
 
         WeatherContract.Model model = new WeatherRepository(this);
         presenter = new WeatherPresenter(model, this);
@@ -99,13 +106,6 @@ public class WeatherActivity extends BaseActivity implements WeatherContract.Vie
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         collapsingToolbar.setTitle(title);
-    }
-
-    @Override
-    protected void setListener() {
-        mNavigationView.setNavigationItemSelectedListener(this);
-        fabSpeech.setOnClickListener(this);
-        mRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -205,9 +205,9 @@ public class WeatherActivity extends BaseActivity implements WeatherContract.Vie
     }
 
     @Override
-    public boolean onNavigationItemSelected(final MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         mDrawerLayout.closeDrawers();
-        mHandler.postDelayed(() -> item.setChecked(false), 500);
+        handler.postDelayed(() -> item.setChecked(false), 500);
         switch (item.getItemId()) {
             case R.id.action_image_weather:
                 presenter.startImageWeather();

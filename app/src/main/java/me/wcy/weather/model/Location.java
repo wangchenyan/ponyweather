@@ -1,10 +1,11 @@
 package me.wcy.weather.model;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
-import me.wcy.weather.utils.proguard.NoProGuard;
-
-public class Location implements Serializable, NoProGuard {
+@Keep
+public class Location implements Serializable {
     private String address;
     private String country;
     private String province;

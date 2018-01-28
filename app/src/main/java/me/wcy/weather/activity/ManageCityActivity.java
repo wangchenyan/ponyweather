@@ -41,10 +41,6 @@ public class ManageCityActivity extends BaseActivity implements View.OnClickList
         adapter.setTag(mACache);
         rvCity.setLayoutManager(new LinearLayoutManager(rvCity.getContext()));
         rvCity.setAdapter(adapter);
-    }
-
-    @Override
-    protected void setListener() {
         fabAdd.setOnClickListener(this);
     }
 

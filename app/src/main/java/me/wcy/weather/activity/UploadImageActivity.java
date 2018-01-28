@@ -1,7 +1,7 @@
 package me.wcy.weather.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,7 +47,6 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
     @Bind(R.id.btn_upload)
     private Button btnUpload;
     private ImageWeather imageWeather = new ImageWeather();
-    private ProgressDialog mProgressDialog;
     private String path;
 
     public static void start(Activity activity, Location location, String path) {
@@ -68,9 +67,11 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
                 .placeholder(R.drawable.image_weather_placeholder)
                 .error(R.drawable.image_weather_placeholder)
                 .into(ivWeatherImage);
+        btnUpload.setOnClickListener(this);
 
         Location location = (Location) getIntent().getSerializableExtra(Extras.LOCATION);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        @SuppressLint({"MissingPermission", "HardwareIds"})
         String deviceId = telephonyManager.getDeviceId();
         String userName;
         if (!TextUtils.isEmpty(deviceId) && deviceId.length() == 15) {
@@ -84,15 +85,7 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
         imageWeather.setPraise(0L);
         tvLocation.setText(location.getAddress());
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-
         KeyboardUtils.showKeyboard(etSay);
-    }
-
-    @Override
-    protected void setListener() {
-        btnUpload.setOnClickListener(this);
     }
 
     @Override
@@ -105,14 +98,13 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void upload() {
-        mProgressDialog.setMessage(getString(R.string.uploading_image));
-        mProgressDialog.show();
-        final BmobFile file = new BmobFile(new File(path));
+        showProgress(getString(R.string.uploading_image));
+        BmobFile file = new BmobFile(new File(path));
         file.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    mProgressDialog.setMessage(getString(R.string.publishing));
+                    showProgress(getString(R.string.publishing));
                     imageWeather.setImageUrl(file.getFileUrl());
                     imageWeather.setSay(etSay.getText().toString());
                     imageWeather.setTag(tagLayout.getTag());
@@ -120,21 +112,21 @@ public class UploadImageActivity extends BaseActivity implements View.OnClickLis
                         @Override
                         public void done(String objectId, BmobException e) {
                             if (e == null) {
-                                mProgressDialog.cancel();
+                                cancelProgress();
                                 Toast.makeText(UploadImageActivity.this, getString(R.string.publish_success,
                                         imageWeather.getLocation().getCity()), Toast.LENGTH_SHORT).show();
                                 setResult(RESULT_OK);
                                 finish();
                             } else {
                                 Log.e(TAG, "upload object fail", e);
-                                mProgressDialog.cancel();
+                                cancelProgress();
                                 SnackbarUtils.show(UploadImageActivity.this, getString(R.string.publish_fail, e.getMessage()));
                             }
                         }
                     });
                 } else {
                     Log.e(TAG, "upload image fail", e);
-                    mProgressDialog.cancel();
+                    cancelProgress();
                     SnackbarUtils.show(UploadImageActivity.this, getString(R.string.upload_image_fail, e.getMessage()));
                 }
             }

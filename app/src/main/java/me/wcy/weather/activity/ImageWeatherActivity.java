@@ -80,6 +80,12 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         rvImage.addItemDecoration(new StaggeredGridSpacingItemDecoration(ScreenUtils.dp2px(8)));
         rvImage.setAdapter(mAdapter);
 
+        mRefreshLayout.setOnRefreshListener(this);
+        rvImage.addOnScrollListener(mLoadMoreListener);
+        mAdapter.setOnItemClickListener(this);
+        fabCamera.setOnClickListener(this);
+        fabAlbum.setOnClickListener(this);
+
         mQuery.setLimit(QUERY_LIMIT);
         mQuery.order("-createdAt");
 
@@ -87,15 +93,6 @@ public class ImageWeatherActivity extends BaseActivity implements View.OnClickLi
         LocationManager.get().start();
 
         mRefreshLayout.post(() -> mRefreshLayout.setRefreshing(true));
-    }
-
-    @Override
-    protected void setListener() {
-        mRefreshLayout.setOnRefreshListener(this);
-        rvImage.addOnScrollListener(mLoadMoreListener);
-        mAdapter.setOnItemClickListener(this);
-        fabCamera.setOnClickListener(this);
-        fabAlbum.setOnClickListener(this);
     }
 
     @Override
