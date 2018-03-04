@@ -59,7 +59,7 @@ BUG_HD_KEY=xxxxxx
 - 支持Android 6.0
 
 ## 下载地址
-fir.im：http://fir.im/ponyweather
+蒲公英：https://www.pgyer.com/ponyweather
 
 ## TODO
 - [x] 实景天气
