@@ -28,8 +28,6 @@ BMOB_KEY=xxxxxx
 # 百度语音合成，影响语音播报
 BD_TTS_API_KEY=xxxxxx
 BD_TTS_SECRET_KEY=xxxxxx
-# fir，非必需
-FIR_KEY=xxxxxx
 # 高德地图，影响定位
 AMAP_KEY=xxxxxx
 # bughd，非必需
