@@ -61,6 +61,8 @@ public class WeatherActivity extends BaseActivity implements WeatherContract.Vie
     private TextView tvMinTemp;
     @Bind(R.id.tv_more_info)
     private TextView tvMoreInfo;
+    @Bind(R.id.hourly_forecast_card)
+    private View hourlyForecastCard;
     @Bind(R.id.lv_hourly_forecast)
     private ListView lvHourlyForecast;
     @Bind(R.id.lv_daily_forecast)
@@ -159,7 +161,12 @@ public class WeatherActivity extends BaseActivity implements WeatherContract.Vie
                 .append(weather.now.wind.sc)
                 .append(weather.now.wind.sc.endsWith("风") ? "" : "级");
         tvMoreInfo.setText(sb.toString());
-        lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
+        if (weather.hourly_forecast != null && !weather.hourly_forecast.isEmpty()) {
+            hourlyForecastCard.setVisibility(View.VISIBLE);
+            lvHourlyForecast.setAdapter(new HourlyForecastAdapter(weather.hourly_forecast));
+        } else {
+            hourlyForecastCard.setVisibility(View.GONE);
+        }
         lvDailyForecast.setAdapter(new DailyForecastAdapter(weather.daily_forecast));
         lvSuggestion.setAdapter(new SuggestionAdapter(weather.suggestion));
     }

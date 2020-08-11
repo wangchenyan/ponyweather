@@ -9,6 +9,7 @@ import me.wcy.weather.R;
 import me.wcy.weather.addcity.AddCityContract;
 import me.wcy.weather.model.CityEntity;
 import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 import me.wcy.weather.widget.radapter.RLayout;
 import me.wcy.weather.widget.radapter.RViewHolder;
 
@@ -30,6 +31,7 @@ public class AddCityViewHolder extends RViewHolder<CityEntity> implements View.O
 
     public AddCityViewHolder(View itemView) {
         super(itemView);
+        ViewBinder.bind(this, itemView);
         itemView.setOnClickListener(this);
     }
 

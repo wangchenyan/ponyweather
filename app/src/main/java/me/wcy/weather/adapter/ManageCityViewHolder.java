@@ -16,6 +16,7 @@ import me.wcy.weather.model.CityInfo;
 import me.wcy.weather.utils.ACache;
 import me.wcy.weather.utils.SnackbarUtils;
 import me.wcy.weather.utils.binding.Bind;
+import me.wcy.weather.utils.binding.ViewBinder;
 import me.wcy.weather.widget.radapter.RLayout;
 import me.wcy.weather.widget.radapter.RViewHolder;
 
@@ -37,6 +38,7 @@ public class ManageCityViewHolder extends RViewHolder<CityInfo> implements View.
 
     public ManageCityViewHolder(View itemView) {
         super(itemView);
+        ViewBinder.bind(this, itemView);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
     }

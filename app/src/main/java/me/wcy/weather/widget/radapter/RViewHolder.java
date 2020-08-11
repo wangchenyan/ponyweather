@@ -20,7 +20,6 @@ public abstract class RViewHolder<T> extends RecyclerView.ViewHolder {
         super(itemView);
         this.itemView = itemView;
         context = itemView.getContext();
-        ViewBinder.bind(this, itemView);
     }
 
     public void setAdapter(RAdapter<T> adapter) {
