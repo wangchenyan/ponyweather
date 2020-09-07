@@ -2,6 +2,7 @@ package me.wcy.weather.weather;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
@@ -133,9 +134,10 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
     @Override
     public void share() {
+        Context context = view.getContext();
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, view.getContext().getString(R.string.share_content));
+        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_content, context.getString(R.string.app_name), context.getString(R.string.about_project_url)));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         view.getContext().startActivity(Intent.createChooser(intent, view.getContext().getString(R.string.share)));
     }
