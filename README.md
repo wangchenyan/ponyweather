@@ -57,11 +57,12 @@ BUG_HD_KEY=xxxxxx
 - 支持Android 6.0
 
 ## 下载地址
-https://raw.githubusercontent.com/wangchenyan/ponyweather/master/release/ponyweather-2.2.0.apk
+### 2.2
+https://raw.githubusercontent.com/wangchenyan/ponyweather/master/release/ponyweather.apk
 
 扫码下载
 
-![](https://raw.githubusercontent.com/wangchenyan/ponyweather/master/release/ponyweather-2.2.0.png)
+![](https://raw.githubusercontent.com/wangchenyan/ponyweather/master/release/qrcode.png)
 
 ## TODO
 - [x] 实景天气
@@ -126,8 +127,8 @@ private void fetchDataFromNetWork(final CityEntity city) {
 ![](https://raw.githubusercontent.com/wangchenyan/ponyweather/master/art/screenshot_04.jpg)
 
 ## 关于作者
-掘金：https://juejin.im/user/58abd9f1da2f607e924e945a<br>
-微博：http://weibo.com/wangchenyan1993
+掘金：https://juejin.im/user/2313028193754168<br>
+微博：https://weibo.com/wangchenyan1993
 
 ## License
 
