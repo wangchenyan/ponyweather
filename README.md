@@ -58,11 +58,7 @@ BUG_HD_KEY=xxxxxx
 
 ## 下载地址
 ### 2.2
-https://raw.githubusercontent.com/wangchenyan/ponyweather/master/release/ponyweather.apk
-
-扫码下载
-
-![](https://raw.githubusercontent.com/wangchenyan/ponyweather/master/release/qrcode.png)
+https://github.com/wangchenyan/ponyweather/releases/download/2.2/ponyweather-2.2.apk
 
 ## TODO
 - [x] 实景天气
