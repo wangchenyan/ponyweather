@@ -57,7 +57,7 @@ BUG_HD_KEY=xxxxxx
 - 支持Android 6.0
 
 ## 下载地址
-### 2.2
+### V2.2
 https://github.com/wangchenyan/ponyweather/releases/download/2.2/ponyweather-2.2.apk
 
 ## TODO
